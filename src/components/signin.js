@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import GoogleIcon from "@mui/icons-material/Google";
+import ForgotPassword from "./forgotPassword";
+import { emailValidation } from "./utils";
 import {
   Link,
   Box,
@@ -14,6 +18,8 @@ import {
   IconButton,
   Checkbox,
   Typography,
+  Grid2,
+  Divider,
 } from "@mui/material";
 
 class SignIn extends Component {
@@ -25,33 +31,21 @@ class SignIn extends Component {
       checked: false,
       error: false,
       error1: false,
+      onReset: false,
     };
   }
-
   handleChange = (e) => {
     let { name, value } = e.target;
     const loginData = { ...this.state.loginData, [name]: value };
     this.setState({ loginData });
   };
   onSubmit = () => {
-    if (this.emailValidation()) {
-      console.log("auth through backend");
-    }
-    console.log(this.state.loginData);
-  };
-  emailValidation = () => {
-    let email = this.state.loginData.email;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (email === null || "") {
-      this.setState({ error: true });
-      return false;
-    }
-    if (!emailRegex.test(email)) {
-      this.setState({ error: true });
-      return false;
-    } else {
+    if (emailValidation(this.state.loginData.email)) {
       this.setState({ error: false });
-      return true;
+      console.log("auth through backend");
+    } else {
+      this.setState({ error: true });
+      console.log(this.state.loginData);
     }
   };
   handleClickShowPassword = () => {
@@ -63,8 +57,13 @@ class SignIn extends Component {
   handleMouseUpPassword = (event) => {
     event.preventDefault();
   };
+  handleReset = () => {
+    this.setState({ onReset: !this.state.onReset });
+  };
 
   render() {
+    const {handlechangetab} = this.props;
+
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
@@ -122,26 +121,72 @@ class SignIn extends Component {
           )}
         </FormControl>
         <FormControl>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={this.state.checked}
-                onChange={this.handleChange}
+          <Grid2 container spacing={3} sx={{ flexGrow: 1 }}>
+            <Grid2 size={6}>
+              <FormControlLabel
+                control={<Checkbox onChange={this.handleChange} />}
+                label="Remember me"
               />
-            }
-            label="Remember me"
-          />
+            </Grid2>
+            <Grid2 size={6}>
+              <Typography sx={{ margin: "10px" }}>
+                <Link underline="hover" onClick={this.handleReset}>
+                  Forgot Password?
+                </Link>
+              </Typography>
+            </Grid2>
+            <Grid2 size={12}>
+              <Button
+                variant="contained"
+                sx={{ width: "90%" }}
+                onClick={this.onSubmit}
+              >
+                Sign In
+              </Button>
+            </Grid2>
+            <Grid2 size={12}>
+              <Typography sx={{ margin: "10px" }}>
+                Don't have an account? <Link underline="hover"  onClick={() => handlechangetab(Event, '2')} >Sign Up</Link>
+              </Typography>
+            </Grid2>
+            <Grid2 size={12}>
+              <Divider
+                sx={{ margin: "2px", opacity: 0.5, borderColor: "black" }}
+              />
+            </Grid2>
+            <Grid2 size={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "90%",
+                  backgroundColor: "#e85b23",
+                  "&:hover": { backgroundColor: "#a64119" },
+                }}
+                onClick={this.onSubmit}
+              >
+                <GoogleIcon sx={{ marginRight: 2 }} />
+                Sign In with Google
+              </Button>
+            </Grid2>
+            <Grid2 size={12}>
+              <Button
+                variant="contained"
+                sx={{
+                  width: "90%",
+                  backgroundColor: "#1031eb",
+                  "&:hover": { backgroundColor: "#0d27bd" },
+                }}
+                onClick={this.onSubmit}
+              >
+                <FacebookIcon sx={{ marginRight: 2 }} />
+                Sign In with Facebook
+              </Button>
+            </Grid2>
+          </Grid2>
         </FormControl>
-        <FormControl>
-          <Typography>
-            <Link underline="hover">Forgot Password?</Link>
-          </Typography>
-        </FormControl>
-        <FormControl>
-          <Button variant="outlined" onClick={this.onSubmit}>
-            Log In
-          </Button>
-        </FormControl>
+        {this.state.onReset ? (
+          <ForgotPassword toggle={this.handleReset} />
+        ) : null}
       </Box>
     );
   }
