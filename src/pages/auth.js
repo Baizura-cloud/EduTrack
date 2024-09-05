@@ -26,7 +26,7 @@ export default function Auth() {
         <Box sx={{ width: 500, maxWidth: "100%", height: 'auto' }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Stack sx={{justifyContent: "center", alignItems: "center"}} spacing={0}>
+                <Stack sx={{justifyContent: "center", alignItems: "center"}}>
                   <img className="logo" alt="logo" loading="lazy" src={logo} />
                   <Typography>
                     {show? 'Welcome back, enter your credential to sign in' : 'Create your account to join us'}

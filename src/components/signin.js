@@ -4,7 +4,9 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import ForgotPassword from "./forgotPassword";
+import Snack from "./snackbar";
 import { emailValidation } from "./utils";
+import { supabase } from "../client";
 import {
   Link,
   Box,
@@ -32,6 +34,9 @@ class SignIn extends Component {
       error: false,
       error1: false,
       onReset: false,
+      toggleSnack: false,
+      messageSnack: '',
+      severitySnack: ''
     };
   }
   handleChange = (e) => {
@@ -43,11 +48,32 @@ class SignIn extends Component {
     if (emailValidation(this.state.loginData.email)) {
       this.setState({ error: false });
       console.log("auth through backend");
+      this.signInUser(this.state.loginData);
     } else {
-      this.setState({ error: true });
+      this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
       console.log(this.state.loginData);
     }
   };
+  async signInUser(loginData) {
+    try {
+      const { data, error } = await supabase.auth
+        .signInWithPassword({
+          email: loginData.email,
+          password: loginData.password,
+        })
+        .then(console.log("sign in"));
+      if (error) {
+        console.log(error);
+        this.setState({ error: true, error1: true , toggleSnack: true, messageSnack: 'Invalid Email or Password', severitySnack: 'error' });
+      } else {
+        console.log(data);
+        this.setState({ error: false, error1: false });
+      }
+    } catch (error) {
+      this.setState({ error: true, error1: true , toggleSnack: true, messageSnack: 'Invalid Email or Password', severitySnack: 'error' });
+      console.log(error);
+    }
+  }
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
@@ -62,7 +88,7 @@ class SignIn extends Component {
   };
 
   render() {
-    const {handlechangetab} = this.props;
+    const { handlechangetab } = this.props;
 
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
@@ -146,7 +172,13 @@ class SignIn extends Component {
             </Grid2>
             <Grid2 size={12}>
               <Typography sx={{ margin: "10px" }}>
-                Don't have an account? <Link underline="hover"  onClick={() => handlechangetab(Event, '2')} >Sign Up</Link>
+                Don't have an account?{" "}
+                <Link
+                  underline="hover"
+                  onClick={() => handlechangetab(Event, "2")}
+                >
+                  Sign Up
+                </Link>
               </Typography>
             </Grid2>
             <Grid2 size={12}>
@@ -187,6 +219,7 @@ class SignIn extends Component {
         {this.state.onReset ? (
           <ForgotPassword toggle={this.handleReset} />
         ) : null}
+          {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
       </Box>
     );
   }

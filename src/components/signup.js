@@ -3,7 +3,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
-import { emailValidation } from "./utils";
+import Snack from "./snackbar";
+import { emailValidation, passwordValidation } from "./utils";
+import { supabase } from "../client";
 import {
   Link,
   Box,
@@ -26,10 +28,14 @@ class SignUp extends Component {
       loginData: {},
       showPassword: false,
       checked: false,
-      error0: false,
-      error: false,
-      error1: false,
+      errorName: false,
+      errorEmail: false,
+      errorPassword: false,
+      match: true,
       onReset: false,
+      toggleSnack: false,
+      messageSnack: '',
+      severitySnack: ''
     };
   }
   handleChange = (e) => {
@@ -38,14 +44,59 @@ class SignUp extends Component {
     this.setState({ loginData });
   };
   onSubmit = () => {
-    if (emailValidation(this.state.loginData.email)) {
-      this.setState({ error: false });
-      console.log("auth through backend");
+    if (Object.keys(this.state.loginData).length === 0){  //validate if all is empty
+      this.setState({ errorName: true, errorEmail: true, errorPassword:true, toggleSnack:true, messageSnack: 'Please fill in the form to sign up', severitySnack: 'error' });
+      return;
+    }
+    if (this.state.loginData.name !== null || "") {  // validate name
+      this.setState({ errorName: false });
+      if (emailValidation(this.state.loginData.email)) {  // validate email
+        this.setState({ errorEmail: false });
+        if (passwordValidation(this.state.loginData.password)) {  //validate password
+          this.setState({ errorPassword: false });
+          if (this.state.loginData.password == this.state.loginData.Cpassword) {  //validate Cpassword
+            this.setState({ errorPassword: false });
+            console.log("auth through backend");
+            this.signupUser(this.state.loginData);
+          } else {
+            this.setState({ errorPassword: true, match: false, toggleSnack:true, messageSnack: 'Please confirm your password', severitySnack: 'error' });
+            console.log(this.state.loginData);
+          }
+        } else {
+          this.setState({ errorPassword: true, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
+          console.log(this.state.loginData);
+        }
+      } else {
+        this.setState({ errorEmail: true, toggleSnack:true, messageSnack: 'Invalid email', severitySnack: 'error' });
+        console.log(this.state.loginData);
+      }
     } else {
-      this.setState({ error: true });
+      this.setState({ errorName: true, toggleSnack:true, messageSnack: 'Name is required', severitySnack: 'error' });
       console.log(this.state.loginData);
     }
   };
+  
+  async signupUser(loginData) {
+    try {
+      const { data, error } = await supabase.auth
+        .signUp({
+          name: loginData.name,
+          email: loginData.email,
+          password: loginData.password,
+        })
+        .then(console.log("sign in"));
+      if (error) {
+        console.log(error);
+        this.setState({ errorEmail: true, errorPassword: true, toggleSnack:true, messageSnack: 'Email or password are invalid', severitySnack: 'error' });
+      } else {
+        console.log(data);
+        this.setState({ errorEmail: false, errorPassword: false });
+      }
+    } catch (error) {
+      this.setState({ errorEmail: true, errorPassword: true, toggleSnack:true, messageSnack: 'Email or password are invalid', severitySnack: 'error' });
+      console.log(error);
+    }
+  }
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
@@ -60,7 +111,7 @@ class SignUp extends Component {
   };
 
   render() {
-    const {handlechangetab} = this.props;
+    const { handlechangetab } = this.props;
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
         <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
@@ -73,10 +124,12 @@ class SignUp extends Component {
             type="text"
             onChange={this.handleChange}
             required
-            error={this.state.error0}
+            error={this.state.errorName}
           />
-          {this.state.error ? (
-            <FormHelperText sx={{ color: "red" }}>Name is required</FormHelperText>
+          {this.state.errorName ? (
+            <FormHelperText sx={{ color: "red" }}>
+              Name is required
+            </FormHelperText>
           ) : (
             ""
           )}
@@ -91,9 +144,9 @@ class SignUp extends Component {
             type="text"
             onChange={this.handleChange}
             required
-            error={this.state.error}
+            error={this.state.errorEmail}
           />
-          {this.state.error ? (
+          {this.state.errorEmail ? (
             <FormHelperText sx={{ color: "red" }}>Invalid Email</FormHelperText>
           ) : (
             ""
@@ -107,7 +160,7 @@ class SignUp extends Component {
             name="password"
             type={this.state.showPassword ? "text" : "password"}
             onChange={this.handleChange}
-            error={this.state.error1}
+            error={this.state.errorPassword}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -127,9 +180,9 @@ class SignUp extends Component {
             required
             label="Password"
           />
-          {this.state.error1 ? (
+          {this.state.errorPassword ? (
             <FormHelperText sx={{ color: "red" }}>
-              Invalid Password
+              {this.state.match? 'Password must have at least 8 characters contains one lowercase letter, uppercase letter, special character and digit. ' : 'The password does not match'}
             </FormHelperText>
           ) : (
             ""
@@ -143,7 +196,7 @@ class SignUp extends Component {
             name="Cpassword"
             type={this.state.showPassword ? "text" : "password"}
             onChange={this.handleChange}
-            error={this.state.error1}
+            error={this.state.errorPassword}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -163,9 +216,9 @@ class SignUp extends Component {
             required
             label="Confirm Password"
           />
-          {this.state.error1 ? (
+          {this.state.errorPassword ? (
             <FormHelperText sx={{ color: "red" }}>
-              Invalid Password
+              {this.state.match? 'Invalid password' : 'The password does not match'}
             </FormHelperText>
           ) : (
             ""
@@ -176,7 +229,7 @@ class SignUp extends Component {
             <Grid2 size={12}>
               <Button
                 variant="contained"
-                sx={{ width: "90%", marginTop:2 }}
+                sx={{ width: "90%", marginTop: 2 }}
                 onClick={this.onSubmit}
               >
                 Sign Up
@@ -184,7 +237,13 @@ class SignUp extends Component {
             </Grid2>
             <Grid2 size={12}>
               <Typography sx={{ margin: "10px" }}>
-                Already have an account? <Link underline="hover" onClick={() => handlechangetab(Event, '1')}>Sign In</Link>
+                Already have an account?{" "}
+                <Link
+                  underline="hover"
+                  onClick={() => handlechangetab(Event, "1")}
+                >
+                  Sign In
+                </Link>
               </Typography>
             </Grid2>
             <Grid2 size={12}>
@@ -222,6 +281,7 @@ class SignUp extends Component {
             </Grid2>
           </Grid2>
         </FormControl>
+        {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
       </Box>
     );
   }

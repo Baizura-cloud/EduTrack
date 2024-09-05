@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import "../App.css";
+import { passwordValidation } from "../components/utils";
+import { supabase } from "../client";
 import {
   Card,
   CardContent,

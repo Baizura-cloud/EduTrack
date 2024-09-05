@@ -10,3 +10,14 @@ export function emailValidation(email) {  //validate email : return false if inv
       return true;
     }
   }
+  export function passwordValidation(password) {  //validate email : return false if invalid
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (password == null || "") {
+      return false;
+    }
+    if (!strongPasswordRegex.test(password)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
