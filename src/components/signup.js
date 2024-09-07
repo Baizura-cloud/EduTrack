@@ -44,36 +44,41 @@ class SignUp extends Component {
     this.setState({ loginData });
   };
   onSubmit = () => {
+    this.setState({ errorName: false, errorEmail: false, errorPassword:false });
+
     if (Object.keys(this.state.loginData).length === 0){  //validate if all is empty
       this.setState({ errorName: true, errorEmail: true, errorPassword:true, toggleSnack:true, messageSnack: 'Please fill in the form to sign up', severitySnack: 'error' });
       return;
     }
-    if (this.state.loginData.name !== null || "") {  // validate name
-      this.setState({ errorName: false });
-      if (emailValidation(this.state.loginData.email)) {  // validate email
-        this.setState({ errorEmail: false });
-        if (passwordValidation(this.state.loginData.password)) {  //validate password
-          this.setState({ errorPassword: false });
-          if (this.state.loginData.password == this.state.loginData.Cpassword) {  //validate Cpassword
-            this.setState({ errorPassword: false });
-            console.log("auth through backend");
-            this.signupUser(this.state.loginData);
-          } else {
-            this.setState({ errorPassword: true, match: false, toggleSnack:true, messageSnack: 'Please confirm your password', severitySnack: 'error' });
-            console.log(this.state.loginData);
-          }
-        } else {
-          this.setState({ errorPassword: true, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
-          console.log(this.state.loginData);
-        }
-      } else {
-        this.setState({ errorEmail: true, toggleSnack:true, messageSnack: 'Invalid email', severitySnack: 'error' });
-        console.log(this.state.loginData);
-      }
-    } else {
-      this.setState({ errorName: true, toggleSnack:true, messageSnack: 'Name is required', severitySnack: 'error' });
-      console.log(this.state.loginData);
+    if(this.state.loginData.name == null || ""){  //validate name
+      this.setState({errorName:true, toggleSnack:true, messageSnack: 'Name is required', severitySnack: 'error'})
+      return;
+    }else{
+      this.setState({errorName:false})
     }
+    if(!emailValidation(this.state.loginData.email)){  //validate email
+      this.setState({ errorEmail: true, toggleSnack:true, messageSnack: 'Invalid email', severitySnack: 'error' });
+      return;
+    }else{
+      this.setState({errorEmail:false})
+    }
+    if(!passwordValidation(this.state.loginData.password)){ //validate password
+      this.setState({ errorPassword: true, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
+      return;
+    }else{
+      this.setState({errorPassword:false})
+    }
+    if(this.state.loginData.password !== this.state.loginData.Cpassword){  //validate Cpassword
+      this.setState({ errorPassword: true, match: false, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
+      return;
+    }else{
+      this.setState({errorPassword:false})
+    }
+    if((this.state.errorName == false && this.state.errorEmail) == false && this.state.errorPassword == false){
+      console.log("backend")
+      this.signupUser(this.state.loginData)
+    }
+
   };
   
   async signupUser(loginData) {
