@@ -31,9 +31,7 @@ function App() {
   else {
     return (
       <div className="App">
-      <header className="App-header">
       <Main/>
-      </header>
     </div>
     )
   }

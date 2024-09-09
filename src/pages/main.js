@@ -1,33 +1,23 @@
-import React, {Component} from "react";
-import { Button } from "@mui/material";
+import React, { Component } from "react";
+import ResponsiveDrawer from "../components/drawer";
+import { Card, CardContent, Box, Button } from "@mui/material";
 import { supabase } from "../client";
+import Dashboard from "./dashboard";
 
 class Main extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      
-    };
+    this.state = {};
   }
 
-  async signoutUser() {
-    try {
-      const { error } = await supabase.auth.signOut().then(console.log('signout'))
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  render(){
-    return(
-      <div>
-        Logged In!
-        <Button onClick={this.signoutUser}>
-          Log Out
-        </Button>
-      </div>
-    )
+  render() {
+    return (
+      <Box sx={{ width: '100%', maxWidth: "100%", height: "auto" }}>
+        <ResponsiveDrawer/>
+        <Dashboard/>
+      </Box>
+    );
   }
 }
 
 export default Main;
-
