@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTodo, deleteTodo,  toggleComplete } from "../redux/todoSlice";
+import {fetchProfile} from "../redux/profileSlice"
 import { Button, Typography } from "@mui/material";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -14,8 +15,13 @@ import CommentIcon from '@mui/icons-material/Comment';
 const AddTodoForm = () => {
   const [value, setValue] = useState("");
   const dispatch = useDispatch();
-  const todos = useSelector((state) => state.todos);
+  const profile = useSelector((state) => state.profile);
+  //const {todos, profile} = state
   const [checked, setChecked] = React.useState([0]);
+
+  useEffect(()=>{
+    dispatch(fetchProfile())
+  }, [dispatch])
 
 
   const handleToggle = (value) => () => {
@@ -67,7 +73,16 @@ const AddTodoForm = () => {
         </button>
       </form>
        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      {todos.map((todo) => {
+        {profile.data.map((prof) =>{
+          return (
+            <ul>
+              <li>
+                {prof.email}
+              </li>
+            </ul>
+          )
+        })}
+      {/* {todos.map((todo) => {
         const labelId = `checkbox-list-label-${todo.id}`;
 
         return (
@@ -95,7 +110,7 @@ const AddTodoForm = () => {
             </ListItemButton>
           </ListItem>
         );
-      })}
+      })} */}
     </List>
     </div>
   );

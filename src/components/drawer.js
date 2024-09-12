@@ -21,8 +21,9 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../logo.png";
 import "../App.css";
-import { supabase } from "../client";
 import Snack from "./snackbar";
+import { connect } from "react-redux";
+import { logoutUser } from "../redux/authSlice";
 
 class DrawerAppbar extends Component {
   constructor(props) {
@@ -39,21 +40,6 @@ class DrawerAppbar extends Component {
     };
   }
 
-  userSignout = () =>{
-    this.signoutUser();
-  }
-  async signoutUser() {
-    try {
-      const { error } = await supabase.auth
-        .signOut()
-        .then(console.log("sign out"));
-      if (error) {
-        this.setState({toggleSnack:true, messageSnack:'Sign out error, please contact support', severitySnack: 'error'})
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   handleDrawerClose = () => {
     this.setState({ isClosing: true, mobileOpen: false });
@@ -105,6 +91,7 @@ class DrawerAppbar extends Component {
   };
 
   render() {
+    const {auth, logoutUser} = this.props
     return (
       <Box sx={{ display: "flex" }}>
         <AppBar
@@ -157,7 +144,7 @@ class DrawerAppbar extends Component {
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
               >
-                <MenuItem onClick={this.userSignout}>Logout</MenuItem>
+                <MenuItem onClick={logoutUser}>Logout</MenuItem>
                 <MenuItem onClick={this.handleClose}>My account</MenuItem>
               </Menu>
             </Stack>
@@ -217,4 +204,11 @@ class DrawerAppbar extends Component {
   }
 }
 
-export default DrawerAppbar;
+const mapStateToProps = (state) =>({
+  auth: state.auth
+})
+const mapDispatchToProps = (dispatch) =>({
+  logoutUser: () => dispatch(logoutUser())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerAppbar);
