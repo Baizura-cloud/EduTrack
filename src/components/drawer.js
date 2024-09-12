@@ -23,7 +23,7 @@ import logo from "../logo.png";
 import "../App.css";
 import Snack from "./snackbar";
 import { connect } from "react-redux";
-import { logoutUser } from "../redux/authSlice";
+import { logoutUser } from "../redux/authSlice2";
 
 class DrawerAppbar extends Component {
   constructor(props) {

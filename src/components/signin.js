@@ -7,6 +7,8 @@ import ForgotPassword from "./forgotPassword";
 import Snack from "./snackbar";
 import { emailValidation } from "./utils";
 import { supabase } from "../client";
+import { connect } from "react-redux";
+import { loginUser } from "../redux/authSlice2";
 import {
   Link,
   Box,
@@ -46,34 +48,22 @@ class SignIn extends Component {
   };
   onSubmit = () => {
     if (emailValidation(this.state.loginData.email)) {
-      this.setState({ error: false });
-      console.log("auth through backend");
-      this.signInUser(this.state.loginData);
+      try {
+        this.setState({ error: false });
+        console.log("auth through backend");
+        console.log(this.state.loginData)
+        this.props.loginUser(this.state.loginData)
+        //loginUser(this.state.loginData)
+        //this.signInUser(this.state.loginData);
+      } catch (error) {
+        console.log(error)
+      }
     } else {
       this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
       console.log(this.state.loginData);
     }
   };
-  async signInUser(loginData) {
-    try {
-      const { data, error } = await supabase.auth
-        .signInWithPassword({
-          email: loginData.email,
-          password: loginData.password,
-        })
-        .then(console.log("sign in"));
-      if (error) {
-        console.log(error);
-        this.setState({ error: true, error1: true , toggleSnack: true, messageSnack: 'Invalid Email or Password', severitySnack: 'error' });
-      } else {
-        console.log(data);
-        this.setState({ error: false, error1: false });
-      }
-    } catch (error) {
-      this.setState({ error: true, error1: true , toggleSnack: true, messageSnack: 'Invalid Email or Password', severitySnack: 'error' });
-      console.log(error);
-    }
-  }
+  
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
@@ -88,7 +78,7 @@ class SignIn extends Component {
   };
 
   render() {
-    const { handlechangetab } = this.props;
+    const {  handlechangetab } = this.props;
 
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
@@ -225,4 +215,11 @@ class SignIn extends Component {
   }
 }
 
-export default SignIn;
+const mapStateToProps = (state) =>({
+  auth: state.auth
+})
+const mapDispatchToProps = (dispatch) =>({
+  loginUser: (loginData) => dispatch(loginUser(loginData))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignIn);

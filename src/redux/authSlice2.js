@@ -9,10 +9,22 @@ export const logoutUser = createAsyncThunk('logout-user', async() =>{
         console.log(error)
     }
 })
-
-// export const loginUser = createAsyncThunk('login-user', async()=>{
-
-// })
+export const loginUser = createAsyncThunk('login-user', async(loginData) =>{
+    
+    try {
+        if(!loginData){
+            throw new Error('Data undefined')
+        }
+        const {email, password} = loginData
+        const response = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password
+        })
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 const authSlice = createSlice({
     name:'auth',
@@ -21,13 +33,23 @@ const authSlice = createSlice({
     extraReducers: (builder) =>{
         builder
         .addCase(logoutUser.fulfilled, (state,action)=>{
-            state.data = action.payload.data
+            state.data = []
             state.fetchstatus = 'success'
         })
         .addCase(logoutUser.pending, (state) =>{
             state.fetchstatus = 'pending'
         })
         .addCase(logoutUser.rejected, (state)=>{
+            state.fetchstatus = 'error'
+        })
+        .addCase(loginUser.fulfilled, (state, action) =>{
+            state.data = action.payload
+            state.fetchstatus = 'success'
+        })
+        .addCase(loginUser.pending, (state)=>{
+            state.fetchstatus = 'pending'
+        })
+        .addCase(loginUser.rejected, (state)=>{
             state.fetchstatus = 'error'
         })
     }
