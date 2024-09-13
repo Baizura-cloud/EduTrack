@@ -5,10 +5,15 @@ import SignIn from "../components/signin";
 import {Card, CardContent, Tab, Box, Typography, Stack} from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import logo from "../logo.png";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {  useSelector } from "react-redux";
 
 export default function Auth() {
   const [value, setValue] = React.useState("1");
   const [show, setShow] = React.useState(true);
+  const auth = useSelector((state) => state.auth);
+  const navigate = useNavigate()
 
   const handlechangetab = (event, newValue) => {
     setValue(newValue);
@@ -19,6 +24,11 @@ export default function Auth() {
       setShow(true);
     }
   };
+  useEffect(()=>{
+    if(auth.fetchstatus == 'success'){
+      navigate('/main')
+    }
+  })
 
   return (
     <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>

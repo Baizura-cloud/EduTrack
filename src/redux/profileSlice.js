@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {supabase} from "../client"
 
-export const fetchProfile = createAsyncThunk('fetch-profile', async() =>{
+export const fetchProfile = createAsyncThunk('fetch-profile', async(email) =>{
     try {
-        const response = await supabase.from('profile').select('*')
+        const response = await supabase.from('profile').select('*').eq('email', email)
         return response
     } catch (error) {
         console.log(error)

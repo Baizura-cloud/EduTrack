@@ -15,14 +15,18 @@ import {
   Menu,
   Stack,
 } from "@mui/material";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import GroupsIcon from '@mui/icons-material/Groups';
+import AccountBoxIcon from '@mui/icons-material/AccountBox';
+import TodayIcon from '@mui/icons-material/Today';
+import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../logo.png";
 import "../App.css";
 import Snack from "./snackbar";
 import { connect } from "react-redux";
+import { fetchProfile} from "../redux/profileSlice"
 import { logoutUser } from "../redux/authSlice2";
 
 class DrawerAppbar extends Component {
@@ -67,6 +71,7 @@ class DrawerAppbar extends Component {
   };
 
   drawer = () => {
+    const icon = [<DashboardIcon/>, <GroupsIcon/>, <ImportContactsIcon/>, <TodayIcon/>, <AccountBoxIcon/>]
     return (
       <div>
         <Toolbar>
@@ -74,11 +79,11 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider />
         <List>
-          {["Home", "Starred", "Send email", "Drafts"].map((text, index) => (
+          {["Dashboard", "Team", "Course", "Schedule", "Account"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {icon[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -107,7 +112,7 @@ class DrawerAppbar extends Component {
           <Toolbar>
             <Stack
               spacing={{ xs: 1, sm: 2 }}
-              direction="row-reverse"
+              direction="row"
               justifyContent={"space-between"}
             >
               <IconButton
@@ -205,10 +210,12 @@ class DrawerAppbar extends Component {
 }
 
 const mapStateToProps = (state) =>({
-  auth: state.auth
+  auth: state.auth,
+  profile: state.profile
 })
 const mapDispatchToProps = (dispatch) =>({
-  logoutUser: () => dispatch(logoutUser())
+  logoutUser: () => dispatch(logoutUser()),
+  fetchProfile: (email) => dispatch(fetchProfile(email))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerAppbar);

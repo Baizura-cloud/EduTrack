@@ -1,14 +1,16 @@
 import React, { Component } from "react";
 import ResponsiveDrawer from "../components/drawer";
-import { Card, CardContent, Box, Button } from "@mui/material";
-import { supabase } from "../client";
+import {Box} from "@mui/material";
 import Dashboard from "./dashboard";
+import ErrorPage from "./404";
 
 class Main extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
+
+
 
   render() {
     return (

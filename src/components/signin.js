@@ -5,8 +5,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import ForgotPassword from "./forgotPassword";
 import Snack from "./snackbar";
+//import CircularLoading from "./loading";
 import { emailValidation } from "./utils";
-import { supabase } from "../client";
 import { connect } from "react-redux";
 import { loginUser } from "../redux/authSlice2";
 import {
@@ -26,6 +26,7 @@ import {
   Divider,
 } from "@mui/material";
 
+
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,8 @@ class SignIn extends Component {
       onReset: false,
       toggleSnack: false,
       messageSnack: '',
-      severitySnack: ''
+      severitySnack: '',
+      //loading: false
     };
   }
   handleChange = (e) => {
@@ -46,6 +48,7 @@ class SignIn extends Component {
     const loginData = { ...this.state.loginData, [name]: value };
     this.setState({ loginData });
   };
+  
   onSubmit = () => {
     if (emailValidation(this.state.loginData.email)) {
       try {
@@ -53,8 +56,6 @@ class SignIn extends Component {
         console.log("auth through backend");
         console.log(this.state.loginData)
         this.props.loginUser(this.state.loginData)
-        //loginUser(this.state.loginData)
-        //this.signInUser(this.state.loginData);
       } catch (error) {
         console.log(error)
       }
@@ -206,10 +207,9 @@ class SignIn extends Component {
             </Grid2>
           </Grid2>
         </FormControl>
-        {this.state.onReset ? (
-          <ForgotPassword toggle={this.handleReset} />
-        ) : null}
-          {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
+        {this.state.onReset ? (<ForgotPassword toggle={this.handleReset} />) : null}
+        {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
+        {/* {this.state.loading? <CircularLoading loding={this.state.loading} />: null} */}
       </Box>
     );
   }
