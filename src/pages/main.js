@@ -3,6 +3,7 @@ import ResponsiveDrawer from "../components/drawer";
 import {Box} from "@mui/material";
 import Dashboard from "./dashboard";
 import ErrorPage from "./404";
+import { Outlet } from "react-router-dom";
 
 class Main extends Component {
   constructor(props) {
@@ -10,13 +11,12 @@ class Main extends Component {
     this.state = {};
   }
 
-
-
   render() {
     return (
       <Box sx={{ width: '100%', maxWidth: "100%", height: "auto" }}>
         <ResponsiveDrawer/>
         <Dashboard/>
+        {/* <Outlet/> */}
       </Box>
     );
   }

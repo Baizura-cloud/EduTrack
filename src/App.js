@@ -2,40 +2,37 @@ import Auth from "./pages/auth";
 import { supabase } from "./client";
 import "./App.css";
 import Main from "./pages/main";
-import { useEffect, useState } from "react";
-import ProtectedRoute from "./router/protectedRoute";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Dashboard from "./pages/dashboard";
-import ErrorPage from "./pages/404";
-import Account from "./pages/account"
-import CircularLoading from "./components/loading";
 
-function App(){
-  const router = createBrowserRouter([
-    {
-      path:"/",
-      element: <div className="App"><header className="App-header"><Auth/></header></div>,
-      errorElement: <ErrorPage/>
-    },
-    {
-      path:"/main",
-      element: <ProtectedRoute><Main/></ProtectedRoute>,
-      children:[
-        {
-          path: "dashboard",
-          element: <Dashboard/>
-        },
-        {
-          path: "account",
-          element: <Account/>
-        }
-      ]
-    }
-  ])
+import ProtectedRoutes from "./router/protectedRoute";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-  return(
-    <RouterProvider router={router} fallbackElement={<CircularLoading/>}/>
-  )
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          element={
+            <div className="App">
+              <header className="App-header">
+                <Auth />
+              </header>
+            </div>
+          }
+          path="/login"
+        />
+        <Route element={<ProtectedRoutes />}>
+          <Route
+            element={
+              <div className="App">
+                <Main />
+              </div>
+            }
+            path="/"
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 // function App() {
 //   const [session, setSession] = useState(null);
@@ -54,11 +51,7 @@ function App(){
 
 //   if (!session) {
 //     return (
-//       <div className="App">
-//       <header className="App-header">
-//         <Auth />
-//       </header>
-//     </div>
+//       <div className="App"><header className="App-header"><Auth/></header></div>
 //     )
 //   }
 //   else {
@@ -69,6 +62,6 @@ function App(){
 //     )
 //   }
 
-//}
+// }
 
 export default App;

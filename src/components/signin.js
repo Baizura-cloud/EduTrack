@@ -8,7 +8,7 @@ import Snack from "./snackbar";
 //import CircularLoading from "./loading";
 import { emailValidation } from "./utils";
 import { connect } from "react-redux";
-import { loginUser } from "../redux/authSlice2";
+//import { loginUser } from "../redux/authSlice2";
 import {
   Link,
   Box,
@@ -48,6 +48,8 @@ class SignIn extends Component {
     const loginData = { ...this.state.loginData, [name]: value };
     this.setState({ loginData });
   };
+
+
   
   onSubmit = () => {
     if (emailValidation(this.state.loginData.email)) {
@@ -55,7 +57,11 @@ class SignIn extends Component {
         this.setState({ error: false });
         console.log("auth through backend");
         console.log(this.state.loginData)
-        this.props.loginUser(this.state.loginData)
+        try {
+          this.props.handleloginuser(this.state.loginData)
+        } catch (error) {
+          console.log(error)          
+        }
       } catch (error) {
         console.log(error)
       }
@@ -155,7 +161,7 @@ class SignIn extends Component {
             <Grid2 size={12}>
               <Button
                 variant="contained"
-                sx={{ width: "90%" }}
+                sx={{ width: "90%", backgroundColor:'#6A9C89' }}
                 onClick={this.onSubmit}
               >
                 Sign In
@@ -218,8 +224,8 @@ class SignIn extends Component {
 const mapStateToProps = (state) =>({
   auth: state.auth
 })
-const mapDispatchToProps = (dispatch) =>({
-  loginUser: (loginData) => dispatch(loginUser(loginData))
-})
+// const mapDispatchToProps = (dispatch) =>({
+//   loginUser: (loginData) => dispatch(loginUser(loginData))
+// })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignIn);
+export default connect(mapStateToProps, null)(SignIn);

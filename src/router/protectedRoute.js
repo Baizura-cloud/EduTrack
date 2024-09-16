@@ -1,17 +1,22 @@
-import { Navigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Outlet, Navigate } from "react-router-dom";
+import { supabase } from "../client";
+import { useEffect, useState } from "react";
 
-function ProtectedRoute({ children }) {
-  const { auth } = useSelector(state => state.auth);   
-
-   if(!auth){
-    if (window.localStorage.getItem(auth)) {
-        return <Navigate to="/" replace />;
-      }
+const ProtectedRoutes = () => {
+  const [session, setSession] = useState(true);
+  useEffect(() => {
     
-   } 
-  
-  return children;
-}
+  },[]);
 
-export default ProtectedRoute;
+
+  if(session !== null){
+    console.log('in session')
+    console.log(session)
+    return <Outlet/> 
+  }else{
+    console.log(session)
+    return <Navigate to="/login" />
+  }
+};
+
+export default ProtectedRoutes;

@@ -7,13 +7,15 @@ import { TabContext, TabList, TabPanel } from "@mui/lab";
 import logo from "../logo.png";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {  useSelector } from "react-redux";
+import {  useSelector, useDispatch } from "react-redux";
+import { loginUser } from "../redux/authSlice2";
 
 export default function Auth() {
   const [value, setValue] = React.useState("1");
   const [show, setShow] = React.useState(true);
   const auth = useSelector((state) => state.auth);
-  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  //const navigate = useNavigate()
 
   const handlechangetab = (event, newValue) => {
     setValue(newValue);
@@ -25,10 +27,23 @@ export default function Auth() {
     }
   };
   useEffect(()=>{
-    if(auth.fetchstatus == 'success'){
-      navigate('/main')
-    }
+    // if(auth.fetchstatus == 'success'){
+    //   navigate('/main')
+    // }
   })
+
+  const handleloginuser = (data) =>{
+    console.log('dispatch')
+    console.log(data)
+    dispatch(loginUser(data))
+    //navigate('/main')
+  }
+  const handlelogoutuser = (data) =>{
+    console.log('dispatch')
+    console.log(data)
+    dispatch(loginUser(data))
+    //navigate('/')
+  }
 
   return (
     <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>
@@ -45,15 +60,15 @@ export default function Auth() {
               <TabList
                 onChange={handlechangetab}
                 centered={true}
-                indicatorColor="secondary"
-                textColor="secondary"
+                indicatorColor="primary"
+                textColor="primary"
               >
                 <Tab label="Sign In" value="1" />
                 <Tab label="Sign Up" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <SignIn handlechangetab={handlechangetab} />
+              <SignIn handlechangetab={handlechangetab} handleloginuser={handleloginuser}/>
             </TabPanel>
             <TabPanel  value="2">
               <Signup handlechangetab={handlechangetab} />

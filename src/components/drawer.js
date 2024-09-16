@@ -14,6 +14,7 @@ import {
   MenuItem,
   Menu,
   Stack,
+  Card,
 } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupsIcon from '@mui/icons-material/Groups';
@@ -80,13 +81,15 @@ class DrawerAppbar extends Component {
         <Divider />
         <List>
           {["Dashboard", "Team", "Course", "Schedule", "Account"].map((text, index) => (
-            <ListItem key={text} disablePadding>
+            <ListItem key={text} >
+              <Card sx={{borderRadius:'5px', backgroundColor:'#6A9C89', height:'100%', width:'100%'}}>
               <ListItemButton>
                 <ListItemIcon>
                   {icon[index]}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
+              </Card>
             </ListItem>
           ))}
         </List>
@@ -104,7 +107,7 @@ class DrawerAppbar extends Component {
           sx={{
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
             ml: { sm: `${this.state.drawerWidth}px` },
-            backgroundColor: "#ffff",
+            backgroundColor: "#C4DAD2",
             boxShadow: "none",
             // display: { xs: 'block', sm: 'none' },
           }}
@@ -157,8 +160,9 @@ class DrawerAppbar extends Component {
         </AppBar>
         <Box
           component="nav"
-          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 } }}
+          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 },  }}
           aria-label="mailbox folders"
+
         >
           <Drawer
             variant="temporary"
@@ -169,7 +173,7 @@ class DrawerAppbar extends Component {
               keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-              display: { xs: "block", sm: "none" },
+              display: { xs: "block", sm: "none",  },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: this.state.drawerWidth,
@@ -180,7 +184,7 @@ class DrawerAppbar extends Component {
           </Drawer>
           <Drawer
             variant="permanent"
-            sx={{
+            sx={{ color:'#C4DAD2',
               display: { xs: "none", sm: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
@@ -194,7 +198,7 @@ class DrawerAppbar extends Component {
         </Box>
         <Box
           component="main"
-          sx={{
+          sx={{ 
             flexGrow: 1,
             p: 3,
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
