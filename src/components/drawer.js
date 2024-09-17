@@ -16,19 +16,20 @@ import {
   Stack,
   Card,
 } from "@mui/material";
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupsIcon from '@mui/icons-material/Groups';
-import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import TodayIcon from '@mui/icons-material/Today';
-import ImportContactsIcon from '@mui/icons-material/ImportContacts';
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import GroupsIcon from "@mui/icons-material/Groups";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import TodayIcon from "@mui/icons-material/Today";
+import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../logo.png";
 import "../App.css";
 import Snack from "./snackbar";
 import { connect } from "react-redux";
-import { fetchProfile} from "../redux/profileSlice"
+import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice2";
+import { Link, Navigate, Outlet } from "react-router-dom";
 
 class DrawerAppbar extends Component {
   constructor(props) {
@@ -40,11 +41,10 @@ class DrawerAppbar extends Component {
       anchorEl: null,
       drawerWidth: 240,
       toggleSnack: false,
-      messageSnack: '',
-      severitySnack: ''
+      messageSnack: "",
+      severitySnack: "",
     };
   }
-
 
   handleDrawerClose = () => {
     this.setState({ isClosing: true, mobileOpen: false });
@@ -71,8 +71,19 @@ class DrawerAppbar extends Component {
     this.setState({ anchorEl: null });
   };
 
+  handlelogoutUser = () =>{
+    console.log('in logout')
+    this.props.logoutUser()
+    return <Navigate to='/login' replace={true}/>
+  }
+  handleaccount = () =>{
+    console.log('handle account')
+    return <Navigate to='account' replace/>
+  }
+
   drawer = () => {
-    const icon = [<DashboardIcon/>, <GroupsIcon/>, <ImportContactsIcon/>, <TodayIcon/>, <AccountBoxIcon/>]
+    const icon = [<DashboardIcon />, <GroupsIcon />, <ImportContactsIcon />, <TodayIcon />, <AccountBoxIcon />,];
+    const path = ["/", "/team", "course", "schedule", "account"];
     return (
       <div>
         <Toolbar>
@@ -80,18 +91,27 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider />
         <List>
-          {["Dashboard", "Team", "Course", "Schedule", "Account"].map((text, index) => (
-            <ListItem key={text} >
-              <Card sx={{borderRadius:'5px', backgroundColor:'#6A9C89', height:'100%', width:'100%'}}>
-              <ListItemButton>
-                <ListItemIcon>
-                  {icon[index]}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-              </Card>
-            </ListItem>
-          ))}
+          {["Dashboard", "Team", "Course", "Schedule", "Account"].map(
+            (text, index) => (
+              <ListItem key={text}>
+                <Card
+                  sx={{
+                    borderRadius: "5px",
+                    backgroundColor: "#6A9C89",
+                    height: "100%",
+                    width: "100%",
+                  }}
+                >
+                  <Link to={path[index]} style={{textDecoration: 'none', color: 'inherit'}}>
+                    <ListItemButton>
+                      <ListItemIcon>{icon[index]}</ListItemIcon>
+                      <ListItemText primary={text} />
+                    </ListItemButton>
+                  </Link>
+                </Card>
+              </ListItem>
+            )
+          )}
         </List>
         <Divider />
       </div>
@@ -99,7 +119,7 @@ class DrawerAppbar extends Component {
   };
 
   render() {
-    const {auth, logoutUser} = this.props
+    const { auth, logoutUser } = this.props;
     return (
       <Box sx={{ display: "flex" }}>
         <AppBar
@@ -152,17 +172,21 @@ class DrawerAppbar extends Component {
                 open={Boolean(this.state.anchorEl)}
                 onClose={this.handleClose}
               >
+                <Link to='/login' style={{textDecoration: 'none', color: 'inherit'}}>
                 <MenuItem onClick={logoutUser}>Logout</MenuItem>
-                <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                </Link>
+                <Link to='/account' style={{textDecoration: 'none', color: 'inherit'}} >
+                <MenuItem >My account</MenuItem>
+                </Link>
+                
               </Menu>
             </Stack>
           </Toolbar>
         </AppBar>
         <Box
           component="nav"
-          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 },  }}
+          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 } }}
           aria-label="mailbox folders"
-
         >
           <Drawer
             variant="temporary"
@@ -173,7 +197,7 @@ class DrawerAppbar extends Component {
               keepMounted: true, // Better open performance on mobile.
             }}
             sx={{
-              display: { xs: "block", sm: "none",  },
+              display: { xs: "block", sm: "none" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: this.state.drawerWidth,
@@ -184,7 +208,8 @@ class DrawerAppbar extends Component {
           </Drawer>
           <Drawer
             variant="permanent"
-            sx={{ color:'#C4DAD2',
+            sx={{
+              color: "#C4DAD2",
               display: { xs: "none", sm: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
@@ -198,28 +223,35 @@ class DrawerAppbar extends Component {
         </Box>
         <Box
           component="main"
-          sx={{ 
+          sx={{
             flexGrow: 1,
             p: 3,
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
           }}
         >
           <Toolbar />
+          <Outlet />
           {/* page content */}
         </Box>
-        {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
+        {this.state.toggleSnack ? (
+          <Snack
+            open={this.state.toggleSnack}
+            message={this.state.messageSnack}
+            severity={this.state.severitySnack}
+          />
+        ) : null}
       </Box>
     );
   }
 }
 
-const mapStateToProps = (state) =>({
+const mapStateToProps = (state) => ({
   auth: state.auth,
-  profile: state.profile
-})
-const mapDispatchToProps = (dispatch) =>({
+  profile: state.profile,
+});
+const mapDispatchToProps = (dispatch) => ({
   logoutUser: () => dispatch(logoutUser()),
-  fetchProfile: (email) => dispatch(fetchProfile(email))
-})
+  fetchProfile: (email) => dispatch(fetchProfile(email)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(DrawerAppbar);

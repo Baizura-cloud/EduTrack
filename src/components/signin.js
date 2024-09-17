@@ -48,9 +48,6 @@ class SignIn extends Component {
     const loginData = { ...this.state.loginData, [name]: value };
     this.setState({ loginData });
   };
-
-
-  
   onSubmit = () => {
     if (emailValidation(this.state.loginData.email)) {
       try {

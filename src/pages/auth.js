@@ -15,7 +15,7 @@ export default function Auth() {
   const [show, setShow] = React.useState(true);
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch()
-  //const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handlechangetab = (event, newValue) => {
     setValue(newValue);
@@ -26,25 +26,15 @@ export default function Auth() {
       setShow(true);
     }
   };
-  useEffect(()=>{
-    // if(auth.fetchstatus == 'success'){
-    //   navigate('/main')
-    // }
-  })
 
   const handleloginuser = (data) =>{
     console.log('dispatch')
     console.log(data)
     dispatch(loginUser(data))
-    //navigate('/main')
+    setTimeout(function(){
+      navigate('/')
+    }, 3000)
   }
-  const handlelogoutuser = (data) =>{
-    console.log('dispatch')
-    console.log(data)
-    dispatch(loginUser(data))
-    //navigate('/')
-  }
-
   return (
     <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>
       <CardContent>
