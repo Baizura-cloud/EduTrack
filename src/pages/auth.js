@@ -2,20 +2,26 @@ import * as React from "react";
 import "../App.css";
 import Signup from "../components/signup";
 import SignIn from "../components/signin";
-import {Card, CardContent, Tab, Box, Typography, Stack} from "@mui/material";
+import { Card, CardContent, Tab, Box, Typography, Stack } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import logo from "../logo.png";
-import { useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {  useSelector, useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { loginUser } from "../redux/authSlice2";
+import Snack from "../components/snackbar";
+import Loading from "../components/loading";
 
 export default function Auth() {
-  const [value, setValue] = React.useState("1");
-  const [show, setShow] = React.useState(true);
+  const [value, setValue] = useState("1");
+  const [show, setShow] = useState(true);
+  const [toggleSnack, settoggleSnack] = useState(false);
+  const [loading, setloading] = useState(false);
+  const [messageSnack, setmessageSnack] = useState("");
+  const [severitySnack, setSeveritySnack] = useState("");
   const auth = useSelector((state) => state.auth);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handlechangetab = (event, newValue) => {
     setValue(newValue);
@@ -27,45 +33,74 @@ export default function Auth() {
     }
   };
 
-  const handleloginuser = (data) =>{
-    console.log('dispatch')
-    console.log(data)
-    dispatch(loginUser(data))
-    setTimeout(function(){
-      navigate('/')
-    }, 3000)
-  }
+  const handleloginuser = (data) => {
+    console.log("dispatch");
+    console.log(data);
+    dispatch(loginUser(data));
+    setTimeout(function () {
+      setloading(true)
+      const local = localStorage.getItem("persist:root");
+      const data = JSON.parse(local);
+      const authr = JSON.parse(data.auth);
+      if (data) {
+        if (authr.fetchstatus == "success") {
+          navigate("/");
+          setloading(false)
+        } else {
+          settoggleSnack(true);
+          setmessageSnack("Invalid Credentials");
+          setSeveritySnack("error");
+          console.log("call snackbar");
+          setloading(false)
+        }
+      } else {
+        settoggleSnack(true);
+        setmessageSnack("Invalid Credentials");
+        setSeveritySnack("error");
+        setloading(false)
+      }
+    }, 2000);
+  };
   return (
+    <>
+    {loading? <Loading openload={loading} /> : null}
     <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>
       <CardContent>
-        <Box sx={{ width: 500, maxWidth: "100%", height: 'auto' }}>
+        <Box sx={{ width: 500, maxWidth: "100%", height: "auto" }}>
           <TabContext value={value}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                <Stack sx={{justifyContent: "center", alignItems: "center"}}>
-                  <img className="logo" alt="logo" loading="lazy" src={logo} />
-                  <Typography>
-                    {show? 'Welcome back, enter your credential to sign in' : 'Create your account to join us'}
-                  </Typography>
-                </Stack>
+              <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
+                <img className="logo" alt="logo" loading="lazy" src={logo} />
+                <Typography>
+                  {show
+                    ? "Welcome back, enter your credential to sign in"
+                    : "Create your account to join us"}
+                </Typography>
+              </Stack>
               <TabList
                 onChange={handlechangetab}
                 centered={true}
-                indicatorColor="primary"
-                textColor="primary"
+                TabIndicatorProps={{ sx: { backgroundColor: "#AF1763" } }}
               >
                 <Tab label="Sign In" value="1" />
                 <Tab label="Sign Up" value="2" />
               </TabList>
             </Box>
             <TabPanel value="1">
-              <SignIn handlechangetab={handlechangetab} handleloginuser={handleloginuser}/>
+              <SignIn
+                handlechangetab={handlechangetab}
+                handleloginuser={handleloginuser}
+              />
             </TabPanel>
-            <TabPanel  value="2">
+            <TabPanel value="2">
               <Signup handlechangetab={handlechangetab} />
             </TabPanel>
           </TabContext>
         </Box>
       </CardContent>
+      <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />
+      {toggleSnack ? <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />: <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />}
     </Card>
+  </>
   );
 }

@@ -15,9 +15,7 @@ export const RequireAuth = () => {
   const { user } = useAuth();
   const location = useLocation();
   const token = localStorage.getItem('sb-dgwovnpabxkmvooluiho-auth-token')  
- // console.log(user)
   if (!token) {
-   // console.log(user)
     return (
       <Navigate
         to={{ pathname: "/unauthorized", state: { from: location } }}

@@ -44,16 +44,17 @@ export default function Dashboard() {
     setValue(newValue);
   };
   return (
-    <Container>
+    <Container >
       <Box>
-        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider",}} >
           <Tabs
             value={value}
             onChange={handleChange}
             aria-label="basic tabs example"
             centered
+           TabIndicatorProps={{sx:{backgroundColor:"#AF1763", }}}
           >
-            <Tab label="Dashboard Personal" {...a11yProps(0)} />
+            <Tab  label="Dashboard Personal" {...a11yProps(0)}  />
             <Tab label="Dashboard Team" {...a11yProps(1)} />
           </Tabs>
         </Box>

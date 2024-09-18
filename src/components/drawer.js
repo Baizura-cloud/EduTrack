@@ -23,7 +23,7 @@ import TodayIcon from "@mui/icons-material/Today";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
-import logo from "../logo.png";
+import logo from "../logo2.png";
 import "../App.css";
 import Snack from "./snackbar";
 import { connect } from "react-redux";
@@ -71,16 +71,6 @@ class DrawerAppbar extends Component {
     this.setState({ anchorEl: null });
   };
 
-  handlelogoutUser = () =>{
-    console.log('in logout')
-    this.props.logoutUser()
-    return <Navigate to='/login' replace={true}/>
-  }
-  handleaccount = () =>{
-    console.log('handle account')
-    return <Navigate to='account' replace/>
-  }
-
   drawer = () => {
     const icon = [<DashboardIcon />, <GroupsIcon />, <ImportContactsIcon />, <TodayIcon />, <AccountBoxIcon />,];
     const path = ["/", "/team", "course", "schedule", "account"];
@@ -89,15 +79,15 @@ class DrawerAppbar extends Component {
         <Toolbar>
           <img alt="logo" src={logo} />
         </Toolbar>
-        <Divider />
+        <Divider sx={{borderWidth:2}}/>
         <List>
           {["Dashboard", "Team", "Course", "Schedule", "Account"].map(
             (text, index) => (
-              <ListItem key={text}>
+              <ListItem key={text} sx={{}}>
                 <Card
                   sx={{
                     borderRadius: "5px",
-                    backgroundColor: "#6A9C89",
+                   // backgroundColor: "#D8A25E",
                     height: "100%",
                     width: "100%",
                   }}
@@ -113,7 +103,6 @@ class DrawerAppbar extends Component {
             )
           )}
         </List>
-        <Divider />
       </div>
     );
   };
@@ -127,17 +116,11 @@ class DrawerAppbar extends Component {
           sx={{
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
             ml: { sm: `${this.state.drawerWidth}px` },
-            backgroundColor: "#C4DAD2",
+            backgroundColor: "#ffffff",
             boxShadow: "none",
-            // display: { xs: 'block', sm: 'none' },
           }}
         >
           <Toolbar>
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              justifyContent={"space-between"}
-            >
               <IconButton
                 color="black"
                 aria-label="open drawer"
@@ -148,17 +131,22 @@ class DrawerAppbar extends Component {
                 <MenuIcon />
               </IconButton>
               <IconButton
-                size="large"
+                fontSize="large"
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
                 aria-haspopup="true"
                 onClick={this.handleMenu}
-                color="black"
+                sx={{
+                  position: 'absolute',
+                  top: 10,
+                  right: 20
+                }}
               >
                 <AccountCircle />
               </IconButton>
               <Menu
                 id="menu-appbar"
+                onClick={this.handleClose}
                 anchorEl={this.state.anchorEl}
                 anchorOrigin={{
                   vertical: "top",
@@ -180,12 +168,12 @@ class DrawerAppbar extends Component {
                 </Link>
                 
               </Menu>
-            </Stack>
+            {/* </Stack> */}
           </Toolbar>
         </AppBar>
         <Box
           component="nav"
-          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 } }}
+          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 },   }}
           aria-label="mailbox folders"
         >
           <Drawer
@@ -209,7 +197,6 @@ class DrawerAppbar extends Component {
           <Drawer
             variant="permanent"
             sx={{
-              color: "#C4DAD2",
               display: { xs: "none", sm: "block" },
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
@@ -227,6 +214,7 @@ class DrawerAppbar extends Component {
             flexGrow: 1,
             p: 3,
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
+            
           }}
         >
           <Toolbar />
