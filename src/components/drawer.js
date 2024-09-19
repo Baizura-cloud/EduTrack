@@ -1,20 +1,6 @@
 import React, { Component } from "react";
-import AppBar from "@mui/material/AppBar";
-import {
-  Box,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-  MenuItem,
-  Menu,
-  Stack,
-  Card,
+import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, 
+  ListItemText, Toolbar, MenuItem, Menu, Card,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -29,7 +15,7 @@ import Snack from "./snackbar";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice2";
-import { Link, Navigate, Outlet } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 
 class DrawerAppbar extends Component {
   constructor(props) {

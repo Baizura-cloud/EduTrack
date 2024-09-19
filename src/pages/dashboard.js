@@ -44,7 +44,6 @@ export default function Dashboard() {
     setValue(newValue);
   };
   return (
-    <Container >
       <Box>
         <Box sx={{ borderBottom: 1, borderColor: "divider",}} >
           <Tabs
@@ -65,6 +64,5 @@ export default function Dashboard() {
           <DashboardTeam/>
         </CustomTabPanel>
       </Box>
-    </Container>
   );
 }

@@ -1,178 +1,162 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import React, { Component } from "react";
+import FormControl from "@mui/material/FormControl";
+import Button from "@mui/material/Button";
+import InputLabel from "@mui/material/InputLabel";
+import Input from "@mui/material/Input";
+import FormHelperText from "@mui/material/FormHelperText";
+import { Card, CardActions, CardContent, Box } from "@mui/material";
+import {fetchProfile} from "../redux/profileSlice"
+import { connect } from "react-redux";
 
-export default function Account() {
-  return (
-    <Box
-      component="form"
-      sx={{ '& .MuiTextField-root': { m: 1, width: '25ch' } }}
-      noValidate
-      autoComplete="off"
-    >
-      <div>
-        <TextField
-          required
-          id="outlined-required"
-          label="Required"
-          defaultValue="Hello World"
-        />
-        <TextField
-          disabled
-          id="outlined-disabled"
-          label="Disabled"
-          defaultValue="Hello World"
-        />
-        <TextField
-          id="outlined-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-        />
-        <TextField
-          id="outlined-read-only-input"
-          label="Read Only"
-          defaultValue="Hello World"
-          slotProps={{
-            input: {
-              readOnly: true,
-            },
-          }}
-        />
-        <TextField
-          id="outlined-number"
-          label="Number"
-          type="number"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-        />
-        <TextField id="outlined-search" label="Search field" type="search" />
-        <TextField
-          id="outlined-helperText"
-          label="Helper text"
-          defaultValue="Default Value"
-          helperText="Some important text"
-        />
-      </div>
-      <div>
-        <TextField
-          required
-          id="filled-required"
-          label="Required"
-          defaultValue="Hello World"
-          variant="filled"
-        />
-        <TextField
-          disabled
-          id="filled-disabled"
-          label="Disabled"
-          defaultValue="Hello World"
-          variant="filled"
-        />
-        <TextField
-          id="filled-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          variant="filled"
-        />
-        <TextField
-          id="filled-read-only-input"
-          label="Read Only"
-          defaultValue="Hello World"
-          variant="filled"
-          slotProps={{
-            input: {
-              readOnly: true,
-            },
-          }}
-        />
-        <TextField
-          id="filled-number"
-          label="Number"
-          type="number"
-          variant="filled"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-        />
-        <TextField
-          id="filled-search"
-          label="Search field"
-          type="search"
-          variant="filled"
-        />
-        <TextField
-          id="filled-helperText"
-          label="Helper text"
-          defaultValue="Default Value"
-          helperText="Some important text"
-          variant="filled"
-        />
-      </div>
-      <div>
-        <TextField
-          required
-          id="standard-required"
-          label="Required"
-          defaultValue="Hello World"
-          variant="standard"
-        />
-        <TextField
-          disabled
-          id="standard-disabled"
-          label="Disabled"
-          defaultValue="Hello World"
-          variant="standard"
-        />
-        <TextField
-          id="standard-password-input"
-          label="Password"
-          type="password"
-          autoComplete="current-password"
-          variant="standard"
-        />
-        <TextField
-          id="standard-read-only-input"
-          label="Read Only"
-          defaultValue="Hello World"
-          variant="standard"
-          slotProps={{
-            input: {
-              readOnly: true,
-            },
-          }}
-        />
-        <TextField
-          id="standard-number"
-          label="Number"
-          type="number"
-          variant="standard"
-          slotProps={{
-            inputLabel: {
-              shrink: true,
-            },
-          }}
-        />
-        <TextField
-          id="standard-search"
-          label="Search field"
-          type="search"
-          variant="standard"
-        />
-        <TextField
-          id="standard-helperText"
-          label="Helper text"
-          defaultValue="Default Value"
-          helperText="Some important text"
-          variant="standard"
-        />
-      </div>
-    </Box>
-  );
+class Account extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      profile: this.props.fetchProfile("baizura1996@gmail.com"),
+      error: false,
+      error1: false,
+    };
+  }
+
+  handleChange = (e) => {
+    let { name, value } = e.target;
+    if (e.target.type === "checkbox") {
+      value = e.target.checked;
+    }
+    if (e.target.name == "title") {
+      if (e.target.value == "") {
+        this.setState({ error: true });
+      } else {
+        this.setState({ error: false });
+      }
+    } else if (e.target.name == "description") {
+      if (e.target.value == "") {
+        this.setState({ error1: true });
+      } else {
+        this.setState({ error: false });
+      }
+    }
+
+    const activeItem = { ...this.state.activeItem, [name]: value };
+    this.setState({ activeItem });
+  };
+
+  handleSubmit = (data) => {
+    console.log(data)
+  }
+
+  render() {
+    const { profile} = this.props;
+    return (
+      <Box sx={{ minWidth: 275 }}>
+      <Card variant="outlined" >
+        Settings
+        <CardContent sx={{textAlign:'start'}}>
+          <InputLabel>First Name</InputLabel>
+          <FormControl error={this.state.error} >
+            <Input
+              type="text"
+              id="first-name"
+              name="firstname"
+              value={profile.firstname}
+              onChange={this.handleChange}
+            />
+            <FormHelperText id="my-helper-text">
+              {this.state.error ? "Must not empty" : " "}
+            </FormHelperText>
+          </FormControl>
+
+          <InputLabel sx={{ paddingTop: 2 }}>Last Name</InputLabel>
+          <FormControl error={this.state.error1} >
+            <Input
+              type="text"
+              id="last-name"
+              name="lastname"
+              value={this.state.profile.lastname}
+              onChange={this.handleChange}
+            />
+            <FormHelperText id="my-helper-text">
+              {this.state.error1 ? "Must not empty" : " "}
+            </FormHelperText>
+          </FormControl>
+
+          <InputLabel sx={{ paddingTop: 2 }}>Address</InputLabel>
+          <FormControl error={this.state.error1} >
+            <Input
+              type="text"
+              id="address"
+              name="address"
+              value={this.state.profile.address}
+              onChange={this.handleChange}
+            />
+            <FormHelperText id="my-helper-text">
+              {this.state.error1 ? "Must not empty" : " "}
+            </FormHelperText>
+          </FormControl>
+
+          <InputLabel sx={{ paddingTop: 2 }}>Phone Number</InputLabel>
+          <FormControl error={this.state.error1} >
+            <Input
+              type="text"
+              id="phone-number"
+              name="phone"
+              value={this.state.profile.phone}
+              onChange={this.handleChange}
+            />
+            <FormHelperText id="my-helper-text">
+              {this.state.error1 ? "Must not empty" : " "}
+            </FormHelperText>
+          </FormControl>
+
+          <InputLabel sx={{ paddingTop: 2 }}>Email</InputLabel>
+          <FormControl>
+            <Input
+              type="text"
+              id="email"
+              name="email"
+              value={this.state.profile.email}
+              disabled
+            />
+            <FormHelperText id="my-helper-text">
+              Contact admin to change your email
+            </FormHelperText>
+          </FormControl>
+
+          <InputLabel sx={{ paddingTop: 2 }}>Role</InputLabel>
+          <FormControl  >
+            <Input
+              type="text"
+              id="role"
+              name="role"
+              value={this.state.profile.role}
+              disabled
+            />
+            <FormHelperText id="my-helper-text">
+              Contact admin to change your role
+            </FormHelperText>
+          </FormControl>
+
+        </CardContent>
+        <CardActions>
+          <Button
+            variant="outlined"
+            color="success"
+            onClick={() => this.handleSubmit(this.state.activeItem)}
+          >
+            Save
+          </Button>
+        </CardActions>
+      </Card>
+      </Box>
+    );
+  }
 }
+
+const mapStateToProps = (state) =>({
+  profile: state.profile
+})
+const mapDispatchToProps = (dispatch) =>({
+  fetchProfile: (email) => dispatch(fetchProfile(email))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Account)

@@ -4,7 +4,7 @@ import Signup from "../components/signup";
 import SignIn from "../components/signin";
 import { Card, CardContent, Tab, Box, Typography, Stack } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import logo from "../logo.png";
+import logo from "../logo2.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -34,11 +34,12 @@ export default function Auth() {
   };
 
   const handleloginuser = (data) => {
+    console.log("set loading true")
+    setloading(true)
     console.log("dispatch");
     console.log(data);
     dispatch(loginUser(data));
     setTimeout(function () {
-      setloading(true)
       const local = localStorage.getItem("persist:root");
       const data = JSON.parse(local);
       const authr = JSON.parse(data.auth);
@@ -47,6 +48,7 @@ export default function Auth() {
           navigate("/");
           setloading(false)
         } else {
+          console.log(loading)
           settoggleSnack(true);
           setmessageSnack("Invalid Credentials");
           setSeveritySnack("error");
@@ -98,8 +100,7 @@ export default function Auth() {
           </TabContext>
         </Box>
       </CardContent>
-      <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />
-      {toggleSnack ? <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />: <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} />}
+      {toggleSnack? <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} /> : null}
     </Card>
   </>
   );
