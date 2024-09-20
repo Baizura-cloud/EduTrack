@@ -1,5 +1,12 @@
 This project is currently work in progress
 
+database sketch:
+
+
+![data_diagram](https://github.com/user-attachments/assets/8bf6f288-d2e5-4791-bcee-6a84c5c9b5d6)
+
+
+
 Current commit:
 1. UI page for Sign In & Sign Up
 
