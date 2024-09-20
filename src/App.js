@@ -5,9 +5,10 @@ import Account from "./pages/account"
 import Dashboard from "./pages/dashboard";
 import Drawer from "./components/drawer";
 import Unauthorized from "./pages/unautharized";
-import Team from "./pages/team";
+import StudentClass from "./pages/studentclass";
+import StudentList from "./components/studentlist"
 import Course from "./pages/course";
-import Schedule from "./pages/schedule";
+import Event from "./pages/event";
 import { AuthProvider, RequireAuth } from "./context/auth";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -22,9 +23,10 @@ function App() {
         <Route element={<div className="App"><ErrorPage /></div>}path="/error"/>
         <Route element={<RequireAuth />}>
            <Route element={<div className="App"><Dashboard /></div>}path="/"/>
-           <Route element={<div className="App"><Team /></div>}path="/team"/>
+           <Route element={<div className="App"><StudentClass /></div>}path="/studentclass"/>
+           <Route element={<div className="App"><StudentList /></div>}path="/studentlist"/>
            <Route element={<div className="App"><Course /></div>}path="/course"/>
-           <Route element={<div className="App"><Schedule /></div>}path="/schedule"/>
+           <Route element={<div className="App"><Event /></div>}path="/event"/>
           <Route element={<div className="App"><Account /></div>}path="/account"/>
         </Route>
         </Route>

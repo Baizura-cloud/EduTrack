@@ -98,58 +98,58 @@ class Tasklist extends Component {
     }
   };
   handleDelete = (item) => {
-    this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
+    // this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
   };
   handleSubmitItem = (item) => {
-    this.toggle();
-    try {
-      this.submitItem(item);
-      this.togglesnack("submit");
-    } catch (error) {
-      console.log(error);
-      this.togglesnack("error");
-    }
-    this.refreshList();
+    // this.toggle();
+    // try {
+    //   this.submitItem(item);
+    //   this.togglesnack("submit");
+    // } catch (error) {
+    //   console.log(error);
+    //   this.togglesnack("error");
+    // }
+    // this.refreshList();
   };
   async submitItem(item) {
-    try {
-      if (item.id) {
-        await supabase
-          .from("todos")
-          .update(item)
-          .eq("id", item.id)
-          .then(this.refreshList());
-        return;
-      }
-      await supabase.from("todos").insert(item).then(this.refreshList());
-      return;
-    } catch (error) {
-      return error;
-    }
+    // try {
+    //   if (item.id) {
+    //     await supabase
+    //       .from("todos")
+    //       .update(item)
+    //       .eq("id", item.id)
+    //       .then(this.refreshList());
+    //     return;
+    //   }
+    //   await supabase.from("todos").insert(item).then(this.refreshList());
+    //   return;
+    // } catch (error) {
+    //   return error;
+    // }
   }
   handleDeleteItem = (item) => {
-    this.handleDelete();
-    item = this.state.activeItem;
-    try {
-      this.deleteItem(item);
-      this.togglesnack("delete");
-    } catch (error) {
-      this.togglesnack("error");
-      console.log(error);
-    }
-    this.refreshList();
+    // this.handleDelete();
+    // item = this.state.activeItem;
+    // try {
+    //   this.deleteItem(item);
+    //   this.togglesnack("delete");
+    // } catch (error) {
+    //   this.togglesnack("error");
+    //   console.log(error);
+    // }
+    // this.refreshList();
   };
   async deleteItem(item) {
-    try {
-      await supabase
-        .from("todos")
-        .delete()
-        .eq("id", item.id)
-        .then(this.refreshList());
-      return;
-    } catch (error) {
-      return error;
-    }
+    // try {
+    //   await supabase
+    //     .from("todos")
+    //     .delete()
+    //     .eq("id", item.id)
+    //     .then(this.refreshList());
+    //   return;
+    // } catch (error) {
+    //   return error;
+    // }
   }
 
   createItem = () => {
@@ -273,12 +273,13 @@ class Tasklist extends Component {
   };
 
   render() {
+    const {title} = this.props
     return (
       <>
         <Card variant="outlined" sx={{ minWidth: 275 }}>
           <CardHeader
             title="Task"
-            subheader="Breakdown your daily task"
+            subheader={title}
             action={
               <div align="right">
                 <Button

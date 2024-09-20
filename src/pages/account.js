@@ -132,7 +132,7 @@ class Account extends Component {
               disabled
             />
             <FormHelperText id="my-helper-text">
-              Contact admin to change your role
+              Contact super admin to change your role
             </FormHelperText>
           </FormControl>
 

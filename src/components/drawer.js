@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice2";
 import { Link, Outlet } from "react-router-dom";
-
+import Loading from "./loading";
 class DrawerAppbar extends Component {
   constructor(props) {
     super(props);
@@ -29,6 +29,7 @@ class DrawerAppbar extends Component {
       toggleSnack: false,
       messageSnack: "",
       severitySnack: "",
+      loading: false
     };
   }
 
@@ -57,9 +58,17 @@ class DrawerAppbar extends Component {
     this.setState({ anchorEl: null });
   };
 
+  // handlelogoutUser = () =>{
+  //   this.setState({loading:true})
+  //   setTimeout(function  () {
+  //     this.props.logoutUser()
+  //     this.setState({loading:false})
+  //   }, 2000)
+  // }
+
   drawer = () => {
     const icon = [<DashboardIcon />, <GroupsIcon />, <ImportContactsIcon />, <TodayIcon />, <AccountBoxIcon />,];
-    const path = ["/", "/team", "course", "schedule", "account"];
+    const path = ["/", "/studentclass", "course", "event", "account"];
     return (
       <div>
         <Toolbar>
@@ -67,7 +76,7 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider sx={{borderWidth:2}}/>
         <List>
-          {["Dashboard", "Team", "Course", "Schedule", "Account"].map(
+          {["Dashboard", "Class", "Course", "Event", "Account"].map(
             (text, index) => (
               <ListItem key={text} sx={{}}>
                 <Card
@@ -97,6 +106,7 @@ class DrawerAppbar extends Component {
     const { auth, logoutUser } = this.props;
     return (
       <Box sx={{ display: "flex" }}>
+        {/* {this.state.loading? <Loading openload={this.state.loading}/>: null} */}
         <AppBar
           position="fixed"
           sx={{

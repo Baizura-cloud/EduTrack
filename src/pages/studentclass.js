@@ -8,70 +8,79 @@ import Typography from "@mui/material/Typography";
 import { Stack } from "@mui/material";
 import { Navigate } from "react-router-dom";
 
-class Course extends React.Component {
+class StudentClass extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       listStatus: false,
       activeList: [],
-      courseList: [
+      classList: [
         {
           //dummy data
           id: 1,
-          name: "Science",
-          classCount: 2,
-          className: [
+          name: "Class 13-A",
+          studentCount: 4,
+          student: [
             {
-              name: "13-A",
+              name: "Lana Micheal",
             },
             {
-              name: "13-B",
+              name: "John Lee",
+            },
+            {
+              name: "Skye Fye",
+            },
+            {
+              name: "Tony Marlone",
             },
           ],
         },
         {
           //dummy data
           id: 2,
-          name: "Physics",
-          classCount: 3,
-          className: [
+          name: "Class 13-B",
+          studentCount: 4,
+          student: [
             {
-              name: "14-A",
+              name: "Charles Mick",
             },
             {
-              name: "14-B",
+              name: "Nance Lynn",
             },
             {
-              name: "14-C",
+              name: "Hans Lorve",
+            },
+            {
+              name: "Kyle Fyn",
             },
           ],
         },
       ],
     };
   }
-  handleClass = () => {
-    console.log("class ?");
+  handleStudentlist = (studentList) => {
+    console.log("nav to student list page");
   };
-  rendercourseCard = () => {
+  renderclassCard = () => {
     return (
       <>
-        {this.state.courseList
-          ? this.state.courseList.map((course) => (
+        {this.state.classList
+          ? this.state.classList.map((classStudent) => (
               <Card variant="outlined">
                 <CardContent>
                   <Typography
                     gutterBottom
                     sx={{ color: "text.primary", fontSize: 16 }}
                   >
-                    {course.name}
+                    {classStudent.name}
                   </Typography>
                   <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    {course.classCount} Class(es)
+                    {classStudent.studentCount} Student
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" onClick={this.handleClass}>
-                    Class
+                  <Button size="small" onClick={this.handleStudentlist}>
+                    Student List
                   </Button>
                 </CardActions>
               </Card>
@@ -89,11 +98,11 @@ class Course extends React.Component {
           useFlexGap
           sx={{ flexWrap: "wrap" }}
         >
-          {this.rendercourseCard()}
+          {this.renderclassCard()}
         </Stack>
       </Box>
     );
   }
 }
 
-export default Course;
+export default StudentClass;

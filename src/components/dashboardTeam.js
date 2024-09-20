@@ -1,57 +1,20 @@
-import * as React from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionActions from '@mui/material/AccordionActions';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import Button from '@mui/material/Button';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid2";
+import Tasklist from "./taskList";
+import Bulletin from "./bulletinboard";
 
-export default function AccordionUsage() {
+export default function DashboardTeam() {
   return (
-    <div>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1-content"
-          id="panel1-header"
-        >
-          Accordion 1
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel2-content"
-          id="panel2-header"
-        >
-          Accordion 2
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-      </Accordion>
-      <Accordion defaultExpanded>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel3-content"
-          id="panel3-header"
-        >
-          Accordion Actions
-        </AccordionSummary>
-        <AccordionDetails>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-          malesuada lacus ex, sit amet blandit leo lobortis eget.
-        </AccordionDetails>
-        <AccordionActions>
-          <Button>Cancel</Button>
-          <Button>Agree</Button>
-        </AccordionActions>
-      </Accordion>
-    </div>
+    <Box sx={{ flexGrow: 1 }}>
+      <Grid container spacing={2}>
+        <Grid size={{ xs: 12, md: 4 }}>
+          <Tasklist title={'Task assigned'} />
+        </Grid>
+        <Grid size={{ xs: 12, md: 8 }}>
+          <Bulletin />
+        </Grid>
+      </Grid>
+    </Box>
   );
 }

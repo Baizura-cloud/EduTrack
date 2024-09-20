@@ -2,19 +2,17 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid2";
 import Tasklist from "./taskList";
-import Bulletin from "./bulletinboard";
-import { Typography } from "@mui/material";
+import ScheduleTimeline from "./scheduleTimeline";
 
-export default function BasicGrid() {
+export default function DashboardPersonal() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
         <Grid size={{ xs: 12, md: 4 }}>
-          <Tasklist />
+          <Tasklist title={'Breakdown your daily task'} />
         </Grid>
         <Grid size={{ xs: 12, md: 8 }}>
-          <Typography>Bulletin Board</Typography>
-          <Bulletin />
+          <ScheduleTimeline/>
         </Grid>
       </Grid>
     </Box>
