@@ -30,7 +30,7 @@ export const loginUser = createAsyncThunk("login-user", async (loginData, {dispa
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: { data: [{ email: '', isauth: false }], fetchstatus: "" },
+  initialState: { data: [], fetchstatus: "" },
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -45,7 +45,7 @@ const authSlice = createSlice({
         state.fetchstatus = "error";
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.data = { email: action.payload.data, isauth: true };
+        state.data = { user: action.payload.user };
         state.fetchstatus = "success";
       })
       .addCase(loginUser.pending, (state) => {

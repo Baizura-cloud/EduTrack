@@ -12,30 +12,33 @@ class Account extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      profile: this.props.fetchProfile("baizura1996@gmail.com"),
+      profile: {},
       error: false,
       error1: false,
     };
   }
 
+  componentDidMount() {
+    this.props.fetchProfile("baizura1996@gmail.com")
+    this.setState({})
+  }
+
   handleChange = (e) => {
     let { name, value } = e.target;
-    if (e.target.type === "checkbox") {
-      value = e.target.checked;
-    }
-    if (e.target.name == "title") {
-      if (e.target.value == "") {
-        this.setState({ error: true });
-      } else {
-        this.setState({ error: false });
-      }
-    } else if (e.target.name == "description") {
-      if (e.target.value == "") {
-        this.setState({ error1: true });
-      } else {
-        this.setState({ error: false });
-      }
-    }
+   
+    // if (e.target.name == "title") {
+    //   if (e.target.value == "") {
+    //     this.setState({ error: true });
+    //   } else {
+    //     this.setState({ error: false });
+    //   }
+    // } else if (e.target.name == "description") {
+    //   if (e.target.value == "") {
+    //     this.setState({ error1: true });
+    //   } else {
+    //     this.setState({ error: false });
+    //   }
+    // }
 
     const activeItem = { ...this.state.activeItem, [name]: value };
     this.setState({ activeItem });
@@ -58,7 +61,7 @@ class Account extends Component {
               type="text"
               id="first-name"
               name="firstname"
-              value={profile.firstname}
+              value={profile.data[0].firstname}
               onChange={this.handleChange}
             />
             <FormHelperText id="my-helper-text">
@@ -72,7 +75,7 @@ class Account extends Component {
               type="text"
               id="last-name"
               name="lastname"
-              value={this.state.profile.lastname}
+              value={profile.data[0].lastname}
               onChange={this.handleChange}
             />
             <FormHelperText id="my-helper-text">
@@ -86,7 +89,7 @@ class Account extends Component {
               type="text"
               id="address"
               name="address"
-              value={this.state.profile.address}
+              value={profile.data[0].address}
               onChange={this.handleChange}
             />
             <FormHelperText id="my-helper-text">
@@ -100,7 +103,7 @@ class Account extends Component {
               type="text"
               id="phone-number"
               name="phone"
-              value={this.state.profile.phone}
+              value={profile.data[0].phone}
               onChange={this.handleChange}
             />
             <FormHelperText id="my-helper-text">
@@ -114,7 +117,7 @@ class Account extends Component {
               type="text"
               id="email"
               name="email"
-              value={this.state.profile.email}
+              value={profile.data[0].email}
               disabled
             />
             <FormHelperText id="my-helper-text">
@@ -128,7 +131,7 @@ class Account extends Component {
               type="text"
               id="role"
               name="role"
-              value={this.state.profile.role}
+              value={profile.data[0].role}
               disabled
             />
             <FormHelperText id="my-helper-text">

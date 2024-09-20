@@ -34,74 +34,85 @@ export default function Auth() {
   };
 
   const handleloginuser = (data) => {
-    console.log("set loading true")
-    setloading(true)
+    console.log("set loading true");
+    setloading(true);
     console.log("dispatch");
     console.log(data);
     dispatch(loginUser(data));
     setTimeout(function () {
-      const local = localStorage.getItem("persist:root");
-      const data = JSON.parse(local);
-      const authr = JSON.parse(data.auth);
-      if (data) {
-        if (authr.fetchstatus == "success") {
-          navigate("/");
-          setloading(false)
+      const local = localStorage.getItem("persist:root"); //get local storage auth
+      if (local !== null) {
+        console.log('local not null')
+        console.log(local)
+        const jsonLocal = JSON.parse(local);  // local data as json
+        if (jsonLocal) {
+          console.log('got jsonLocal')
+          const authr = JSON.parse(jsonLocal.auth); //get auth response
+          if (authr.fetchstatus == "success") {
+            navigate("/");
+            setloading(false);
+          } else {
+            console.log(loading);
+            settoggleSnack(true);
+            setmessageSnack("Invalid Credentials");
+            setSeveritySnack("error");
+            console.log("call snackbar");
+            setloading(false);
+          }
         } else {
-          console.log(loading)
           settoggleSnack(true);
           setmessageSnack("Invalid Credentials");
           setSeveritySnack("error");
-          console.log("call snackbar");
-          setloading(false)
+          setloading(false);
         }
-      } else {
-        settoggleSnack(true);
-        setmessageSnack("Invalid Credentials");
-        setSeveritySnack("error");
-        setloading(false)
       }
     }, 2000);
   };
   return (
     <>
-    {loading? <Loading openload={loading} /> : null}
-    <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>
-      <CardContent>
-        <Box sx={{ width: 500, maxWidth: "100%", height: "auto" }}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
-                <img className="logo" alt="logo" loading="lazy" src={logo} />
-                <Typography>
-                  {show
-                    ? "Welcome back, enter your credential to sign in"
-                    : "Create your account to join us"}
-                </Typography>
-              </Stack>
-              <TabList
-                onChange={handlechangetab}
-                centered={true}
-                TabIndicatorProps={{ sx: { backgroundColor: "#AF1763" } }}
-              >
-                <Tab label="Sign In" value="1" />
-                <Tab label="Sign Up" value="2" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              <SignIn
-                handlechangetab={handlechangetab}
-                handleloginuser={handleloginuser}
-              />
-            </TabPanel>
-            <TabPanel value="2">
-              <Signup handlechangetab={handlechangetab} />
-            </TabPanel>
-          </TabContext>
-        </Box>
-      </CardContent>
-      {toggleSnack? <Snack open={toggleSnack} message={messageSnack} severity={severitySnack} /> : null}
-    </Card>
-  </>
+      {loading ? <Loading openload={loading} /> : null}
+      <Card elevation={3} sx={{ minWidth: 275, borderRadius: "10px" }}>
+        <CardContent>
+          <Box sx={{ width: 500, maxWidth: "100%", height: "auto" }}>
+            <TabContext value={value}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Stack sx={{ justifyContent: "center", alignItems: "center" }}>
+                  <img className="logo" alt="logo" loading="lazy" src={logo} />
+                  <Typography>
+                    {show
+                      ? "Welcome back, enter your credential to sign in"
+                      : "Create your account to join us"}
+                  </Typography>
+                </Stack>
+                <TabList
+                  onChange={handlechangetab}
+                  centered={true}
+                  TabIndicatorProps={{ sx: { backgroundColor: "#AF1763" } }}
+                >
+                  <Tab label="Sign In" value="1" />
+                  <Tab label="Sign Up" value="2" />
+                </TabList>
+              </Box>
+              <TabPanel value="1">
+                <SignIn
+                  handlechangetab={handlechangetab}
+                  handleloginuser={handleloginuser}
+                />
+              </TabPanel>
+              <TabPanel value="2">
+                <Signup handlechangetab={handlechangetab} />
+              </TabPanel>
+            </TabContext>
+          </Box>
+        </CardContent>
+        {toggleSnack ? (
+          <Snack
+            open={toggleSnack}
+            message={messageSnack}
+            severity={severitySnack}
+          />
+        ) : null}
+      </Card>
+    </>
   );
 }
