@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
+import FormDrawer from "./formdrawer";
 
 class Bulletin extends React.Component {
   constructor(props) {
@@ -20,6 +21,7 @@ class Bulletin extends React.Component {
           created_by: "badrulazura@gmail.com",
         },
       ],
+      toggleDrawer: false,
     };
   }
 
@@ -46,11 +48,15 @@ class Bulletin extends React.Component {
     );
   };
   createpost = () => {
-    //open modal
+    this.setState({toggleDrawer: !this.state.toggleDrawer}) //open drawer
+  };
+  toggle = () => {
+    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
   };
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
+        {this.state.toggleDrawer? <FormDrawer toggle={this.toggle} />:null}
         <Card variant="outlined">
           <CardHeader
             title="Bulletin Board"

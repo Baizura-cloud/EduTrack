@@ -16,7 +16,7 @@ export const updateProfile = createAsyncThunk('edit-profile', async(data, {rejec
         throw new Error("Data undefined")
     }
     try {
-        const {response, error} = await supabase.auth.update(data).eq("id", data.id)
+        const {response, error} = await supabase.from('profile').update(data).eq("id", data.id)
         if(error){
             return rejectWithValue(error.message)
         }
@@ -43,7 +43,7 @@ const profileSilce = createSlice({
             state.fetchstatus = 'error'
         })
         .addCase(updateProfile.fulfilled, (state,action) =>{
-            state.data = action.payload.data
+           // state.data = action.payload.data
             state.fetchstatus = 'success'
         })
         .addCase(updateProfile.pending, (state) =>{
