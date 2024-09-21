@@ -6,7 +6,7 @@ import TimelineConnector from "@mui/lab/TimelineConnector";
 import TimelineContent from "@mui/lab/TimelineContent";
 import TimelineOppositeContent from "@mui/lab/TimelineOppositeContent";
 import TimelineDot from "@mui/lab/TimelineDot";
-import { Card, CardContent } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 
 class ScheduleTimeline extends React.Component {
   constructor(props) {
@@ -61,7 +61,9 @@ class ScheduleTimeline extends React.Component {
 
   render() {
     return (
-      <Card>
+      <Card variant="outlined" sx={{ minWidth: 275 }}>
+        <CardHeader title="Schedule" subheader="Breakdown your daily schedule" 
+        sx={{ textAlign: "center" }} />
         <CardContent>
           <Timeline position="alternate">
             {this.renderTime()}

@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { Stack } from "@mui/material";
+import { CardHeader, Stack } from "@mui/material";
 import { Navigate } from "react-router-dom";
 
 class Course extends React.Component {
@@ -83,14 +83,19 @@ class Course extends React.Component {
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
-        <Stack
-          spacing={{ xs: 1, sm: 2 }}
-          direction="row"
-          useFlexGap
-          sx={{ flexWrap: "wrap" }}
-        >
-          {this.rendercourseCard()}
-        </Stack>
+        <Card variant="outlined" sx={{ padding: 2}}>
+          <CardHeader title="Course" sx={{ textAlign: "start", margin: 2 }} />
+          <CardContent>
+            <Stack
+              spacing={{ xs: 1, sm: 2 }}
+              direction="row"
+              useFlexGap
+              sx={{ flexWrap: "wrap" }}
+            >
+              {this.rendercourseCard()}
+            </Stack>
+          </CardContent>
+        </Card>
       </Box>
     );
   }

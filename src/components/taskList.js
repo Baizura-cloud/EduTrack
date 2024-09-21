@@ -273,13 +273,13 @@ class Tasklist extends Component {
   };
 
   render() {
-    const {title} = this.props
+   // const {title} = this.props
     return (
       <>
         <Card variant="outlined" sx={{ minWidth: 275 }}>
           <CardHeader
             title="Task"
-            subheader={title}
+            subheader="Breakdown your daily task"
             action={
               <div align="right">
                 <Button

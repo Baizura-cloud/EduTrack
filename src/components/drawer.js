@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, 
-  ListItemText, Toolbar, MenuItem, Menu, Card,
+  ListItemText, Toolbar, MenuItem, Menu, Paper ,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -79,9 +79,10 @@ class DrawerAppbar extends Component {
           {["Dashboard", "Class", "Course", "Event", "Account"].map(
             (text, index) => (
               <ListItem key={text} sx={{}}>
-                <Card
+                <Paper 
+                elevation={0}
                   sx={{
-                    borderRadius: "5px",
+                    //borderRadius: 1,
                    // backgroundColor: "#D8A25E",
                     height: "100%",
                     width: "100%",
@@ -93,7 +94,7 @@ class DrawerAppbar extends Component {
                       <ListItemText primary={text} />
                     </ListItemButton>
                   </Link>
-                </Card>
+                </Paper>
               </ListItem>
             )
           )}

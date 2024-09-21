@@ -63,15 +63,15 @@ class Account extends Component {
   render() {
     const { profile } = this.props;
     return (
-      <Box sx={{ minWidth: 275 }}>
+      <Box sx={{ minWidth: 275, flexGrow: 1 }}>
         <Card variant="outlined" sx={{ padding: 2}}>
           <CardHeader title="Account Setting" sx={{ textAlign: "start" , margin:2 }} />
           <CardContent sx={{ textAlign: "start" }}>
             <Grid container spacing={2} sx={{margin:2}}>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ padding: 1 }}>First Name</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 2 }}>
+              <Grid size={{ xs: 12, md: 2 }}>
                 <FormControl error={this.state.error}>
                   <OutlinedInput
                     type="text"
@@ -86,10 +86,10 @@ class Account extends Component {
                   </FormHelperText>
                 </FormControl>
               </Grid>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ padding: 1 }}>Last Name</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 2 }}>
+              <Grid size={{ xs: 12, md: 2 }}>
                 <FormControl error={this.state.error1}>
                   <OutlinedInput
                     type="text"
@@ -106,14 +106,14 @@ class Account extends Component {
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{margin:2}}>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ padding: 1 }}>Address</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl error={this.state.error1}>
                   <OutlinedInput
                     fullWidth={true}
-                    sx={{width:645}}
+                    sx={{width:{xs: 250, md:645}}}
                     type="text"
                     id="address"
                     name="address"
@@ -127,10 +127,10 @@ class Account extends Component {
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{margin:2}}>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ paddingTop: 2 }}>Phone Number</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl error={this.state.error1}>
                   <OutlinedInput
                   sx={{width:250}}
@@ -147,10 +147,10 @@ class Account extends Component {
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{margin:2}}>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ paddingTop: 2 }}>Email</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl>
                   <OutlinedInput
                   sx={{width:250}}
@@ -167,10 +167,10 @@ class Account extends Component {
               </Grid>
             </Grid>
             <Grid container spacing={2} sx={{margin:2}}>
-              <Grid size={{ xs: 6, md: 1 }}>
+              <Grid size={{ xs: 12, md: 1 }}>
                 <InputLabel sx={{ paddingTop: 2 }}>Role</InputLabel>
               </Grid>
-              <Grid size={{ xs: 6, md: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl>
                   <OutlinedInput
                     type="text"
