@@ -22,7 +22,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import DialogSnackbar from "./snackbar";
 import { CardHeader } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { supabase } from "../client";
+import { createTask, deleteTask, fetchTask, updateTask } from "../redux/taskSlice";
+import { connect } from "react-redux";
 
 class Tasklist extends Component {
   constructor(props) {
@@ -34,7 +35,8 @@ class Tasklist extends Component {
       modal: false, //submit & edit dialog open@close
       confirmDel: false, //confirm delete dialog open@close
       popup: false, //snackbar open@close
-      popupContent: {//snackbar type & message
+      popupContent: {
+        //snackbar type & message
         severity: "",
         message: "",
       },
@@ -52,16 +54,9 @@ class Tasklist extends Component {
   componentDidMount() {
     this.refreshList();
   }
-
-  async refreshList() {
-    // try {
-    //   const response = await supabase.from("todos").select();
-    //   const data = await response.data;
-    //   this.setState({ todoList: data });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-  }
+  refreshList = () => {
+    this.props.fetchTask(this.props.auth.data.user.email);
+  };
   toggle = () => {
     this.setState({ modal: !this.state.modal });
   };
@@ -97,60 +92,34 @@ class Tasklist extends Component {
       });
     }
   };
-  handleDelete = (item) => {
-    // this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
-  };
+
   handleSubmitItem = (item) => {
-    // this.toggle();
-    // try {
-    //   this.submitItem(item);
-    //   this.togglesnack("submit");
-    // } catch (error) {
-    //   console.log(error);
-    //   this.togglesnack("error");
-    // }
-    // this.refreshList();
+    this.toggle();
+    if(item.id){
+      this.props.updateTask(item)
+    }else{
+      const newItem = {...item, created_by: this.props.auth.data.user.email}
+      this.props.createTask([newItem])
+    }
   };
-  async submitItem(item) {
-    // try {
-    //   if (item.id) {
-    //     await supabase
-    //       .from("todos")
-    //       .update(item)
-    //       .eq("id", item.id)
-    //       .then(this.refreshList());
-    //     return;
-    //   }
-    //   await supabase.from("todos").insert(item).then(this.refreshList());
-    //   return;
-    // } catch (error) {
-    //   return error;
-    // }
-  }
+
+  handleDelete = (item) => { //open modal confirm delete
+    this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
+  };
+
   handleDeleteItem = (item) => {
-    // this.handleDelete();
-    // item = this.state.activeItem;
-    // try {
-    //   this.deleteItem(item);
-    //   this.togglesnack("delete");
-    // } catch (error) {
-    //   this.togglesnack("error");
-    //   console.log(error);
-    // }
-    // this.refreshList();
+    this.handleDelete();
+    item = this.state.activeItem;
+    console.log(item);
+    try {
+      this.props.deleteTask(item.id);
+      this.togglesnack("delete");
+      this.refreshList();
+    } catch (error) {
+      this.togglesnack("error");
+      console.log(error);
+    }
   };
-  async deleteItem(item) {
-    // try {
-    //   await supabase
-    //     .from("todos")
-    //     .delete()
-    //     .eq("id", item.id)
-    //     .then(this.refreshList());
-    //   return;
-    // } catch (error) {
-    //   return error;
-    // }
-  }
 
   createItem = () => {
     const item = { title: "", description: "", completed: false };
@@ -173,27 +142,27 @@ class Tasklist extends Component {
   renderTabList = () => {
     const { value } = this.state;
     return (
-        <Tabs
-          centered
-          value={value}
-          onChange={this.handleChange}
-          textColor="primary"
-          indicatorColor="primary"
-        >
-          <Tab
-            label="Completed Task"
-            icon={<TaskAltIcon />}
-            iconPosition="end"
-            onClick={() => this.displayCompleted(true)}
-          />
-          <Tab
-            label="Incompleted Task"
-            icon={<NotInterestedIcon />}
-            iconPosition="end"
-            textColor="secondary"
-            onClick={() => this.displayCompleted(false)}
-          />
-        </Tabs>
+      <Tabs
+        centered
+        value={value}
+        onChange={this.handleChange}
+        textColor="primary"
+        indicatorColor="primary"
+      >
+        <Tab
+          label="Completed Task"
+          icon={<TaskAltIcon />}
+          iconPosition="end"
+          onClick={() => this.displayCompleted(true)}
+        />
+        <Tab
+          label="Incompleted Task"
+          icon={<NotInterestedIcon />}
+          iconPosition="end"
+          textColor="secondary"
+          onClick={() => this.displayCompleted(false)}
+        />
+      </Tabs>
     );
   };
   renderSmallTabList = () => {
@@ -227,16 +196,17 @@ class Tasklist extends Component {
 
   renderItems = () => {
     const { viewCompleted } = this.state;
-    if(this.state.todoList == null){
-        return
+    const { task } = this.props;
+    if (task.data == null) {
+      return;
     }
-    const newItems = this.state.todoList.filter(
+    const newItems = task.data.filter(
       (item) => item.completed === viewCompleted
     );
 
     return newItems.map((item) => (
       <li key={item.id}>
-        <Accordion sx={{ marginTop: 2 }}>
+        <Accordion sx={{ marginTop: 2, textAlign:'start' }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel3-content"
@@ -273,7 +243,6 @@ class Tasklist extends Component {
   };
 
   render() {
-   // const {title} = this.props
     return (
       <>
         <Card variant="outlined" sx={{ minWidth: 275 }}>
@@ -332,4 +301,15 @@ class Tasklist extends Component {
   }
 }
 
-export default Tasklist;
+const mapStateToProps = (state) => ({
+  task: state.task,
+  auth: state.auth,
+});
+const mapDispatchToProps = (dispatch) => ({
+  fetchTask: (email) => dispatch(fetchTask(email)),
+  updateTask: (data) => dispatch(updateTask(data)),
+  deleteTask: (id) => dispatch(deleteTask(id)),
+  createTask: (data) => dispatch(createTask(data))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasklist);

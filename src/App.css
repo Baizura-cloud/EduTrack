@@ -25,3 +25,11 @@ img {
 .css-19wsa2m-MuiButtonBase-root-MuiTab-root.Mui-selected {
   color: #AF1763 !important;
 }
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  list-style-type: none;
+}

@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHeader, Stack } from "@mui/material";
 import { Navigate } from "react-router-dom";
+import { fetchClassStudent } from "../redux/classSlice";
+import { connect } from "react-redux";
 
 class StudentClass extends React.Component {
   constructor(props) {
@@ -14,69 +16,37 @@ class StudentClass extends React.Component {
     this.state = {
       listStatus: false,
       activeList: [],
-      classList: [
-        {
-          //dummy data
-          id: 1,
-          name: "Class 13-A",
-          studentCount: 4,
-          student: [
-            {
-              name: "Lana Micheal",
-            },
-            {
-              name: "John Lee",
-            },
-            {
-              name: "Skye Fye",
-            },
-            {
-              name: "Tony Marlone",
-            },
-          ],
-        },
-        {
-          //dummy data
-          id: 2,
-          name: "Class 13-B",
-          studentCount: 4,
-          student: [
-            {
-              name: "Charles Mick",
-            },
-            {
-              name: "Nance Lynn",
-            },
-            {
-              name: "Hans Lorve",
-            },
-            {
-              name: "Kyle Fyn",
-            },
-          ],
-        },
-      ],
+      classList: [],
     };
   }
+
+  componentDidMount (){
+    this.props.fetchClassStudent(this.props.auth.data.user.email)
+    this.setState({classList:this.props.classstudent.data})
+  }
+
   handleStudentlist = (studentList) => {
     console.log("nav to student list page");
   };
   renderclassCard = () => {
+    const classStudent = this.props.classstudent.data
     return (
       <>
-        {this.state.classList
-          ? this.state.classList.map((classStudent) => (
+        {classStudent
+          ? classStudent.map((clStudent) => (
               <Card variant="outlined">
                 <CardContent>
                   <Typography
                     gutterBottom
                     sx={{ color: "text.primary", fontSize: 16 }}
                   >
-                    {classStudent.name}
+                    {clStudent.name}
                   </Typography>
-                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    {classStudent.studentCount} Student
-                  </Typography>
+                    {clStudent.members.student.map((student)=>(
+                      <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
+                        {student}
+                        </Typography>
+                    ))}
                 </CardContent>
                 <CardActions>
                   <Button size="small" onClick={this.handleStudentlist}>
@@ -110,4 +80,13 @@ class StudentClass extends React.Component {
   }
 }
 
-export default StudentClass;
+const mapStateToProps = (state) =>({
+  auth:state.auth,
+  classstudent:state.classstudent
+})
+
+const mapDispatchToProps = (dispatch) =>({
+  fetchClassStudent: (email) => dispatch(fetchClassStudent(email))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(StudentClass)

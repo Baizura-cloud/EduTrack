@@ -212,7 +212,6 @@ class SignIn extends Component {
         </FormControl>
         {this.state.onReset ? (<ForgotPassword toggle={this.handleReset} />) : null}
         {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
-        {/* {this.state.loading? <CircularLoading loding={this.state.loading} />: null} */}
       </Box>
     );
   }
@@ -221,8 +220,5 @@ class SignIn extends Component {
 const mapStateToProps = (state) =>({
   auth: state.auth
 })
-// const mapDispatchToProps = (dispatch) =>({
-//   loginUser: (loginData) => dispatch(loginUser(loginData))
-// })
 
 export default connect(mapStateToProps, null)(SignIn);

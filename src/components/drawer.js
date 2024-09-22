@@ -1,6 +1,19 @@
 import React, { Component } from "react";
-import { AppBar, Box, Divider, Drawer, IconButton, List, ListItem, ListItemButton, ListItemIcon, 
-  ListItemText, Toolbar, MenuItem, Menu, Paper ,
+import {
+  AppBar,
+  Box,
+  Divider,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Toolbar,
+  MenuItem,
+  Menu,
+  Paper,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import GroupsIcon from "@mui/icons-material/Groups";
@@ -29,7 +42,7 @@ class DrawerAppbar extends Component {
       toggleSnack: false,
       messageSnack: "",
       severitySnack: "",
-      loading: false
+      loading: false,
     };
   }
 
@@ -58,37 +71,40 @@ class DrawerAppbar extends Component {
     this.setState({ anchorEl: null });
   };
 
-  // handlelogoutUser = () =>{
-  //   this.setState({loading:true})
-  //   setTimeout(function  () {
-  //     this.props.logoutUser()
-  //     this.setState({loading:false})
-  //   }, 2000)
-  // }
-
   drawer = () => {
-    const icon = [<DashboardIcon />, <GroupsIcon />, <ImportContactsIcon />, <TodayIcon />, <AccountBoxIcon />,];
+    const icon = [
+      <DashboardIcon />,
+      <GroupsIcon />,
+      <ImportContactsIcon />,
+      <TodayIcon />,
+      <AccountBoxIcon />,
+    ];
     const path = ["/", "/studentclass", "course", "event", "account"];
     return (
       <div>
         <Toolbar>
           <img alt="logo" src={logo} />
         </Toolbar>
-        <Divider sx={{borderWidth:2}}/>
+        <Divider sx={{ borderWidth: 2 }} />
         <List>
           {["Dashboard", "Class", "Course", "Event", "Account"].map(
             (text, index) => (
-              <ListItem key={text} sx={{}}>
-                <Paper 
-                elevation={0}
+              <ListItem key={index} sx={{}}>
+                <Paper
+                  elevation={0}
                   sx={{
                     //borderRadius: 1,
-                   // backgroundColor: "#D8A25E",
+                    //backgroundColor: "#D8A25E",
+                   // backgroundColor: this.state.paperColour.class,
                     height: "100%",
                     width: "100%",
                   }}
+                 // onClick={() => this.handlclick(text)}
                 >
-                  <Link to={path[index]} style={{textDecoration: 'none', color: 'inherit'}}>
+                  <Link
+                    to={path[index]}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
                     <ListItemButton>
                       <ListItemIcon>{icon[index]}</ListItemIcon>
                       <ListItemText primary={text} />
@@ -118,59 +134,64 @@ class DrawerAppbar extends Component {
           }}
         >
           <Toolbar>
-              <IconButton
-                color="black"
-                aria-label="open drawer"
-                edge="start"
-                onClick={this.handleDrawerToggle}
-                sx={{ mr: 2, display: { sm: "none" } }}
+            <IconButton
+              color="black"
+              aria-label="open drawer"
+              edge="start"
+              onClick={this.handleDrawerToggle}
+              sx={{ mr: 2, display: { sm: "none" } }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <IconButton
+              fontSize="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={this.handleMenu}
+              sx={{
+                position: "absolute",
+                top: 10,
+                right: 20,
+              }}
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              onClick={this.handleClose}
+              anchorEl={this.state.anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={Boolean(this.state.anchorEl)}
+              onClose={this.handleClose}
+            >
+              <Link
+                to="/login"
+                style={{ textDecoration: "none", color: "inherit" }}
               >
-                <MenuIcon />
-              </IconButton>
-              <IconButton
-                fontSize="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={this.handleMenu}
-                sx={{
-                  position: 'absolute',
-                  top: 10,
-                  right: 20
-                }}
-              >
-                <AccountCircle />
-              </IconButton>
-              <Menu
-                id="menu-appbar"
-                onClick={this.handleClose}
-                anchorEl={this.state.anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(this.state.anchorEl)}
-                onClose={this.handleClose}
-              >
-                <Link to='/login' style={{textDecoration: 'none', color: 'inherit'}}>
                 <MenuItem onClick={logoutUser}>Logout</MenuItem>
-                </Link>
-                <Link to='/account' style={{textDecoration: 'none', color: 'inherit'}} >
-                <MenuItem >My account</MenuItem>
-                </Link>
-                
-              </Menu>
+              </Link>
+              <Link
+                to="/account"
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <MenuItem>My account</MenuItem>
+              </Link>
+            </Menu>
             {/* </Stack> */}
           </Toolbar>
         </AppBar>
         <Box
           component="nav"
-          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 },   }}
+          sx={{ width: { sm: this.state.drawerWidth }, flexShrink: { sm: 0 } }}
           aria-label="mailbox folders"
         >
           <Drawer
@@ -211,7 +232,6 @@ class DrawerAppbar extends Component {
             flexGrow: 1,
             p: 3,
             width: { sm: `calc(100% - ${this.state.drawerWidth}px)` },
-            
           }}
         >
           <Toolbar />

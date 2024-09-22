@@ -28,7 +28,6 @@ class Account extends Component {
 
   componentDidMount() {
     this.props.fetchProfile(this.props.auth.data.user.email);
-    this.setState({});
   }
 
   handleChange = (e) => {
