@@ -6,7 +6,6 @@ import Dashboard from "./pages/dashboard";
 import Drawer from "./components/drawer";
 import Unauthorized from "./pages/unautharized";
 import StudentClass from "./pages/studentclass";
-import StudentList from "./components/studentlist"
 import Course from "./pages/course";
 import Event from "./pages/event";
 import { AuthProvider, RequireAuth } from "./context/auth";
@@ -24,7 +23,6 @@ function App() {
         <Route element={<RequireAuth />}>
            <Route element={<div className="App"><Dashboard /></div>}path="/"/>
            <Route element={<div className="App"><StudentClass /></div>}path="/studentclass"/>
-           <Route element={<div className="App"><StudentList /></div>}path="/studentlist"/>
            <Route element={<div className="App"><Course /></div>}path="/course"/>
            <Route element={<div className="App"><Event /></div>}path="/event"/>
           <Route element={<div className="App"><Account /></div>}path="/account"/>

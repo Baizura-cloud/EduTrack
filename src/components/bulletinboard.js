@@ -14,14 +14,15 @@ class Bulletin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      activeItem:{},
       postList: [],
       toggleDrawer: false,
     };
   }
 
-  componentDidMount(){
-    this.props.fetchBulletin()
-    this.setState({postList: this.props.bulletin.data})
+  componentDidMount() {
+    this.props.fetchBulletin();
+    this.setState({ postList: this.props.bulletin.data });
   }
 
   renderCard = () => {
@@ -47,7 +48,9 @@ class Bulletin extends React.Component {
     );
   };
   createpost = () => {
-    this.setState({toggleDrawer: !this.state.toggleDrawer}) //open drawer
+    const item = { title: "", details: "", completed: false };
+
+    this.setState({activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
   };
   toggle = () => {
     this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
@@ -55,7 +58,14 @@ class Bulletin extends React.Component {
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
-        {this.state.toggleDrawer? <FormDrawer toggle={this.toggle} />:null}
+        {this.state.toggleDrawer ? (
+          <FormDrawer
+            toggle={this.toggle}
+            activeItem={this.state.activeItem}
+            onSave={this.handleSubmitItem}
+            flag="bulletin"
+          />
+        ) : null}
         <Card variant="outlined">
           <CardHeader
             title="Bulletin Board"
@@ -79,12 +89,11 @@ class Bulletin extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  bulletin: state.bulletin,
+});
+const mapDispatchToProps = (dispatch) => ({
+  fetchBulletin: () => dispatch(fetchBulletin()),
+});
 
-const mapStateToProps = (state) =>({
-  bulletin: state.bulletin
-})
-const mapDispatchToProps= (dispatch) =>({
-  fetchBulletin: () => dispatch(fetchBulletin())
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(Bulletin)
+export default connect(mapStateToProps, mapDispatchToProps)(Bulletin);

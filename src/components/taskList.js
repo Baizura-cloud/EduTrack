@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Modal from "./modal";
 import AlertDialog from "./confirmDialog";
 import "../App.css";
 import Button from "@mui/material/Button";

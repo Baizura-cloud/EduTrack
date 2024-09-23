@@ -14,7 +14,7 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
-export default class TaskForm extends Component {
+export default class BulletinForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,7 +65,7 @@ export default class TaskForm extends Component {
 
     return (
       <Card>
-        <CardHeader title={"Task"} />
+        <CardHeader title={"Bulletin"} />
         <CardContent>
           <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
@@ -89,15 +89,15 @@ export default class TaskForm extends Component {
 
           <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
-              <InputLabel sx={{ padding: 2 }}>Description</InputLabel>
+              <InputLabel sx={{ padding: 2 }}>Details</InputLabel>
             </Grid>
             <Grid size={{ xs: 12, md: 8 }}>
               <FormControl error={this.state.error1} fullWidth={true}>
                 <OutlinedInput
                   type="text"
-                  id="todo-description"
-                  name="description"
-                  defaultValue={activeItem.description}
+                  id="todo-details"
+                  name="details"
+                  defaultValue={activeItem.details}
                   onChange={this.handleChange}
                 />
                 <FormHelperText id="my-helper-text">
@@ -107,7 +107,7 @@ export default class TaskForm extends Component {
             </Grid>
           </Grid>
 
-          <Grid container spacing={1}>
+          {/* <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
               <InputLabel sx={{ padding: 2 }}>Status</InputLabel>
             </Grid>
@@ -122,7 +122,7 @@ export default class TaskForm extends Component {
                 />
               </FormControl>
             </Grid>
-          </Grid>
+          </Grid> */}
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button
