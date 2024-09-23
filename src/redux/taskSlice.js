@@ -7,7 +7,6 @@ export const fetchTask = createAsyncThunk('fetch-task', async(email) =>{
     }
     try {
         const response = await supabase.from('task').select('*').eq('created_by',email)
-        console.log(response)
         return response
     } catch (error) {
         console.log(error)
@@ -92,7 +91,7 @@ const taskSlice = createSlice({
             state.fetchstatus = 'error'
         })
         .addCase(createTask.fulfilled, (state,action)=>{
-            state.data = action.payload
+            //state.data = action.payload
             state.fetchstatus = 'success'
         })
         .addCase(createTask.pending, (state)=>{

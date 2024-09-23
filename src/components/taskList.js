@@ -19,11 +19,12 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import DialogSnackbar from "./snackbar";
+import Snack from "./snackbar";
 import { CardHeader } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { createTask, deleteTask, fetchTask, updateTask } from "../redux/taskSlice";
 import { connect } from "react-redux";
+import FormDrawer from "./formdrawer";
 
 class Tasklist extends Component {
   constructor(props) {
@@ -96,11 +97,18 @@ class Tasklist extends Component {
   handleSubmitItem = (item) => {
     this.toggle();
     if(item.id){
-      this.props.updateTask(item)
+      this.props.updateTask(item).then(()=>{
+        this.refreshList()
+        this.togglesnack("edit")
+      })
     }else{
       const newItem = {...item, created_by: this.props.auth.data.user.email}
-      this.props.createTask([newItem])
+      this.props.createTask([newItem]).then(()=>{
+        this.refreshList()
+        this.togglesnack("submit")
+      })
     }
+    
   };
 
   handleDelete = (item) => { //open modal confirm delete
@@ -110,11 +118,11 @@ class Tasklist extends Component {
   handleDeleteItem = (item) => {
     this.handleDelete();
     item = this.state.activeItem;
-    console.log(item);
     try {
-      this.props.deleteTask(item.id);
-      this.togglesnack("delete");
-      this.refreshList();
+      this.props.deleteTask(item.id).then(()=>{
+        this.refreshList()
+        this.togglesnack("delete")
+      })
     } catch (error) {
       this.togglesnack("error");
       console.log(error);
@@ -263,10 +271,10 @@ class Tasklist extends Component {
           />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid item xs={12} sx={{ display: { xs: "none", md: "block" } }}>
+              <Grid  xs={12} sx={{ display: { xs: "none", md: "block" } }}>
                 {this.renderTabList()}
               </Grid>
-              <Grid item xs={12} sx={{ display: { xs: "block", md: "none" } }}>
+              <Grid  xs={12} sx={{ display: { xs: "block", md: "none" } }}>
                 {this.renderSmallTabList()}
               </Grid>
             </Grid>
@@ -276,10 +284,11 @@ class Tasklist extends Component {
           </CardContent>
         </Card>
         {this.state.modal ? (
-          <Modal
+          <FormDrawer
             activeItem={this.state.activeItem}
             toggle={this.toggle}
             onSave={this.handleSubmitItem}
+            flag='task'
           />
         ) : null}
         {this.state.confirmDel ? (
@@ -290,10 +299,11 @@ class Tasklist extends Component {
           />
         ) : null}
         {this.state.popup ? (
-          <DialogSnackbar
-            togglesnack={this.togglesnack}
-            popup={this.state.popup}
-            popupContent={this.state.popupContent}
+          <Snack
+             togglesnack={this.togglesnack} // the function
+            open={this.state.popup}
+            message={this.state.popupContent.message}
+            severity={this.state.popupContent.severity}
           />
         ) : null}
       </>

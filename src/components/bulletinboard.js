@@ -7,22 +7,21 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import FormDrawer from "./formdrawer";
+import { fetchBulletin } from "../redux/bulletinSlice";
+import { connect } from "react-redux";
 
 class Bulletin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      postList: [
-        { // dummy data
-          id: 1,
-          created_at: "2024-09-20 03:18:54.185187+00",
-          title: "Urgent",
-          details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fuscesuscipit accumsan lacus, in porta tortor facilisis vel. Donecmolestie risus ante, non semper mauris tincidunt nec. Vestibulum posuere congue lorem ut tempor. Sed interdum consectetur risus et molestie.",
-          created_by: "badrulazura@gmail.com",
-        },
-      ],
+      postList: [],
       toggleDrawer: false,
     };
+  }
+
+  componentDidMount(){
+    this.props.fetchBulletin()
+    this.setState({postList: this.props.bulletin.data})
   }
 
   renderCard = () => {
@@ -80,4 +79,12 @@ class Bulletin extends React.Component {
   }
 }
 
-export default Bulletin;
+
+const mapStateToProps = (state) =>({
+  bulletin: state.bulletin
+})
+const mapDispatchToProps= (dispatch) =>({
+  fetchBulletin: () => dispatch(fetchBulletin())
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Bulletin)

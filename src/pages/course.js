@@ -6,7 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHeader, Stack } from "@mui/material";
-import { Navigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 
 class Course extends React.Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class Course extends React.Component {
       <>
         {this.state.courseList
           ? this.state.courseList.map((course) => (
-              <Card variant="outlined">
+              <Card variant="outlined" sx={{width:200, height:200, textAlign:'start'}}>
                 <CardContent>
                   <Typography
                     gutterBottom
@@ -69,7 +69,7 @@ class Course extends React.Component {
                     {course.classCount} Class(es)
                   </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions sx={{justifyContent:'end'}}>
                   <Button size="small" onClick={this.handleClass}>
                     Class
                   </Button>
@@ -84,7 +84,21 @@ class Course extends React.Component {
     return (
       <Box sx={{ minWidth: 275 }}>
         <Card variant="outlined" sx={{ padding: 2}}>
-          <CardHeader title="Course" sx={{ textAlign: "start", margin: 2 }} />
+          <CardHeader 
+          title="Course" 
+          sx={{ textAlign: "start", margin: 2 }} 
+          action={
+            <div align="right">
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                onClick={this.createCourse}
+              >
+                New Course
+              </Button>
+            </div>
+          }
+          />
           <CardContent>
             <Stack
               spacing={{ xs: 1, sm: 2 }}

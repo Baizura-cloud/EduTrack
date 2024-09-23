@@ -11,23 +11,17 @@ class Snack extends Component {
     };
   }
 
-  handleClose = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-    this.setState({ open: false });
-  };
-
   render() {
+    const {togglesnack} = this.props
     return (
       <div>
         <Snackbar
           open={this.state.open}
           autoHideDuration={3000}
-          onClose={this.handleClose}
+          onClose={togglesnack}
         >
           <Alert
-            onClose={this.handleClose}
+            onClose={togglesnack}
             severity={this.state.severity}
             variant="filled"
             sx={{ width: "100%" }}

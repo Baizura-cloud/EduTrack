@@ -77,7 +77,7 @@ class Account extends Component {
                     id="first-name"
                     sx={{width:250}}
                     name="firstname"
-                    value={profile.data[0].firstname}
+                    defaultValue={profile.data[0].firstname}
                     onChange={this.handleChange}
                   />
                   <FormHelperText id="my-helper-text">
@@ -95,7 +95,7 @@ class Account extends Component {
                     id="last-name"
                     sx={{width:250}}
                     name="lastname"
-                    value={profile.data[0].lastname}
+                    defaultValue={profile.data[0].lastname}
                     onChange={this.handleChange}
                   />
                   <FormHelperText id="my-helper-text">
@@ -116,7 +116,7 @@ class Account extends Component {
                     type="text"
                     id="address"
                     name="address"
-                    value={profile.data[0].address}
+                    defaultValue={profile.data[0].address}
                     onChange={this.handleChange}
                   />
                   <FormHelperText id="my-helper-text">
@@ -136,7 +136,7 @@ class Account extends Component {
                     type="text"
                     id="phone-number"
                     name="phone"
-                    value={profile.data[0].phone}
+                    defaultValue={profile.data[0].phone}
                     onChange={this.handleChange}
                   />
                   <FormHelperText id="my-helper-text">

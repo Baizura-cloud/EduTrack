@@ -5,6 +5,7 @@ import profileSlice from './profileSlice'
 import authSlice from "./authSlice2";
 import taskSlice from "./taskSlice";
 import classSlice from "./classSlice";
+import bulletinSlice from "./bulletinSlice";
 
 const persistConfig = {
     key: 'root',
@@ -15,7 +16,8 @@ const rootReducer = combineReducers({
     auth: authSlice.reducer,
     profile: profileSlice.reducer,
     task: taskSlice.reducer,
-    classstudent: classSlice.reducer
+    classstudent: classSlice.reducer,
+    bulletin: bulletinSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

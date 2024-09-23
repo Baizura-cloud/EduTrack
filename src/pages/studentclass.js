@@ -5,8 +5,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack } from "@mui/material";
-import { Navigate } from "react-router-dom";
+import { CardHeader, List, ListItem, Stack } from "@mui/material";
+import Grid from "@mui/material/Grid2";
+import AddIcon from "@mui/icons-material/Add";
 import { fetchClassStudent } from "../redux/classSlice";
 import { connect } from "react-redux";
 
@@ -17,24 +18,30 @@ class StudentClass extends React.Component {
       listStatus: false,
       activeList: [],
       classList: [],
+      openList: false,
+      activeClass: {},
     };
   }
 
-  componentDidMount (){
+  componentDidMount() {
     this.props.fetchClassStudent(this.props.auth.data.user.email)
     this.setState({classList:this.props.classstudent.data})
   }
 
-  handleStudentlist = (studentList) => {
-    console.log("nav to student list page");
+  handleStudentlist = (clStudent) => {
+    this.setState({ activeClass: clStudent, openList: true });
   };
+  createClass = () => {
+    console.log("open drawer form");
+  };
+
   renderclassCard = () => {
-    const classStudent = this.props.classstudent.data
+    const classStudent = this.props.classstudent.data;
     return (
       <>
         {classStudent
           ? classStudent.map((clStudent) => (
-              <Card variant="outlined">
+              <Card variant="outlined" sx={{ width: 200, height: 100 }}>
                 <CardContent>
                   <Typography
                     gutterBottom
@@ -42,15 +49,13 @@ class StudentClass extends React.Component {
                   >
                     {clStudent.name}
                   </Typography>
-                    {clStudent.members.student.map((student)=>(
-                      <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                        {student}
-                        </Typography>
-                    ))}
                 </CardContent>
-                <CardActions>
-                  <Button size="small" onClick={this.handleStudentlist}>
-                    Student List
+                <CardActions sx={{ justifyContent: "end" }}>
+                  <Button
+                    size="small"
+                    onClick={() => this.handleStudentlist(clStudent)}
+                  >
+                    Details
                   </Button>
                 </CardActions>
               </Card>
@@ -59,20 +64,78 @@ class StudentClass extends React.Component {
       </>
     );
   };
+
+  renderstudentCard = () => {
+    const student = this.state.activeClass.members.student;
+    console.log(student);
+    return (
+      <>
+        <Card variant="outlined" sx={{textAlign:'start'}}>
+          <CardHeader
+            title={"Student List"}
+            action={
+              <div align="right">
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={this.addstudent}
+                >
+                  Add Student
+                </Button>
+              </div>
+            }
+          />
+          <CardContent>
+            {student
+              ? student.map((stud) => {
+                  return (
+                    <ul>
+                      <li>{stud}</li>
+                    </ul>
+                  );
+                })
+              : null}
+          </CardContent>
+        </Card>
+      </>
+    );
+  };
+
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
         <Card variant="outlined" sx={{ padding: 2 }}>
-          <CardHeader title="Class" sx={{ textAlign: "start", margin: 2 }} />
+          <CardHeader
+            title="Class"
+            sx={{ textAlign: "start", margin: 2 }}
+            action={
+              <div align="right">
+                <Button
+                  variant="outlined"
+                  startIcon={<AddIcon />}
+                  onClick={this.createClass}
+                >
+                  New class
+                </Button>
+              </div>
+            }
+          />
           <CardContent>
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              useFlexGap
-              sx={{ flexWrap: "wrap" }}
-            >
-              {this.renderclassCard()}
-            </Stack>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 6 }}>
+                <Stack
+                  spacing={{ xs: 1, sm: 2 }}
+                  direction="row"
+                  useFlexGap
+                  sx={{ flexWrap: "wrap" }}
+                >
+                  {this.renderclassCard()}
+                </Stack>
+              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>
+                {this.state.openList ? this.renderstudentCard() : null}
+              </Grid>
+            </Grid>
           </CardContent>
         </Card>
       </Box>
@@ -80,13 +143,13 @@ class StudentClass extends React.Component {
   }
 }
 
-const mapStateToProps = (state) =>({
-  auth:state.auth,
-  classstudent:state.classstudent
-})
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  classstudent: state.classstudent,
+});
 
-const mapDispatchToProps = (dispatch) =>({
-  fetchClassStudent: (email) => dispatch(fetchClassStudent(email))
-})
+const mapDispatchToProps = (dispatch) => ({
+  fetchClassStudent: (email) => dispatch(fetchClassStudent(email)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentClass)
+export default connect(mapStateToProps, mapDispatchToProps)(StudentClass);

@@ -1,15 +1,18 @@
 import React, { Component } from "react";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Checkbox from "@mui/material/Checkbox";
 import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import FormHelperText from "@mui/material/FormHelperText";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  OutlinedInput,
+} from "@mui/material";
+import Grid from "@mui/material/Grid2";
 
 export default class TaskForm extends Component {
   constructor(props) {
@@ -20,7 +23,8 @@ export default class TaskForm extends Component {
       error1: false,
     };
   }
-
+  componentDidMount(){
+  }
   handleChange = (e) => {
     let { name, value } = e.target;
     if (e.target.type === "checkbox") {
@@ -39,59 +43,98 @@ export default class TaskForm extends Component {
         this.setState({ error: false });
       }
     }
-
     const activeItem = { ...this.state.activeItem, [name]: value };
     this.setState({ activeItem });
   };
 
+  handlesubmit = () =>{
+    const item = this.state.activeItem
+    if(item.title == '' || null){
+      this.setState({error:true})
+      return
+    }
+    if(item.description == ''|| null){
+      this.setState({error1:true})
+      return
+    }
+    this.props.onSave(item)
+  }
+
   render() {
-    const { onSave } = this.props;
+    const {activeItem, onSave } = this.props;
 
     return (
-      <>
-        <InputLabel>Title</InputLabel>
-        <FormControl error={this.state.error} fullWidth={true}>
-          <Input
-            type="text"
-            id="todo-title"
-            name="title"
-           // value={this.state.activeItem.title}
-            onChange={this.handleChange}
-          />
-          <FormHelperText id="my-helper-text">
-            {this.state.error ? "Must not empty" : " "}
-          </FormHelperText>
-        </FormControl>
-        <InputLabel sx={{ paddingTop: 2 }}>Description</InputLabel>
-        <FormControl error={this.state.error1} fullWidth={true}>
-          <Input
-            type="text"
-            id="todo-description"
-            name="description"
-           // value={this.state.activeItem.description}
-            onChange={this.handleChange}
-          />
-          <FormHelperText id="my-helper-text">
-            {this.state.error1 ? "Must not empty" : " "}
-          </FormHelperText>
-        </FormControl>
-        <FormControl fullWidth={true}>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="completed"
-            name="completed"
-           // checked={this.state.activeItem.completed}
-            onChange={this.handleChange}
-          />
-        </FormControl>
-        <Button
-          variant="outlined"
-          color="success"
-         // onClick={() => onSave(this.state.activeItem)}
-        >
-          Save
-        </Button>
-      </>
+      <Card>
+        <CardHeader title={"Task"} />
+        <CardContent>
+          <Grid container spacing={1}>
+            <Grid size={{ xs: 12, md: 3 }}>
+              <InputLabel sx={{ padding: 2 }}>Title</InputLabel>
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <FormControl error={this.state.error} fullWidth={true}>
+                <OutlinedInput
+                  type="text"
+                  id="todo-title"
+                  name="title"
+                 defaultValue={activeItem.title}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="my-helper-text">
+                  {this.state.error ? "Must not empty" : " "}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={1}>
+            <Grid size={{ xs: 12, md: 3 }}>
+              <InputLabel sx={{ padding: 2 }}>Description</InputLabel>
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <FormControl error={this.state.error1} fullWidth={true}>
+                <OutlinedInput
+                  type="text"
+                  id="todo-description"
+                  name="description"
+                  defaultValue={activeItem.description}
+                  onChange={this.handleChange}
+                />
+                <FormHelperText id="my-helper-text">
+                  {this.state.error1 ? "Must not empty" : " "}
+                </FormHelperText>
+              </FormControl>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={1}>
+            <Grid size={{ xs: 12, md: 3 }}>
+              <InputLabel sx={{ padding: 2 }}>Status</InputLabel>
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <FormControl fullWidth={true}>
+                <FormControlLabel
+                  control={<Checkbox defaultChecked={activeItem.completed} />}
+                  label="completed"
+                  name="completed"
+                  
+                  onChange={this.handleChange}
+                />
+              </FormControl>
+            </Grid>
+          </Grid>
+        </CardContent>
+        <CardActions sx={{ justifyContent: "end" }}>
+          <Button
+            variant="outlined"
+            color="success"
+            // onClick={() => onSave(this.state.activeItem)}
+            onClick={this.handlesubmit}
+          >
+            Save
+          </Button>
+        </CardActions>
+      </Card>
     );
   }
 }

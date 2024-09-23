@@ -43,7 +43,7 @@ class ScheduleTimeline extends React.Component {
       <>
         {this.state.timeList
           ? this.state.timeList.map((time) => (
-              <TimelineItem>
+              <TimelineItem key={time.id}>
                 <TimelineOppositeContent color="text.secondary">
                   {time.time}
                 </TimelineOppositeContent>
