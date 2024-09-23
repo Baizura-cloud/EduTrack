@@ -57,7 +57,7 @@ class Course extends React.Component {
       <>
         {this.state.courseList
           ? this.state.courseList.map((course) => (
-              <Card variant="outlined" sx={{width:200, height:200, textAlign:'start'}}>
+              <Card key={course.id} variant="outlined" sx={{width:200, height:200, textAlign:'start'}}>
                 <CardContent>
                   <Typography
                     gutterBottom

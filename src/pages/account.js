@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
-import Input from "@mui/material/Input";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
   Card,
@@ -15,6 +14,7 @@ import {
 import { fetchProfile, updateProfile } from "../redux/profileSlice";
 import { connect } from "react-redux";
 import Grid from "@mui/material/Grid2";
+import Snack from "../components/snackbar"
 
 class Account extends Component {
   constructor(props) {
@@ -23,11 +23,23 @@ class Account extends Component {
       activeItem: {},
       error: false,
       error1: false,
+      popup: false, //snackbar open@close
+      popupContent: {
+        //snackbar type & message
+        severity: "",
+        message: "",
+      },
     };
   }
 
   componentDidMount() {
+    this.refreshData()
+  }
+  refreshData= () =>{
     this.props.fetchProfile(this.props.auth.data.user.email);
+  }
+  togglesnack = () =>{
+    this.setState({ popup: !this.state.popup });
   }
 
   handleChange = (e) => {
@@ -43,7 +55,7 @@ class Account extends Component {
       if (e.target.value == "") {
         this.setState({ error1: true });
       } else {
-        this.setState({ error: false });
+        this.setState({ error1: false });
       }
     }
 
@@ -56,7 +68,23 @@ class Account extends Component {
       return;
     }
     const newdata = {...data, id: this.props.profile.data[0].id}
-    this.props.updateProfile(newdata)
+    if(data.firstname == ''){
+      this.setState({ error: true });
+      this.setState({popupContent: {message: 'First name must not be empty', severity:'error'}})
+      this.togglesnack()
+      return
+    }
+    if(data.lastname == ''){
+      this.setState({ error1: true });
+      this.setState({popupContent: {message: 'Last name must not be empty', severity:'error'}})
+      this.togglesnack()
+      return
+    }
+    this.props.updateProfile(newdata).then(() =>{
+      this.refreshData()
+      this.setState({popupContent: {message: 'Profile updated successfully', severity:'success'}})
+      this.togglesnack()
+    })
   };
 
   render() {
@@ -109,7 +137,7 @@ class Account extends Component {
                 <InputLabel sx={{ padding: 1 }}>Address</InputLabel>
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                <FormControl error={this.state.error1}>
+                <FormControl >
                   <OutlinedInput
                     fullWidth={true}
                     sx={{width:{xs: 250, md:645}}}
@@ -119,9 +147,6 @@ class Account extends Component {
                     defaultValue={profile.data[0].address}
                     onChange={this.handleChange}
                   />
-                  <FormHelperText id="my-helper-text">
-                    {this.state.error1 ? "Must not empty" : " "}
-                  </FormHelperText>
                 </FormControl>
               </Grid>
             </Grid>
@@ -130,7 +155,7 @@ class Account extends Component {
                 <InputLabel sx={{ paddingTop: 2 }}>Phone Number</InputLabel>
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                <FormControl error={this.state.error1}>
+                <FormControl >
                   <OutlinedInput
                   sx={{width:250}}
                     type="text"
@@ -139,9 +164,6 @@ class Account extends Component {
                     defaultValue={profile.data[0].phone}
                     onChange={this.handleChange}
                   />
-                  <FormHelperText id="my-helper-text">
-                    {this.state.error1 ? "Must not empty" : " "}
-                  </FormHelperText>
                 </FormControl>
               </Grid>
             </Grid>
@@ -197,6 +219,14 @@ class Account extends Component {
             </Button>
           </CardActions>
         </Card>
+        {this.state.popup? 
+        <Snack 
+        togglesnack={this.togglesnack}
+        open={this.state.popup}
+        message={this.state.popupContent.message}
+        severity= {this.state.popupContent.severity}
+        /> 
+        : null}
       </Box>
     );
   }

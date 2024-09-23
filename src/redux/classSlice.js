@@ -7,7 +7,6 @@ export const fetchClassStudent = createAsyncThunk('fetch-class', async(email)=>{
     }
     try {
         const response = await supabase.from('class').select('*').eq('admin', email)
-        console.log(response)
         return response
     } catch (error) {
         console.log(error)

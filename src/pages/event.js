@@ -42,7 +42,7 @@ class Event extends React.Component {
       <>
         {this.state.eventList
           ? this.state.eventList.map((event) => (
-              <Card variant="outlined">
+              <Card variant="outlined" key={event.id}>
                 <CardContent>
                   <Typography
                     gutterBottom

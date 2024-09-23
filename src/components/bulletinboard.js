@@ -29,7 +29,7 @@ class Bulletin extends React.Component {
       <Card>
         {this.state.postList
           ? this.state.postList.map((post) => (
-              <CardContent>
+              <CardContent key={post.id}>
                 <Typography
                   gutterBottom
                   sx={{ textAlign: "start", fontSize: 16 }}

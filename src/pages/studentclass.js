@@ -41,7 +41,7 @@ class StudentClass extends React.Component {
       <>
         {classStudent
           ? classStudent.map((clStudent) => (
-              <Card variant="outlined" sx={{ width: 200, height: 100 }}>
+              <Card key={clStudent.id} variant="outlined" sx={{ width: 200, height: 100 }}>
                 <CardContent>
                   <Typography
                     gutterBottom
@@ -67,7 +67,6 @@ class StudentClass extends React.Component {
 
   renderstudentCard = () => {
     const student = this.state.activeClass.members.student;
-    console.log(student);
     return (
       <>
         <Card variant="outlined" sx={{textAlign:'start'}}>
@@ -89,8 +88,8 @@ class StudentClass extends React.Component {
             {student
               ? student.map((stud) => {
                   return (
-                    <ul>
-                      <li>{stud}</li>
+                    <ul key={stud.id}>
+                      <li >{stud}</li>
                     </ul>
                   );
                 })
