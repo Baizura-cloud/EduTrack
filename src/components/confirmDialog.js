@@ -31,8 +31,8 @@ export default class AlertDialog extends Component {
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button variant="outlined" onClick={handleDelete}>Cancel</Button>
-            <Button variant="outlined" onClick={deleteItem} color="error">
+            <Button variant="contained" onClick={handleDelete}>Cancel</Button>
+            <Button variant="contained" onClick={deleteItem} color="error">
               Delete {alertContent.button}
             </Button>
           </DialogActions>

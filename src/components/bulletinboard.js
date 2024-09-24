@@ -140,7 +140,7 @@ class Bulletin extends React.Component {
                 {post.created_by == this.props.auth.data.user.email ? (
                   <CardHeader
                     action={
-                      <Stack direction="row" spacing={1}>
+                      <Stack direction="row" >
                         <IconButton
                           color="secondary"
                           onClick={() => this.editpost(post)}
@@ -192,7 +192,7 @@ class Bulletin extends React.Component {
             action={
               <div align="right">
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<AddIcon />}
                   onClick={this.createpost}
                 >

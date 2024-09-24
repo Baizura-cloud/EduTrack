@@ -43,9 +43,12 @@ class DrawerAppbar extends Component {
       messageSnack: "",
       severitySnack: "",
       loading: false,
+      path:''
     };
   }
-
+  componentDidMount(){
+    this.setState({path: window.location.pathname})
+  }
   handleDrawerClose = () => {
     this.setState({ isClosing: true, mobileOpen: false });
   };
@@ -70,6 +73,9 @@ class DrawerAppbar extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
+  handleClick = () =>{
+    this.setState({path: window.location.pathname})
+  }
 
   drawer = () => {
     const icon = [
@@ -79,7 +85,7 @@ class DrawerAppbar extends Component {
       <TodayIcon />,
       <AccountBoxIcon />,
     ];
-    const path = ["/", "/studentclass", "course", "event", "account"];
+    const path = ["/", "/studentclass", "/course", "/event", "/account"];
     return (
       <div>
         <Toolbar>
@@ -93,21 +99,19 @@ class DrawerAppbar extends Component {
                 <Paper
                   elevation={0}
                   sx={{
-                    //borderRadius: 1,
-                    //backgroundColor: "#D8A25E",
-                   // backgroundColor: this.state.paperColour.class,
                     height: "100%",
                     width: "100%",
+                    borderRight: this.state.path == path[index]? '2px solid blue': 'inherit',
                   }}
-                 // onClick={() => this.handlclick(text)}
+                  onClick={this.handleClick}
                 >
                   <Link
                     to={path[index]}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    <ListItemButton>
-                      <ListItemIcon>{icon[index]}</ListItemIcon>
-                      <ListItemText primary={text} />
+                    <ListItemButton >
+                      <ListItemIcon sx={{color:this.state.path == path[index]? "#11469c": 'inherit'}}>{icon[index]}</ListItemIcon>
+                      <ListItemText sx={{color:this.state.path == path[index]? "#11469c": 'inherit'}} primary={text} />
                     </ListItemButton>
                   </Link>
                 </Paper>

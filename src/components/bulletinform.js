@@ -161,7 +161,7 @@ class BulletinForm extends Component {
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button
-            variant="outlined"
+            variant="contained"
             color="success"
             onClick={this.handlesubmit}
           >

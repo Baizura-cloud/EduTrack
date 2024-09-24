@@ -70,7 +70,7 @@ class Course extends React.Component {
                   </Typography>
                 </CardContent>
                 <CardActions sx={{justifyContent:'end'}}>
-                  <Button size="small" onClick={this.handleClass}>
+                  <Button variant="contained" size="small" onClick={this.handleClass}>
                     Class
                   </Button>
                 </CardActions>
@@ -90,7 +90,7 @@ class Course extends React.Component {
           action={
             <div align="right">
               <Button
-                variant="outlined"
+                variant="contained"
                 startIcon={<AddIcon />}
                 onClick={this.createCourse}
               >

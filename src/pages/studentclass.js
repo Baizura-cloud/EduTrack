@@ -52,6 +52,7 @@ class StudentClass extends React.Component {
                 </CardContent>
                 <CardActions sx={{ justifyContent: "end" }}>
                   <Button
+                  variant="contained"
                     size="small"
                     onClick={() => this.handleStudentlist(clStudent)}
                   >
@@ -75,7 +76,7 @@ class StudentClass extends React.Component {
             action={
               <div align="right">
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<AddIcon />}
                   onClick={this.addstudent}
                 >
@@ -110,7 +111,7 @@ class StudentClass extends React.Component {
             action={
               <div align="right">
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<AddIcon />}
                   onClick={this.createClass}
                 >

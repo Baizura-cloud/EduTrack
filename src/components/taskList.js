@@ -21,6 +21,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import Snack from "./snackbar";
 import { CardHeader } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import IconButton from "@mui/material/IconButton";
 import { createTask, deleteTask, fetchTask, updateTask } from "../redux/taskSlice";
 import { connect } from "react-redux";
 import FormDrawer from "./formdrawer";
@@ -229,24 +230,18 @@ class Tasklist extends Component {
             <Typography variant="subtitle2">{item.description}</Typography>
           </AccordionDetails>
           <AccordionActions>
-            <Button
-              variant="outlined"
+            <IconButton
               color="secondary"
-              startIcon={<EditIcon />}
               onClick={() => this.editItem(item)}
-              size="small"
             >
-              Edit
-            </Button>
-            <Button
-              variant="outlined"
+              <EditIcon />
+            </IconButton>
+            <IconButton
               color="error"
-              startIcon={<DeleteIcon />}
               onClick={() => this.handleDelete(item)}
-              size="small"
             >
-              Delete
-            </Button>
+              <DeleteIcon />
+            </IconButton>
           </AccordionActions>
         </Accordion>
       </li>
@@ -263,7 +258,7 @@ class Tasklist extends Component {
             action={
               <div align="right">
                 <Button
-                  variant="outlined"
+                  variant="contained"
                   startIcon={<AddIcon />}
                   onClick={this.createItem}
                 >
