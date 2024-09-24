@@ -128,7 +128,6 @@ export default class TaskForm extends Component {
           <Button
             variant="outlined"
             color="success"
-            // onClick={() => onSave(this.state.activeItem)}
             onClick={this.handlesubmit}
           >
             Save

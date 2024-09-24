@@ -40,6 +40,10 @@ class Tasklist extends Component {
         severity: "",
         message: "",
       },
+      alertContent: { // on confirm delete data
+        message: 'This action cannot be undone. All data related to this task will be deleted',
+        button: 'Task'
+      },
       activeItem: {
         title: "",
         description: "",
@@ -295,6 +299,7 @@ class Tasklist extends Component {
             activeItem={this.state.activeItem}
             handleDelete={this.handleDelete}
             deleteItem={this.handleDeleteItem}
+            alertContent={this.state.alertContent}
           />
         ) : null}
         {this.state.popup ? (

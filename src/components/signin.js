@@ -52,8 +52,6 @@ class SignIn extends Component {
     if (emailValidation(this.state.loginData.email)) {
       try {
         this.setState({ error: false });
-        console.log("auth through backend");
-        console.log(this.state.loginData)
         try {
           this.props.handleloginuser(this.state.loginData)
         } catch (error) {
@@ -64,7 +62,6 @@ class SignIn extends Component {
       }
     } else {
       this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
-      console.log(this.state.loginData);
     }
   };
   

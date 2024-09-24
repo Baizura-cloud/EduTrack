@@ -12,11 +12,10 @@ export default class AlertDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem: this.props.activeItem,
     };
   }
   render() {
-    const { handleDelete, deleteItem } = this.props;
+    const { handleDelete, deleteItem, alertContent } = this.props;
     return (
       <React.Fragment>
         <Dialog open={true} onClose={handleDelete}>
@@ -28,14 +27,13 @@ export default class AlertDialog extends Component {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              This action cannot be undone. All data related to this task will
-              be deleted.
+              {alertContent.message}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button variant="outlined" onClick={handleDelete}>Cancel</Button>
             <Button variant="outlined" onClick={deleteItem} color="error">
-              Delete Task
+              Delete {alertContent.button}
             </Button>
           </DialogActions>
         </Dialog>

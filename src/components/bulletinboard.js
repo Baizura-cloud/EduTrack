@@ -1,4 +1,5 @@
 import * as React from "react";
+import AlertDialog from "./confirmDialog";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
@@ -7,30 +8,155 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import FormDrawer from "./formdrawer";
-import { fetchBulletin } from "../redux/bulletinSlice";
+import {
+  createBulletin,
+  deleteBulletin,
+  fetchBulletin,
+  updateBulletin,
+} from "../redux/bulletinSlice";
 import { connect } from "react-redux";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Stack } from "@mui/material";
+import Snack from "./snackbar";
 
 class Bulletin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeItem:{},
+      activeItem: {},
       postList: [],
       toggleDrawer: false,
+      confirmDel: false, //confirm delete dialog open@close
+      popup: false, //snackbar open@close
+      popupContent: {
+        //snackbar type & message
+        severity: "",
+        message: "",
+      },
+      alertContent: {
+        // on confirm delete data
+        message:
+          "This action cannot be undone. All data related to this post will be deleted",
+        button: "Bulletin",
+      },
     };
   }
 
   componentDidMount() {
-    this.props.fetchBulletin();
-    this.setState({ postList: this.props.bulletin.data });
+    this.refreshList();
   }
+  refreshList = () => {
+    this.props.fetchBulletin();
+  };
+  createpost = () => {
+    const item = { title: "", details: "" };
+    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+  };
+  toggle = () => {
+    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
+  };
+  editpost = (item) => {
+    this.setState({
+      activeItem: item,
+      toggleDrawer: !this.state.toggleDrawer,
+    }); //open drawer
+  };
+  handleSubmitItem = (item) => {
+    this.toggle();
+    if (item.id) {
+      console.log('update ' + item.id)
+      this.props.updateBulletin(item).then(() => {
+        this.refreshList();
+        this.togglesnack("edit");
+      });
+    } else {
+      const newItem = { ...item, created_by: this.props.auth.data.user.email };
+      this.props.createBulletin([newItem]).then(() => {
+        this.refreshList();
+        this.togglesnack("submit");
+      });
+    }
+  };
+
+  handleDelete = (item) => {
+    //open modal confirm delete
+    this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
+  };
+  handleDeleteItem = (item) => {
+    this.handleDelete(); // close the alert
+    item = this.state.activeItem;
+    try {
+      this.props.deleteBulletin(item.id).then(() => {
+        this.refreshList();
+        this.togglesnack("delete");
+      });
+    } catch (error) {
+      this.togglesnack("error");
+      console.log(error);
+    }
+  };
+  togglesnack = (snacktype) => {
+    this.setState({ popup: !this.state.popup });
+    if (snacktype == "delete") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Task deleted successfully",
+        },
+      });
+    } else if (snacktype == "submit") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Task submitted successfully",
+        },
+      });
+    } else if (snacktype == "edit") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Task edited successfully",
+        },
+      });
+    } else if (snacktype == "error") {
+      this.setState({
+        popupContent: {
+          severity: "error",
+          message: "Error: please make sure the data are valid",
+        },
+      });
+    }
+  };
 
   renderCard = () => {
+    const { bulletin } = this.props;
     return (
       <Card>
-        {this.state.postList
-          ? this.state.postList.map((post) => (
+        {bulletin
+          ? bulletin.data.map((post) => (
               <CardContent key={post.id}>
+                {post.created_by == this.props.auth.data.user.email ? (
+                  <CardHeader
+                    action={
+                      <Stack direction="row" spacing={1}>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => this.editpost(post)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          onClick={() => this.handleDelete(post)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Stack>
+                    }
+                  />
+                ) : null}
                 <Typography
                   gutterBottom
                   sx={{ textAlign: "start", fontSize: 16 }}
@@ -47,14 +173,7 @@ class Bulletin extends React.Component {
       </Card>
     );
   };
-  createpost = () => {
-    const item = { title: "", details: "", completed: false };
 
-    this.setState({activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
-  };
-  toggle = () => {
-    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
-  };
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
@@ -84,16 +203,36 @@ class Bulletin extends React.Component {
           />
           <CardContent>{this.renderCard()}</CardContent>
         </Card>
+        {this.state.confirmDel ? (
+          <AlertDialog
+            activeItem={this.state.activeItem}
+            handleDelete={this.handleDelete}
+            deleteItem={this.handleDeleteItem}
+            alertContent={this.state.alertContent}
+          />
+        ) : null}
+        {this.state.popup ? (
+          <Snack
+            togglesnack={this.togglesnack} // the function
+            open={this.state.popup}
+            message={this.state.popupContent.message}
+            severity={this.state.popupContent.severity}
+          />
+        ) : null}
       </Box>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   bulletin: state.bulletin,
 });
 const mapDispatchToProps = (dispatch) => ({
   fetchBulletin: () => dispatch(fetchBulletin()),
+  deleteBulletin: (id) => dispatch(deleteBulletin(id)),
+  updateBulletin: (data) => dispatch(updateBulletin(data)),
+  createBulletin: (data) => dispatch(createBulletin(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bulletin);
