@@ -8,6 +8,7 @@ import classSlice from "./classSlice";
 import bulletinSlice from "./bulletinSlice";
 import otherprofileSlice from "./otherprofileSlice";
 import courseSlice from "./courseSlice";
+import eventSlice from "./eventSlice";
 
 const persistConfig = {
     key: 'root',
@@ -21,7 +22,8 @@ const rootReducer = combineReducers({
     classstudent: classSlice.reducer,
     bulletin: bulletinSlice.reducer,
     otherprofile: otherprofileSlice.reducer,
-    course: courseSlice.reducer
+    course: courseSlice.reducer,
+    event: eventSlice.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

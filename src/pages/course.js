@@ -8,10 +8,11 @@ import Typography from "@mui/material/Typography";
 import { CardHeader, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
+import Tooltip from "@mui/material/Tooltip";
 import {
   createCourse,
   deleteCourse,
@@ -144,9 +145,9 @@ class Course extends React.Component {
                 variant="outlined"
                 sx={{ width: 200, height: 300, textAlign: "start" }}
               >
-                {course.admin == this.props.auth.data.user.email ? (
-                  <CardHeader
-                    action={
+                <CardHeader
+                  action={
+                    course.admin == this.props.auth.data.user.email ? (
                       <Stack direction="row">
                         <IconButton
                           color="secondary"
@@ -161,9 +162,18 @@ class Course extends React.Component {
                           <DeleteIcon />
                         </IconButton>
                       </Stack>
-                    }
-                  />
-                ) : null}
+                    ) : (
+                      <Stack direction="row">
+                        <Tooltip title={"created by " + course.admin} arrow>
+                          <IconButton color="secondary">
+                            <ContactPageIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    )
+                  }
+                />
+
                 <CardContent>
                   <Typography
                     gutterBottom

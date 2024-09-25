@@ -1,41 +1,125 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack } from "@mui/material";
-import { Navigate } from "react-router-dom";
+import { CardHeader, Stack, Tooltip } from "@mui/material";
+import { connect } from "react-redux";
+import { createEvent, deleteEvent, fetchEvent, updateEvent } from "../redux/eventSlice";
+import FormDrawer from "../components/formdrawer";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
+import AddIcon from "@mui/icons-material/Add";
+import Snack from "../components/snackbar";
+import AlertDialog from "../components/confirmDialog";
 
 class Event extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      listStatus: false,
-      activeList: [],
-      eventList: [
-        {
-          //dummy data
-          id: 1,
-          name: "Sports Day",
-          details:
-            "Sed posuere mi enim, vitae fermentum odio aliquam hendrerit. Praesent malesuada, nulla a aliquet ullamcorper, elit urna varius arcu, id pellentesque mauris nunc vitae lacus. Mauris sit amet dolor at metus fringilla sodales. Ut eget porta lorem. Donec egestas est nec odio laoreet, at efficitur tortor vulputate. Aenean luctus risus et lacus rutrum dapibus. Aenean tempor risus vitae nisl pretium sollicitudin. Curabitur scelerisque porttitor augue, vitae pulvinar lorem vulputate in. Mauris nisi ex, hendrerit et ipsum sit amet, tincidunt gravida turpis.",
-          date: "12/9/2024",
-        },
-        {
-          //dummy data
-          id: 2,
-          name: "Annual Exam",
-          details:
-            "Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed id purus sit amet purus interdum hendrerit nec nec ipsum. Sed ac vehicula neque. Donec tincidunt vehicula ligula nec vulputate. Sed bibendum maximus metus, vel vestibulum lectus eleifend nec. Curabitur sed dolor eget tortor auctor dignissim sed in sapien. Suspendisse pretium efficitur maximus. Pellentesque facilisis lacus ipsum, eu scelerisque dolor pulvinar vitae. Maecenas fringilla ultricies felis vitae sollicitudin.",
-          date: "30/9/2024",
-        },
-      ],
+      toggleDrawer: false,
+      confirmDel: false, //confirm delete dialog open@close
+      popup: false, //snackbar open@close
+      popupContent: {
+        //snackbar type & message
+        severity: "",
+        message: "",
+      },
+      alertContent: {
+        // on confirm delete data
+        message:
+          "This action cannot be undone. All data related to this event will be deleted",
+        button: "Event",
+      },
     };
   }
-  handleClass = () => {
-    console.log("class ?");
+
+  componentDidMount(){
+    this.refreshList()
+  }
+  refreshList = () =>{
+    this.props.fetchEvent()
+    this.setState({eventList:this.props.event.data})
+  }
+  togglesnack = (snacktype) => {
+    this.setState({ popup: !this.state.popup });
+    if (snacktype == "delete") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Event deleted successfully",
+        },
+      });
+    } else if (snacktype == "submit") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Event submitted successfully",
+        },
+      });
+    } else if (snacktype == "edit") {
+      this.setState({
+        popupContent: {
+          severity: "success",
+          message: "Event edited successfully",
+        },
+      });
+    } else if (snacktype == "error") {
+      this.setState({
+        popupContent: {
+          severity: "error",
+          message: "Error: please make sure the data are valid",
+        },
+      });
+    }
+  };
+  toggle = () => {
+    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
+  };
+  handlecreateEvent = () =>{
+    const item = { name: "", details: ""};
+    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+  }
+  handleeditEvent = (item) => {
+    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+  };
+  handleSubmitItem = (item) => {
+    this.toggle();
+    if (item.id) {
+      this.props.updateEvent(item).then(() => {
+        this.refreshList();
+        this.togglesnack("edit");
+      });
+    } else {
+      const newItem = { ...item, created_by: this.props.auth.data.user.email };
+      this.props.createEvent([newItem]).then(() => {
+        this.refreshList();
+        this.togglesnack("submit");
+      });
+    }
+  };
+  handleDelete = (item) => {
+    //open modal confirm delete
+    this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
+  };
+  handleDeleteItem = (item) => {
+    this.handleDelete(); // close the alert
+    item = this.state.activeItem;
+    try {
+      this.props.deleteEvent(item.id).then(() => {
+        this.refreshList();
+        this.togglesnack("delete");
+      });
+    } catch (error) {
+      this.togglesnack("error");
+      console.log(error);
+    }
+  };
+  handleClass = (course) => {
+    this.setState({ activeDetails: course, openList: true });
   };
   rendereventCard = () => {
     return (
@@ -43,6 +127,34 @@ class Event extends React.Component {
         {this.state.eventList
           ? this.state.eventList.map((event) => (
               <Card variant="outlined" key={event.id}>
+                <CardHeader
+                action={
+                  event.created_by == this.props.auth.data.user.email? (
+                    <Stack direction="row">
+                        <IconButton
+                          color="secondary"
+                          onClick={() => this.handleeditEvent(event)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                        <IconButton
+                          color="error"
+                          onClick={() => this.handleDelete(event)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Stack>
+                  ) : (
+                    <Stack>
+                      <Tooltip title={"created by " + event.created_by} arrow>
+                          <IconButton color="secondary">
+                            <ContactPageIcon />
+                          </IconButton>
+                        </Tooltip>
+                    </Stack>
+                  )
+                }
+                />
                 <CardContent>
                   <Typography
                     gutterBottom
@@ -66,11 +178,6 @@ class Event extends React.Component {
                     {event.details}
                   </Typography>
                 </CardContent>
-                {/* <CardActions>
-                  <Button size="small" onClick={this.handleClass}>
-                    Class
-                  </Button>
-                </CardActions> */}
               </Card>
             ))
           : null}
@@ -80,8 +187,30 @@ class Event extends React.Component {
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
+        {this.state.toggleDrawer ? (
+          <FormDrawer
+            toggle={this.toggle}
+            activeItem={this.state.activeItem}
+            onSave={this.handleSubmitItem}
+            flag="event"
+          />
+        ) : null}
         <Card variant="outlined" sx={{ padding: 2 }}>
-          <CardHeader title="Event" sx={{ textAlign: "start", margin: 2 }} />
+          <CardHeader 
+          title="Event" 
+          sx={{ textAlign: "start", margin: 2 }} 
+          action={
+            <div align="right">
+              <Button
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={this.handlecreateEvent}
+              >
+                New Event
+              </Button>
+            </div>
+          }
+          />
           <CardContent>
             <Stack
               spacing={{ xs: 1, sm: 2 }}
@@ -93,9 +222,36 @@ class Event extends React.Component {
             </Stack>
           </CardContent>
         </Card>
+        {this.state.confirmDel ? (
+          <AlertDialog
+            activeItem={this.state.activeItem}
+            handleDelete={this.handleDelete}
+            deleteItem={this.handleDeleteItem}
+            alertContent={this.state.alertContent}
+          />
+        ) : null}
+        {this.state.popup ? (
+          <Snack
+            togglesnack={this.togglesnack} // the function
+            open={this.state.popup}
+            message={this.state.popupContent.message}
+            severity={this.state.popupContent.severity}
+          />
+        ) : null}
       </Box>
     );
   }
 }
 
-export default Event;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  event: state.event
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchEvent: () => dispatch(fetchEvent()),
+  createEvent: (data) => dispatch(createEvent(data)),
+  updateEvent: (data) => dispatch(updateEvent(data)),
+  deleteEvent: (id) => dispatch(deleteEvent(id))
+})
+export default connect(mapStateToProps, mapDispatchToProps)(Event);

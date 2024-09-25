@@ -7,6 +7,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
+import ContactPageIcon from "@mui/icons-material/ContactPage";
 import FormDrawer from "./formdrawer";
 import {
   createBulletin,
@@ -18,7 +19,7 @@ import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Stack } from "@mui/material";
+import { Stack, Tooltip } from "@mui/material";
 import Snack from "./snackbar";
 
 class Bulletin extends React.Component {
@@ -139,7 +140,7 @@ class Bulletin extends React.Component {
                 {post.created_by == this.props.auth.data.user.email ? (
                   <CardHeader
                     action={
-                      <Stack direction="row" >
+                      <Stack direction="row">
                         <IconButton
                           color="secondary"
                           onClick={() => this.editpost(post)}
@@ -155,7 +156,19 @@ class Bulletin extends React.Component {
                       </Stack>
                     }
                   />
-                ) : null}
+                ) : (
+                  <CardHeader
+                    action={
+                      <Stack>
+                        <Tooltip title={"created by " + post.created_by} arrow>
+                          <IconButton color="secondary">
+                            <ContactPageIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    }
+                  />
+                )}
                 <Typography
                   gutterBottom
                   sx={{ textAlign: "start", fontSize: 16 }}
