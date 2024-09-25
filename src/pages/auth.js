@@ -34,29 +34,21 @@ export default function Auth() {
   };
 
   const handleloginuser = (data) => {
-    console.log("set loading true");
     setloading(true);
-    console.log("dispatch");
-    console.log(data);
     dispatch(loginUser(data));
     setTimeout(function () {
       const local = localStorage.getItem("persist:root"); //get local storage auth
       if (local !== null) {
-        console.log('local not null')
-        console.log(local)
         const jsonLocal = JSON.parse(local);  // local data as json
         if (jsonLocal) {
-          console.log('got jsonLocal')
           const authr = JSON.parse(jsonLocal.auth); //get auth response
           if (authr.fetchstatus == "success") {
             navigate("/");
             setloading(false);
           } else {
-            console.log(loading);
             settoggleSnack(true);
             setmessageSnack("Invalid Credentials");
             setSeveritySnack("error");
-            console.log("call snackbar");
             setloading(false);
           }
         } else {

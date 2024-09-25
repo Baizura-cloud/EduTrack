@@ -66,7 +66,6 @@ class Bulletin extends React.Component {
   handleSubmitItem = (item) => {
     this.toggle();
     if (item.id) {
-      console.log('update ' + item.id)
       this.props.updateBulletin(item).then(() => {
         this.refreshList();
         this.togglesnack("edit");
@@ -103,21 +102,21 @@ class Bulletin extends React.Component {
       this.setState({
         popupContent: {
           severity: "success",
-          message: "Task deleted successfully",
+          message: "Post deleted successfully",
         },
       });
     } else if (snacktype == "submit") {
       this.setState({
         popupContent: {
           severity: "success",
-          message: "Task submitted successfully",
+          message: "Post submitted successfully",
         },
       });
     } else if (snacktype == "edit") {
       this.setState({
         popupContent: {
           severity: "success",
-          message: "Task edited successfully",
+          message: "Post edited successfully",
         },
       });
     } else if (snacktype == "error") {

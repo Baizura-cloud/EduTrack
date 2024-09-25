@@ -37,11 +37,9 @@ export default class ForgotPassword extends Component {
       this.setState({ error: false });
       if (emailValidation(this.state.data.email)) {
         this.setState({ error: false });
-        console.log("auth through backend");
         this.resetEmail(this.state.data.email);
       } else {
         this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
-        console.log(this.state.data);
       }
     }
   };
@@ -52,7 +50,6 @@ export default class ForgotPassword extends Component {
         console.log(error);
         this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
       } else {
-        console.log(data);
         this.setState({ error: false,  toggleSnack: true, messageSnack: 'Email sent', severitySnack: 'success' });
       }
     } catch (error) {

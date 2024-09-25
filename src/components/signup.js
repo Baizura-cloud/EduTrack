@@ -94,7 +94,6 @@ class SignUp extends Component {
         console.log(error);
         this.setState({ errorEmail: true, errorPassword: true, toggleSnack:true, messageSnack: 'Email or password are invalid', severitySnack: 'error' });
       } else {
-        console.log(data);
         this.setState({ errorEmail: false, errorPassword: false });
       }
     } catch (error) {

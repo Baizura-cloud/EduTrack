@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import TaskForm from "./taskform";
 import BulletinForm from "./bulletinform";
+import Courseform from "./courseform";
 
 class FormDrawer extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ class FormDrawer extends React.Component {
             {/* Your form content here */}
             {flag == 'task'? <TaskForm activeItem={activeItem} onSave={onSave}  />: null}
             {flag == 'bulletin'? <BulletinForm activeItem={activeItem} onSave={onSave} />:null}
+            {flag == 'course'? <Courseform activeItem={activeItem} onSave={onSave} />:null}
           </Box>
         </Drawer>
       </div>
