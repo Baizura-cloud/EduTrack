@@ -149,18 +149,22 @@ class Course extends React.Component {
                   action={
                     course.admin == this.props.auth.data.user.email ? (
                       <Stack direction="row">
-                        <IconButton
-                          color="secondary"
-                          onClick={() => this.handleeditcourse(course)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => this.handleDelete(course)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
+                        <Tooltip title={"edit"} arrow>
+                          <IconButton
+                            color="secondary"
+                            onClick={() => this.handleeditcourse(course)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"delete"} arrow>
+                          <IconButton
+                            color="error"
+                            onClick={() => this.handleDelete(course)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Stack>
                     ) : (
                       <Stack direction="row">

@@ -6,7 +6,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { CardHeader, Stack, Tooltip } from "@mui/material";
 import { connect } from "react-redux";
-import { createEvent, deleteEvent, fetchEvent, updateEvent } from "../redux/eventSlice";
+import {
+  createEvent,
+  deleteEvent,
+  fetchEvent,
+  updateEvent,
+} from "../redux/eventSlice";
 import FormDrawer from "../components/formdrawer";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
@@ -37,13 +42,13 @@ class Event extends React.Component {
     };
   }
 
-  componentDidMount(){
-    this.refreshList()
+  componentDidMount() {
+    this.refreshList();
   }
-  refreshList = () =>{
-    this.props.fetchEvent()
-    this.setState({eventList:this.props.event.data})
-  }
+  refreshList = () => {
+    this.props.fetchEvent();
+    this.setState({ eventList: this.props.event.data });
+  };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
     if (snacktype == "delete") {
@@ -79,10 +84,10 @@ class Event extends React.Component {
   toggle = () => {
     this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
   };
-  handlecreateEvent = () =>{
-    const item = { name: "", details: ""};
+  handlecreateEvent = () => {
+    const item = { name: "", details: "" };
     this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
-  }
+  };
   handleeditEvent = (item) => {
     this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
   };
@@ -128,32 +133,28 @@ class Event extends React.Component {
           ? this.state.eventList.map((event) => (
               <Card variant="outlined" key={event.id}>
                 <CardHeader
-                action={
-                  event.created_by == this.props.auth.data.user.email? (
-                    <Stack direction="row">
-                        <IconButton
-                          color="secondary"
-                          onClick={() => this.handleeditEvent(event)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => this.handleDelete(event)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
-                  ) : (
-                    <Stack>
-                      <Tooltip title={"created by " + event.created_by} arrow>
-                          <IconButton color="secondary">
-                            <ContactPageIcon />
+                  action={
+                    event.created_by == this.props.auth.data.user.email ? (
+                      <Stack direction="row">
+                        <Tooltip title={"edit"} arrow>
+                          <IconButton
+                            color="secondary"
+                            onClick={() => this.handleeditEvent(event)}
+                          >
+                            <EditIcon />
                           </IconButton>
                         </Tooltip>
-                    </Stack>
-                  )
-                }
+                        <Tooltip title={"delete"} arrow>
+                          <IconButton
+                            color="error"
+                            onClick={() => this.handleDelete(event)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    ) : null
+                  }
                 />
                 <CardContent>
                   <Typography
@@ -177,6 +178,13 @@ class Event extends React.Component {
                   >
                     {event.details}
                   </Typography>
+                  <Stack alignItems={"start"}>
+                    <Tooltip title={"created by " + event.created_by} arrow>
+                      <IconButton color="secondary">
+                        <ContactPageIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
                 </CardContent>
               </Card>
             ))
@@ -196,20 +204,20 @@ class Event extends React.Component {
           />
         ) : null}
         <Card variant="outlined" sx={{ padding: 2 }}>
-          <CardHeader 
-          title="Event" 
-          sx={{ textAlign: "start", margin: 2 }} 
-          action={
-            <div align="right">
-              <Button
-                variant="contained"
-                startIcon={<AddIcon />}
-                onClick={this.handlecreateEvent}
-              >
-                New Event
-              </Button>
-            </div>
-          }
+          <CardHeader
+            title="Event"
+            sx={{ textAlign: "start", margin: 2 }}
+            action={
+              <div align="right">
+                <Button
+                  variant="contained"
+                  startIcon={<AddIcon />}
+                  onClick={this.handlecreateEvent}
+                >
+                  New Event
+                </Button>
+              </div>
+            }
           />
           <CardContent>
             <Stack
@@ -245,13 +253,13 @@ class Event extends React.Component {
 
 const mapStateToProps = (state) => ({
   auth: state.auth,
-  event: state.event
-})
+  event: state.event,
+});
 
 const mapDispatchToProps = (dispatch) => ({
   fetchEvent: () => dispatch(fetchEvent()),
   createEvent: (data) => dispatch(createEvent(data)),
   updateEvent: (data) => dispatch(updateEvent(data)),
-  deleteEvent: (id) => dispatch(deleteEvent(id))
-})
+  deleteEvent: (id) => dispatch(deleteEvent(id)),
+});
 export default connect(mapStateToProps, mapDispatchToProps)(Event);

@@ -5,6 +5,7 @@ import TaskForm from "./taskform";
 import BulletinForm from "./bulletinform";
 import Courseform from "./courseform";
 import EventForm from "./eventform";
+import Classform from "./classform";
 
 class FormDrawer extends React.Component {
   constructor(props) {
@@ -30,6 +31,7 @@ class FormDrawer extends React.Component {
             {flag == 'bulletin'? <BulletinForm activeItem={activeItem} onSave={onSave} />:null}
             {flag == 'course'? <Courseform activeItem={activeItem} onSave={onSave} />:null}
             {flag == 'event'? <EventForm activeItem={activeItem} onSave={onSave} />:null}
+            {flag == 'class'? <Classform activeItem={activeItem} onSave={onSave} />:null}
           </Box>
         </Drawer>
       </div>

@@ -141,34 +141,26 @@ class Bulletin extends React.Component {
                   <CardHeader
                     action={
                       <Stack direction="row">
-                        <IconButton
-                          color="secondary"
-                          onClick={() => this.editpost(post)}
-                        >
-                          <EditIcon />
-                        </IconButton>
-                        <IconButton
-                          color="error"
-                          onClick={() => this.handleDelete(post)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Stack>
-                    }
-                  />
-                ) : (
-                  <CardHeader
-                    action={
-                      <Stack>
-                        <Tooltip title={"created by " + post.created_by} arrow>
-                          <IconButton color="secondary">
-                            <ContactPageIcon />
+                        <Tooltip title={"edit"} arrow>
+                          <IconButton
+                            color="secondary"
+                            onClick={() => this.editpost(post)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"delete"} arrow>
+                          <IconButton
+                            color="error"
+                            onClick={() => this.handleDelete(post)}
+                          >
+                            <DeleteIcon />
                           </IconButton>
                         </Tooltip>
                       </Stack>
                     }
                   />
-                )}
+                ) : null}
                 <Typography
                   gutterBottom
                   sx={{ textAlign: "start", fontSize: 16 }}
@@ -179,6 +171,11 @@ class Bulletin extends React.Component {
                   {post.details}
                   <br />
                 </Typography>
+                <Stack alignItems={'start'}>
+                  <Tooltip title={"created by " + post.created_by} arrow>
+                      <ContactPageIcon color="secondary" />
+                  </Tooltip>
+                </Stack>
               </CardContent>
             ))
           : null}

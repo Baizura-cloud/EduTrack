@@ -19,10 +19,15 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Snack from "./snackbar";
-import { CardHeader } from "@mui/material";
+import { CardHeader, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
-import { createTask, deleteTask, fetchTask, updateTask } from "../redux/taskSlice";
+import {
+  createTask,
+  deleteTask,
+  fetchTask,
+  updateTask,
+} from "../redux/taskSlice";
 import { connect } from "react-redux";
 import FormDrawer from "./formdrawer";
 
@@ -41,9 +46,11 @@ class Tasklist extends Component {
         severity: "",
         message: "",
       },
-      alertContent: { // on confirm delete data
-        message: 'This action cannot be undone. All data related to this task will be deleted',
-        button: 'Task'
+      alertContent: {
+        // on confirm delete data
+        message:
+          "This action cannot be undone. All data related to this task will be deleted",
+        button: "Task",
       },
       activeItem: {
         title: "",
@@ -100,22 +107,22 @@ class Tasklist extends Component {
 
   handleSubmitItem = (item) => {
     this.toggle();
-    if(item.id){
-      this.props.updateTask(item).then(()=>{
-        this.refreshList()
-        this.togglesnack("edit")
-      })
-    }else{
-      const newItem = {...item, created_by: this.props.auth.data.user.email}
-      this.props.createTask([newItem]).then(()=>{
-        this.refreshList()
-        this.togglesnack("submit")
-      })
+    if (item.id) {
+      this.props.updateTask(item).then(() => {
+        this.refreshList();
+        this.togglesnack("edit");
+      });
+    } else {
+      const newItem = { ...item, created_by: this.props.auth.data.user.email };
+      this.props.createTask([newItem]).then(() => {
+        this.refreshList();
+        this.togglesnack("submit");
+      });
     }
-    
   };
 
-  handleDelete = (item) => { //open modal confirm delete
+  handleDelete = (item) => {
+    //open modal confirm delete
     this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
   };
 
@@ -123,10 +130,10 @@ class Tasklist extends Component {
     this.handleDelete();
     item = this.state.activeItem;
     try {
-      this.props.deleteTask(item.id).then(()=>{
-        this.refreshList()
-        this.togglesnack("delete")
-      })
+      this.props.deleteTask(item.id).then(() => {
+        this.refreshList();
+        this.togglesnack("delete");
+      });
     } catch (error) {
       this.togglesnack("error");
       console.log(error);
@@ -218,7 +225,7 @@ class Tasklist extends Component {
 
     return newItems.map((item) => (
       <li key={item.id}>
-        <Accordion sx={{ marginTop: 2, textAlign:'start' }}>
+        <Accordion sx={{ marginTop: 2, textAlign: "start" }}>
           <AccordionSummary
             expandIcon={<ExpandMoreIcon />}
             aria-controls="panel3-content"
@@ -230,18 +237,16 @@ class Tasklist extends Component {
             <Typography variant="subtitle2">{item.description}</Typography>
           </AccordionDetails>
           <AccordionActions>
-            <IconButton
-              color="secondary"
-              onClick={() => this.editItem(item)}
-            >
-              <EditIcon />
-            </IconButton>
-            <IconButton
-              color="error"
-              onClick={() => this.handleDelete(item)}
-            >
-              <DeleteIcon />
-            </IconButton>
+            <Tooltip title={"edit"} arrow>
+              <IconButton color="secondary" onClick={() => this.editItem(item)}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"delete"} arrow>
+              <IconButton color="error" onClick={() => this.handleDelete(item)}>
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
           </AccordionActions>
         </Accordion>
       </li>
@@ -269,10 +274,10 @@ class Tasklist extends Component {
           />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid  xs={12} sx={{ display: { xs: "none", md: "block" } }}>
+              <Grid xs={12} sx={{ display: { xs: "none", md: "block" } }}>
                 {this.renderTabList()}
               </Grid>
-              <Grid  xs={12} sx={{ display: { xs: "block", md: "none" } }}>
+              <Grid xs={12} sx={{ display: { xs: "block", md: "none" } }}>
                 {this.renderSmallTabList()}
               </Grid>
             </Grid>
@@ -286,7 +291,7 @@ class Tasklist extends Component {
             activeItem={this.state.activeItem}
             toggle={this.toggle}
             onSave={this.handleSubmitItem}
-            flag='task'
+            flag="task"
           />
         ) : null}
         {this.state.confirmDel ? (
@@ -299,7 +304,7 @@ class Tasklist extends Component {
         ) : null}
         {this.state.popup ? (
           <Snack
-             togglesnack={this.togglesnack} // the function
+            togglesnack={this.togglesnack} // the function
             open={this.state.popup}
             message={this.state.popupContent.message}
             severity={this.state.popupContent.severity}
@@ -318,7 +323,7 @@ const mapDispatchToProps = (dispatch) => ({
   fetchTask: (email) => dispatch(fetchTask(email)),
   updateTask: (data) => dispatch(updateTask(data)),
   deleteTask: (id) => dispatch(deleteTask(id)),
-  createTask: (data) => dispatch(createTask(data))
+  createTask: (data) => dispatch(createTask(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tasklist);
