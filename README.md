@@ -23,3 +23,7 @@ Current commit:
 
 ![image](https://github.com/user-attachments/assets/b2ad7877-65d6-41c8-a98b-543961223e0a)
 
+
+3. UI page for Account setting
+
+![image](https://github.com/user-attachments/assets/ca704ae7-12c7-4b2f-a30e-018ede4129d3)
