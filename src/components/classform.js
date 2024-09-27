@@ -19,7 +19,6 @@ import {
   CardActions,
   CardContent,
   CardHeader,
-  Divider,
   IconButton,
   OutlinedInput,
   Typography,
@@ -39,6 +38,7 @@ class Classform extends Component {
           id: 1,
           name: "",
           ic: "",
+          class: "",
         },
       ],
     };
@@ -49,7 +49,7 @@ class Classform extends Component {
       this.setState((prevstate) => ({
         student: [
           ...prevstate.student,
-          { id: this.state.student.length + 1, name: "", ic: "" },
+          { id: this.state.student.length + 1, name: "", ic: "", class: "" },
         ],
       }));
     } else if (operation == "delete") {
@@ -83,15 +83,26 @@ class Classform extends Component {
       const activeItem = { ...this.state.activeItem, [name]: value };
       this.setState({ activeItem });
     }
-
   };
+  handleclassname = (classname) => {// add class name to each student object
+    const studentItem = this.state.student;
+    const newStudentItem = studentItem.map((obj) => {
+      return {
+        ...obj,
+        class: classname,
+      };
+    });
 
+    const item = newStudentItem.map((obj) => {// remove id from each student object
+      const { id, ...data } = obj;
+      return data;
+    });
+    return item;
+  };
   handlesubmit = () => {
     const classItem = this.state.activeItem;
-    const studentItem = this.state.student
-    console.log(classItem)
-    console.log(studentItem)
-    this.props.onSave(classItem, studentItem );
+    const studentItem = this.handleclassname(classItem.name);
+    this.props.onSave(classItem, studentItem);
   };
   handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -104,7 +115,6 @@ class Classform extends Component {
       const sheetData = XLSX.utils.sheet_to_json(sheet);
 
       this.setState({ importdata: sheetData });
-      console.log(sheetData);
     };
 
     reader.readAsArrayBuffer(file);
@@ -182,71 +192,79 @@ class Classform extends Component {
                   </FormControl>
                 </Grid>
               </Grid>
-              <Grid container spacing={1}>
-                <Grid size={{ xs: 12, md: 3 }}>
-                  <Typography variant="h6" gutterBottom>
-                    Student
-                    <IconButton
-                      onClick={() => this.handleAddDeleteStudent("add")}
-                    >
-                      <AddCircleIcon color="primary" />
-                    </IconButton>
-                  </Typography>
-                </Grid>
-              </Grid>
-              {this.state.student.map((data, index) => {
-                return (
-                  <>
-                    <Grid container spacing={1}>
-                      <Grid size={{ xs: 12, md: 3 }}>
-                        <InputLabel sx={{ padding: 2 }}>Name</InputLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 8 }}>
-                        <FormControl error={this.state.error} fullWidth={true}>
-                          <OutlinedInput
-                            type="text"
-                            id="student-name"
-                            name="sname"
-                            // defaultValue={data.name}
-                            onChange={(e) => this.handleChange(e, index)}
-                          />
-                          <FormHelperText id="my-helper-text">
-                            {this.state.error ? "Must not empty" : " "}
-                          </FormHelperText>
-                        </FormControl>
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid size={{ xs: 12, md: 3 }}>
-                        <InputLabel sx={{ padding: 2 }}>IC No.</InputLabel>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 8 }}>
-                        <FormControl error={this.state.error} fullWidth={true}>
-                          <OutlinedInput
-                            type="text"
-                            id="student-ic"
-                            name="ic"
-                            // defaultValue={data.ic}
-                            onChange={(e) => this.handleChange(e, index)}
-                          />
-                          <FormHelperText id="my-helper-text">
-                            {this.state.error ? "Must not empty" : " "}
-                          </FormHelperText>
-                        </FormControl>
-                      </Grid>
-                      <Grid size={{ xs: 12, md: 1 }}>
+              {activeItem.name == "" ? (
+                <>
+                  <Grid container spacing={1}>
+                    <Grid size={{ xs: 12, md: 3 }}>
+                      <Typography variant="h6" gutterBottom>
+                        Student
                         <IconButton
-                          onClick={() =>
-                            this.handleAddDeleteStudent("delete", index)
-                          }
+                          onClick={() => this.handleAddDeleteStudent("add")}
                         >
-                          <RemoveCircleIcon color="error" />
+                          <AddCircleIcon color="primary" />
                         </IconButton>
-                      </Grid>
+                      </Typography>
                     </Grid>
-                  </>
-                );
-              })}
+                  </Grid>
+                  {this.state.student.map((data, index) => {
+                    return (
+                      <>
+                        <Grid container spacing={1}>
+                          <Grid size={{ xs: 12, md: 3 }}>
+                            <InputLabel sx={{ padding: 2 }}>Name</InputLabel>
+                          </Grid>
+                          <Grid size={{ xs: 12, md: 8 }}>
+                            <FormControl
+                              error={this.state.error}
+                              fullWidth={true}
+                            >
+                              <OutlinedInput
+                                type="text"
+                                id="student-name"
+                                name="sname"
+                                onChange={(e) => this.handleChange(e, index)}
+                              />
+                              <FormHelperText id="my-helper-text">
+                                {this.state.error ? "Must not empty" : " "}
+                              </FormHelperText>
+                            </FormControl>
+                          </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                          <Grid size={{ xs: 12, md: 3 }}>
+                            <InputLabel sx={{ padding: 2 }}>IC No.</InputLabel>
+                          </Grid>
+                          <Grid size={{ xs: 12, md: 8 }}>
+                            <FormControl
+                              error={this.state.error}
+                              fullWidth={true}
+                            >
+                              <OutlinedInput
+                                type="text"
+                                id="student-ic"
+                                name="ic"
+                                onChange={(e) => this.handleChange(e, index)}
+                              />
+                              <FormHelperText id="my-helper-text">
+                                {this.state.error ? "Must not empty" : " "}
+                              </FormHelperText>
+                            </FormControl>
+                          </Grid>
+                          <Grid size={{ xs: 12, md: 1 }}>
+                            <IconButton
+                              onClick={() =>
+                                this.handleAddDeleteStudent("delete", index)
+                              }
+                            >
+                              <RemoveCircleIcon color="error" />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </>
+                    );
+                  })}
+                </>
+              ) : null}
             </>
           ) : (
             <>

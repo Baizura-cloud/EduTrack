@@ -5,9 +5,16 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack } from "@mui/material";
+import { CardHeader, Stack, Toolbar } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import AddIcon from "@mui/icons-material/Add";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import {
   createClassStudent,
   deleteClassStudent,
@@ -23,6 +30,11 @@ import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
+import {
+  createStudent,
+  deleteStudent,
+  fetchStudent,
+} from "../redux/studentSlice";
 
 class StudentClass extends React.Component {
   constructor(props) {
@@ -31,6 +43,8 @@ class StudentClass extends React.Component {
       activeItem: {},
       classList: [],
       openList: false,
+      studentList: [],
+      activeStudent: {},
       activeClass: {},
       toggleDrawer: false,
       confirmDel: false, //confirm delete dialog open@close
@@ -42,9 +56,8 @@ class StudentClass extends React.Component {
       },
       alertContent: {
         // on confirm delete data
-        message:
-          "This action cannot be undone. All data related to this class will be deleted",
-        button: "Class",
+        message: "",
+        button: "",
       },
     };
   }
@@ -89,7 +102,12 @@ class StudentClass extends React.Component {
     }
   };
   handleStudentlist = (clStudent) => {
-    this.setState({ activeClass: clStudent, openList: true });
+    this.props.fetchStudent(clStudent.name);
+    this.setState({
+      activeClass: clStudent,
+      studentList: this.props.student.data,
+      openList: true,
+    });
   };
   handlecreateClass = () => {
     const item = { name: "" };
@@ -101,30 +119,69 @@ class StudentClass extends React.Component {
   toggle = () => {
     this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
   };
-  handleSubmitItem = (classItem , studentItem) => {
-   // this.toggle();
+  handleSubmitItem = (classItem, studentItem) => {
+    this.toggle();
     if (classItem.id) {
       this.props.updateClassStudent(classItem).then(() => {
         this.refreshList();
         this.togglesnack("edit");
       });
     } else {
-      const newItem = { ...classItem, admin: this.props.auth.data.user.email };
-      this.props.createClassStudent([newItem]).then(() => {
-        this.refreshList();
-        this.togglesnack("submit");
+      const newClassItem = {
+        ...classItem,
+        admin: this.props.auth.data.user.email,
+      };
+      console.log(newClassItem);
+      console.log(studentItem);
+      this.props.createClassStudent([newClassItem]).then(() => {
+        this.props.createStudent(studentItem).then(() => {
+          this.refreshList();
+          this.togglesnack("submit");
+        });
       });
     }
   };
   handleDelete = (item) => {
     //open modal confirm delete
-    this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
+    this.setState({
+      activeItem: item,
+      confirmDel: !this.state.confirmDel,
+      alertContent: {
+        message:
+          "This action cannot be undone. All data related to this class including the student list will be deleted",
+        button: "Class",
+      },
+    });
   };
   handleDeleteItem = (item) => {
     this.handleDelete(); // close the alert
     item = this.state.activeItem;
     try {
       this.props.deleteClassStudent(item.id).then(() => {
+        this.refreshList();
+        this.togglesnack("delete");
+      });
+    } catch (error) {
+      this.togglesnack("error");
+      console.log(error);
+    }
+  };
+  handleDeleteStudent = (item) => {
+    this.setState({
+      activeStudent: item,
+      confirmDel: !this.state.confirmDel,
+      alertContent: {
+        message:
+          "This action cannot be undone. All data related to this student will be deleted",
+        button: "Student",
+      },
+    });
+  };
+  handleDeleteStudentItem = (item) => {
+    this.handleDelete(); // close the alert
+    item = this.state.activeStudent;
+    try {
+      this.props.deleteStudent(item.id).then(() => {
         this.refreshList();
         this.togglesnack("delete");
       });
@@ -202,38 +259,60 @@ class StudentClass extends React.Component {
   };
 
   renderstudentCard = () => {
-    const allstudent = this.state.activeClass.members;
-    return allstudent !== null ? (
-      <>
-        <Card variant="outlined" sx={{ textAlign: "start" }}>
-          <CardHeader
-            title={"Student List"}
-            action={
-              <div align="right">
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.addstudent}
-                >
-                  Add Student
-                </Button>
-              </div>
-            }
-          />
-          <CardContent>
-            {allstudent
-              ? allstudent.student.map((student) => {
-                  return (
-                    <ul key={student.id}>
-                      <li>{student}</li>
-                    </ul>
-                  );
-                })
-              : null}
-          </CardContent>
-        </Card>
-      </>
-    ) : null;
+    const { student } = this.props;
+    return (
+      <Box sx={{ width: "100%" }}>
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <Toolbar>
+            <Typography variant="h6">Student List</Typography>
+          </Toolbar>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="right">
+                    Identification Card No. (IC)
+                  </TableCell>
+                  <TableCell align="right">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {student
+                  ? student.data.map((data) => {
+                      return (
+                        <TableRow
+                          key={data.id}
+                          sx={{
+                            "&:last-child td, &:last-child th": { border: 0 },
+                          }}
+                        >
+                          <TableCell component="th" scope="row">
+                            {data.name}
+                          </TableCell>
+                          <TableCell align="right">{data.ic}</TableCell>
+                          <TableCell align="right">
+                            <Tooltip title={"edit"} arrow>
+                              <IconButton>
+                                <EditIcon color="secondary" />
+                              </IconButton>
+                              <IconButton
+                                onClick={() => this.handleDeleteStudent(data)}
+                              >
+                                <DeleteIcon color="error" />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  : null}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </Box>
+    );
   };
 
   render() {
@@ -305,6 +384,7 @@ class StudentClass extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   classstudent: state.classstudent,
+  student: state.student,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -312,6 +392,9 @@ const mapDispatchToProps = (dispatch) => ({
   createClassStudent: (data) => dispatch(createClassStudent(data)),
   updateClassStudent: (data) => dispatch(updateClassStudent(data)),
   deleteClassStudent: (id) => dispatch(deleteClassStudent(id)),
+  createStudent: (data) => dispatch(createStudent(data)),
+  fetchStudent: (classname) => dispatch(fetchStudent(classname)),
+  deleteStudent: (id) => dispatch(deleteStudent(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentClass);
