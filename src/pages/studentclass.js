@@ -5,16 +5,9 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack, Toolbar } from "@mui/material";
+import { CardHeader, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import AddIcon from "@mui/icons-material/Add";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import {
   createClassStudent,
   deleteClassStudent,
@@ -30,11 +23,8 @@ import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
-import {
-  createStudent,
-  deleteStudent,
-  fetchStudent,
-} from "../redux/studentSlice";
+import Student from "./student";
+import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class StudentClass extends React.Component {
   constructor(props) {
@@ -42,9 +32,8 @@ class StudentClass extends React.Component {
     this.state = {
       activeItem: {},
       classList: [],
+      studentList:[],
       openList: false,
-      studentList: [],
-      activeStudent: {},
       activeClass: {},
       toggleDrawer: false,
       confirmDel: false, //confirm delete dialog open@close
@@ -102,10 +91,9 @@ class StudentClass extends React.Component {
     }
   };
   handleStudentlist = (clStudent) => {
-    this.props.fetchStudent(clStudent.name);
+    this.props.fetchStudent(clStudent.name)
     this.setState({
       activeClass: clStudent,
-      studentList: this.props.student.data,
       openList: true,
     });
   };
@@ -166,31 +154,6 @@ class StudentClass extends React.Component {
       console.log(error);
     }
   };
-  handleDeleteStudent = (item) => {
-    this.setState({
-      activeStudent: item,
-      confirmDel: !this.state.confirmDel,
-      alertContent: {
-        message:
-          "This action cannot be undone. All data related to this student will be deleted",
-        button: "Student",
-      },
-    });
-  };
-  handleDeleteStudentItem = (item) => {
-    this.handleDelete(); // close the alert
-    item = this.state.activeStudent;
-    try {
-      this.props.deleteStudent(item.id).then(() => {
-        this.refreshList();
-        this.togglesnack("delete");
-      });
-    } catch (error) {
-      this.togglesnack("error");
-      console.log(error);
-    }
-  };
-
   renderclassCard = () => {
     const classStudent = this.props.classstudent.data;
     return (
@@ -258,63 +221,6 @@ class StudentClass extends React.Component {
     );
   };
 
-  renderstudentCard = () => {
-    const { student } = this.props;
-    return (
-      <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
-          <Toolbar>
-            <Typography variant="h6">Student List</Typography>
-          </Toolbar>
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} size="small">
-              <TableHead>
-                <TableRow>
-                  <TableCell>Name</TableCell>
-                  <TableCell align="right">
-                    Identification Card No. (IC)
-                  </TableCell>
-                  <TableCell align="right">Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {student
-                  ? student.data.map((data) => {
-                      return (
-                        <TableRow
-                          key={data.id}
-                          sx={{
-                            "&:last-child td, &:last-child th": { border: 0 },
-                          }}
-                        >
-                          <TableCell component="th" scope="row">
-                            {data.name}
-                          </TableCell>
-                          <TableCell align="right">{data.ic}</TableCell>
-                          <TableCell align="right">
-                            <Tooltip title={"edit"} arrow>
-                              <IconButton>
-                                <EditIcon color="secondary" />
-                              </IconButton>
-                              <IconButton
-                                onClick={() => this.handleDeleteStudent(data)}
-                              >
-                                <DeleteIcon color="error" />
-                              </IconButton>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  : null}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Box>
-    );
-  };
-
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
@@ -355,7 +261,7 @@ class StudentClass extends React.Component {
                 </Stack>
               </Grid>
               <Grid size={{ xs: 12, md: 6 }}>
-                {this.state.openList ? this.renderstudentCard() : null}
+                {this.state.openList ? <Student activeClass={this.state.activeClass} studentList={this.props.student}/> : null}
               </Grid>
             </Grid>
           </CardContent>
@@ -393,8 +299,7 @@ const mapDispatchToProps = (dispatch) => ({
   updateClassStudent: (data) => dispatch(updateClassStudent(data)),
   deleteClassStudent: (id) => dispatch(deleteClassStudent(id)),
   createStudent: (data) => dispatch(createStudent(data)),
-  fetchStudent: (classname) => dispatch(fetchStudent(classname)),
-  deleteStudent: (id) => dispatch(deleteStudent(id)),
+  fetchStudent: (classname) => dispatch(fetchStudent(classname))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(StudentClass);
