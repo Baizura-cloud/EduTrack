@@ -119,14 +119,19 @@ class StudentClass extends React.Component {
         ...classItem,
         admin: this.props.auth.data.user.email,
       };
-      console.log(newClassItem);
-      console.log(studentItem);
+      if(newClassItem.name == ""){
+        this.props.createStudent(studentItem).then(() => {
+          this.refreshList();
+          this.togglesnack("submit");
+        });
+      }else{
       this.props.createClassStudent([newClassItem]).then(() => {
         this.props.createStudent(studentItem).then(() => {
           this.refreshList();
           this.togglesnack("submit");
         });
       });
+      }
     }
   };
   handleDelete = (item) => {
@@ -202,7 +207,7 @@ class StudentClass extends React.Component {
                     gutterBottom
                     sx={{ color: "text.primary", fontSize: 16 }}
                   >
-                    {clStudent.name}
+                    Class {clStudent.name}
                   </Typography>
                 </CardContent>
                 <CardActions sx={{ justifyContent: "end" }}>

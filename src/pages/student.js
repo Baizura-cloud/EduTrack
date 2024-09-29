@@ -116,7 +116,6 @@ class Student extends Component {
     item = this.state.activeStudent;
     try {
       this.props.deleteStudent(item.id).then((data) => {
-        console.log(data);
         this.refreshList();
         this.togglesnack("delete");
       });

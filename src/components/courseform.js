@@ -53,7 +53,6 @@ class CourseForm extends Component {
   }
   handleChange = (e, tag) => {
     let { name, value } = e.target;
-    console.log(tag)
     if (e.target.name == "name") {
       if (e.target.value == "") {
         this.setState({ error: true });

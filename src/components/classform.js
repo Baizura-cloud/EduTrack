@@ -84,7 +84,8 @@ class Classform extends Component {
       this.setState({ activeItem });
     }
   };
-  handleclassname = (classname) => {// add class name to each student object
+  handleclassname = (classname) => {
+    // add class name to each student object
     const studentItem = this.state.student;
     const newStudentItem = studentItem.map((obj) => {
       return {
@@ -93,16 +94,27 @@ class Classform extends Component {
       };
     });
 
-    const item = newStudentItem.map((obj) => {// remove id from each student object
+    const item = newStudentItem.map((obj) => {
+      // remove id from each student object
       const { id, ...data } = obj;
       return data;
     });
     return item;
   };
   handlesubmit = () => {
-    const classItem = this.state.activeItem;
-    const studentItem = this.handleclassname(classItem.name);
-    this.props.onSave(classItem, studentItem);
+    if (this.state.importdata) {
+      const studentItem = this.state.importdata.map((student) => {
+        const { Nama, KP, Kelas } = student;
+        const newstudent = { class: Kelas, name: Nama, ic: KP };
+        return newstudent;
+      });
+      const classItem = this.state.activeItem;
+      this.props.onSave(classItem, studentItem)
+    } else {
+      const classItem = this.state.activeItem;
+      const studentItem = this.handleclassname(classItem.name);
+      this.props.onSave(classItem, studentItem);
+    }
   };
   handleFileUpload = (e) => {
     const file = e.target.files[0];
@@ -125,10 +137,10 @@ class Classform extends Component {
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 300 }} size="small">
           <TableHead>
-            <TableRow sx={{ alignItems: "start" }}>
-              <TableCell>Name</TableCell>
-              <TableCell>KP</TableCell>
-              <TableCell>Class</TableCell>
+            <TableRow sx={{ alignItems: "start", fontWeight: "bold" }}>
+              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>KP</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Class</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -140,8 +152,8 @@ class Classform extends Component {
                 <TableCell component="th" scope="row">
                   {row.Nama}
                 </TableCell>
-                <TableCell align="right">{row.KP}</TableCell>
-                <TableCell align="right">{row.Kelas}</TableCell>
+                <TableCell>{row.KP}</TableCell>
+                <TableCell>{row.Kelas}</TableCell>
               </TableRow>
             ))}
           </TableBody>
