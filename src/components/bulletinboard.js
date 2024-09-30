@@ -133,10 +133,11 @@ class Bulletin extends React.Component {
   renderCard = () => {
     const { bulletin } = this.props;
     return (
-      <Card>
+      <>
         {bulletin
           ? bulletin.data.map((post) => (
-              <CardContent key={post.id}>
+            <Card >
+              <CardContent key={post.id} >
                 {post.created_by == this.props.auth.data.user.email ? (
                   <CardHeader
                     action={
@@ -177,9 +178,10 @@ class Bulletin extends React.Component {
                   </Tooltip>
                 </Stack>
               </CardContent>
+              </Card>
             ))
           : null}
-      </Card>
+      </>
     );
   };
 

@@ -23,8 +23,7 @@ export default class StudentForm extends Component {
       error1: false,
     };
   }
-  componentDidMount(){
-  }
+  componentDidMount() {}
   handleChange = (e) => {
     let { name, value } = e.target;
     if (e.target.type === "checkbox") {
@@ -47,21 +46,21 @@ export default class StudentForm extends Component {
     this.setState({ activeItem });
   };
 
-  handlesubmit = () =>{
-    const item = this.state.activeItem
-    if(item.name == '' || null){
-      this.setState({error:true})
-      return
+  handlesubmit = () => {
+    const item = this.state.activeItem;
+    if (item.name == "" || null) {
+      this.setState({ error: true });
+      return;
     }
-    if(item.ic == ''|| null){
-      this.setState({error1:true})
-      return
+    if (item.ic == "" || null) {
+      this.setState({ error1: true });
+      return;
     }
-    this.props.onSave(item)
-  }
+    this.props.onSave(item);
+  };
 
   render() {
-    const {activeItem } = this.props;
+    const { activeItem } = this.props;
 
     return (
       <Card>
@@ -77,7 +76,7 @@ export default class StudentForm extends Component {
                   type="text"
                   id="student-name"
                   name="name"
-                 defaultValue={activeItem.name}
+                  defaultValue={activeItem.name}
                   onChange={this.handleChange}
                 />
                 <FormHelperText id="my-helper-text">
@@ -94,11 +93,20 @@ export default class StudentForm extends Component {
             <Grid size={{ xs: 12, md: 8 }}>
               <FormControl error={this.state.error1} fullWidth={true}>
                 <OutlinedInput
-                  type="text"
+                  type="number"
                   id="student-ic"
                   name="ic"
                   defaultValue={activeItem.ic}
                   onChange={this.handleChange}
+                  sx={{
+                    "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
+                      {
+                        display: "none",
+                      },
+                    "& input[type=number]": {
+                      MozAppearance: "textfield",
+                    },
+                  }}
                 />
                 <FormHelperText id="my-helper-text">
                   {this.state.error1 ? "Must not empty" : " "}
@@ -106,7 +114,6 @@ export default class StudentForm extends Component {
               </FormControl>
             </Grid>
           </Grid>
-
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button

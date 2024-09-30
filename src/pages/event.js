@@ -20,6 +20,8 @@ import ContactPageIcon from "@mui/icons-material/ContactPage";
 import AddIcon from "@mui/icons-material/Add";
 import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
+import Loading from "../components/loading";
+import CircularProgress from "@mui/material/CircularProgress";
 
 class Event extends React.Component {
   constructor(props) {
@@ -47,7 +49,7 @@ class Event extends React.Component {
   }
   refreshList = () => {
     this.props.fetchEvent();
-    this.setState({ eventList: this.props.event.data });
+    //  this.setState({ eventList: this.props.event.data });
   };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
@@ -94,15 +96,23 @@ class Event extends React.Component {
   handleSubmitItem = (item) => {
     this.toggle();
     if (item.id) {
-      this.props.updateEvent(item).then(() => {
+      this.props.updateEvent(item).then((res) => {
+        if(res.payload !== undefined){
+          this.togglesnack("error");
+          return
+        }
         this.refreshList();
         this.togglesnack("edit");
       });
     } else {
       const newItem = { ...item, created_by: this.props.auth.data.user.email };
-      this.props.createEvent([newItem]).then(() => {
-        this.refreshList();
-        this.togglesnack("submit");
+      this.props.createEvent([newItem]).then((res) => {
+        if(res.payload !== undefined){
+          this.togglesnack("error");
+          return
+        }
+       this.refreshList();
+       this.togglesnack("submit");
       });
     }
   };
@@ -126,11 +136,11 @@ class Event extends React.Component {
   handleClass = (course) => {
     this.setState({ activeDetails: course, openList: true });
   };
-  rendereventCard = () => {
+  rendereventCard = (data) => {
     return (
       <>
-        {this.state.eventList
-          ? this.state.eventList.map((event) => (
+        {data
+          ? data.map((event) => (
               <Card variant="outlined" key={event.id}>
                 <CardHeader
                   action={
@@ -193,6 +203,7 @@ class Event extends React.Component {
     );
   };
   render() {
+    const { data, loading } = this.props.event;
     return (
       <Box sx={{ minWidth: 275 }}>
         {this.state.toggleDrawer ? (
@@ -219,16 +230,28 @@ class Event extends React.Component {
               </div>
             }
           />
-          <CardContent>
-            <Stack
-              spacing={{ xs: 1, sm: 2 }}
-              direction="row"
-              useFlexGap
-              sx={{ flexWrap: "wrap", textAlign: "start" }}
-            >
-              {this.rendereventCard()}
-            </Stack>
-          </CardContent>
+          {loading == true ? (
+            <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '50vh', // Adjust height as needed
+            }}>
+              <CircularProgress size="3rem" />
+            </Box>
+          ) : (
+            <CardContent>
+              <Stack
+                spacing={{ xs: 1, sm: 2 }}
+                direction="row"
+                useFlexGap
+                sx={{ flexWrap: "wrap", textAlign: "start" }}
+              >
+                {this.rendereventCard(data)}
+              </Stack>
+            </CardContent>
+          )}
         </Card>
         {this.state.confirmDel ? (
           <AlertDialog

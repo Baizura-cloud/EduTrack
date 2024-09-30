@@ -5,7 +5,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack } from "@mui/material";
+import { CardHeader, List, ListItem, ListItemText, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -13,6 +13,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import Tooltip from "@mui/material/Tooltip";
+import CommentIcon from "@mui/icons-material/Comment";
 import {
   createCourse,
   deleteCourse,
@@ -27,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Grid from "@mui/material/Grid2";
+import { fetchmultipleStudent } from "../redux/studentSlice";
 class Course extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +54,7 @@ class Course extends React.Component {
     };
   }
   componentDidMount() {
-    // this.refreshList()
+    this.refreshList();
   }
   refreshList = () => {
     this.props.fetchCourse();
@@ -132,6 +134,8 @@ class Course extends React.Component {
     }
   };
   handleClass = (course) => {
+    const tagclass = course.tagclass;
+    this.props.fetchmultipleStudent(tagclass);
     this.setState({ activeDetails: course, openList: true });
   };
   rendercourseCard = () => {
@@ -210,6 +214,7 @@ class Course extends React.Component {
 
   rendersCourseDetails = () => {
     const details = this.state.activeDetails;
+    const studentList = this.props.student.data;
 
     return (
       <>
@@ -225,12 +230,28 @@ class Course extends React.Component {
                         aria-controls="panel1-content"
                         id="panel1-header"
                       >
-                        {name}
+                        Class {name}
                       </AccordionSummary>
                       <AccordionDetails>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Suspendisse malesuada lacus ex, sit amet blandit leo
-                        lobortis eget.
+                        <List>
+                          {studentList
+                            ? studentList.map((stud) => {
+                                return stud.class === name ? (
+                                  <ListItem
+                                    key={stud.id}
+                                    secondaryAction={
+                                      <IconButton edge="end">
+                                        <CommentIcon color="secondary" />
+                                      </IconButton>
+                                    }
+                                    disablePadding
+                                  >
+                                    <ListItemText primary={stud.name} />
+                                  </ListItem>
+                                ) : null;
+                              })
+                            : null}
+                        </List>
                       </AccordionDetails>
                     </Accordion>
                   );
@@ -311,6 +332,7 @@ class Course extends React.Component {
 const mapStateToProps = (state) => ({
   auth: state.auth,
   course: state.course,
+  student: state.student,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -318,6 +340,8 @@ const mapDispatchToProps = (dispatch) => ({
   createCourse: (data) => dispatch(createCourse(data)),
   updateCourse: (data) => dispatch(updateCourse(data)),
   deleteCourse: (id) => dispatch(deleteCourse(id)),
+  fetchmultipleStudent: (mulclassname) =>
+    dispatch(fetchmultipleStudent(mulclassname)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Course);

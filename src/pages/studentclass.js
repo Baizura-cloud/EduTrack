@@ -60,34 +60,18 @@ class StudentClass extends React.Component {
   };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
-    if (snacktype == "delete") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Class deleted successfully",
-        },
-      });
-    } else if (snacktype == "submit") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Class submitted successfully",
-        },
-      });
-    } else if (snacktype == "edit") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Class edited successfully",
-        },
-      });
-    } else if (snacktype == "error") {
-      this.setState({
-        popupContent: {
-          severity: "error",
-          message: "Error: please make sure the data are valid",
-        },
-      });
+    if(snacktype == "delete") {
+      this.setState({popupContent:{severity:"success",message:"Class deleted successfully"}});
+    } else if(snacktype == "submit") {
+      this.setState({popupContent:{severity:"success",message:"Class submitted successfully"},});
+    } else if(snacktype == "edit") {
+      this.setState({popupContent:{severity:"success",message:"Class edited successfully"}});
+    } else if(snacktype == "error") {
+      this.setState({popupContent:{severity:"error",message:"Error: please make sure the data are valid"}});
+    } else if(snacktype == "duplicate"){
+      this.setState({popupContent:{severity:'error',message:'Error: Class already existed'}})
+    } else if(snacktype =="nonexist"){
+      this.setState({popupContent:{severity:'error',message:'Error: please make sure the class exist'}})
     }
   };
   handleStudentlist = (clStudent) => {
@@ -110,7 +94,11 @@ class StudentClass extends React.Component {
   handleSubmitItem = (classItem, studentItem) => {
     this.toggle();
     if (classItem.id) {
-      this.props.updateClassStudent(classItem).then(() => {
+      this.props.updateClassStudent(classItem).then((res) => {
+        if(res.payload !== undefined){
+          this.togglesnack('error')
+          return
+        }
         this.refreshList();
         this.togglesnack("edit");
       });
@@ -119,14 +107,36 @@ class StudentClass extends React.Component {
         ...classItem,
         admin: this.props.auth.data.user.email,
       };
-      if(newClassItem.name == ""){
-        this.props.createStudent(studentItem).then(() => {
+      if(newClassItem.name == ""){ //import data from excel
+        this.props.createStudent(studentItem).then((res) => {
+          console.log(res)
+          if(res.payload !== undefined){
+            if(res.payload.code == '23503'){
+              this.togglesnack('nonexist')
+              return
+            }
+            this.togglesnack('error')
+            return
+          }
           this.refreshList();
           this.togglesnack("submit");
         });
-      }else{
-      this.props.createClassStudent([newClassItem]).then(() => {
-        this.props.createStudent(studentItem).then(() => {
+      }else{ 
+      this.props.createClassStudent([newClassItem]).then((res) => {
+        console.log(res)
+        if(res.payload !== undefined){
+          if(res.payload.code == '23505'){
+            this.togglesnack('duplicate')
+            return
+          }
+          this.togglesnack('error')
+          return
+        }
+        this.props.createStudent(studentItem).then((res) => {
+          if(res.payload !== undefined){
+            this.togglesnack('error')
+            return
+          }
           this.refreshList();
           this.togglesnack("submit");
         });

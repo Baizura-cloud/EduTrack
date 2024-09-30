@@ -59,13 +59,7 @@ class CourseForm extends Component {
       } else {
         this.setState({ error: false });
       }
-    } else if (e.target.name == "credit") {
-      if (e.target.value == "") {
-        this.setState({ error1: true })
-      } else {
-        this.setState({ error1: false })
-      }
-    }
+    } 
 
     if (!e.target.type) {
       if (Array.isArray(tag)) {
@@ -84,15 +78,15 @@ class CourseForm extends Component {
 
   handlesubmit = () => {
     const item = this.state.activeItem;
-    if (item.title == "" || null) {
+    if (item.name == "" || null) {
       this.setState({ error: true });
       return;
     }
-    if (item.description == "" || null) {
+    if (item.type == "" || null) {
       this.setState({ error1: true });
       return;
     }
-    this.props.onSave(item);
+     this.props.onSave(item);
   };
 
   render() {
@@ -122,12 +116,12 @@ class CourseForm extends Component {
             </Grid>
           </Grid>
 
-          <Grid container spacing={1}>
+          <Grid container spacing={1} sx={{ paddingBottom: 3 }}>
             <Grid size={{ xs: 12, md: 3 }}>
               <InputLabel sx={{ padding: 2 }}>Credit</InputLabel>
             </Grid>
             <Grid size={{ xs: 12, md: 8 }}>
-              <FormControl error={this.state.error1} fullWidth={true}>
+              <FormControl  fullWidth={true}>
                 <OutlinedInput
                   type="number"
                   id="course-credit"
@@ -135,30 +129,37 @@ class CourseForm extends Component {
                   defaultValue={activeItem.credit}
                   onChange={this.handleChange}
                 />
-                <FormHelperText id="my-helper-text">
-                  {this.state.error1 ? "Must not empty" : " "}
-                </FormHelperText>
               </FormControl>
             </Grid>
           </Grid>
 
-          <Grid container spacing={1} marginBottom={3}>
+          <Grid container spacing={1} >
             <Grid size={{ xs: 12, md: 3 }}>
               <InputLabel sx={{ padding: 2 }}>Type</InputLabel>
             </Grid>
             <Grid size={{ xs: 12, md: 8 }}>
+            
               <Autocomplete
                 id="course-type"
                 name="type"
                 disablePortal
                 options={this.state.optiontype}
                 sx={{ width: 375 }}
-                renderInput={(params) => <TextField {...params} />}
+                renderInput={(params) =>
+                <FormControl error={this.state.error1} fullWidth={true}> 
+                <TextField {...params} error={this.state.error1} />
+                <FormHelperText id="my-helper-text">
+                  {this.state.error1 ? "Must not empty" : " "}
+                </FormHelperText>
+                </FormControl>
+                }
                 onChange={(event, tag) => this.handleChange(event, tag)}
                 defaultValue={
                   activeItem.type !== null ? activeItem.type : undefined
                 }
               />
+              
+              
             </Grid>
           </Grid>
 

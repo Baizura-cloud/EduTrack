@@ -28,7 +28,8 @@ import Snack from "./snackbar";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice2";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { persistor } from "../redux/store";
 import Loading from "./loading";
 class DrawerAppbar extends Component {
   constructor(props) {
@@ -43,11 +44,12 @@ class DrawerAppbar extends Component {
       messageSnack: "",
       severitySnack: "",
       loading: false,
-      path:''
+      path: "",
+      direct: false,
     };
   }
-  componentDidMount(){
-    this.setState({path: window.location.pathname})
+  componentDidMount() {
+    this.setState({ path: window.location.pathname });
   }
   handleDrawerClose = () => {
     this.setState({ isClosing: true, mobileOpen: false });
@@ -73,9 +75,17 @@ class DrawerAppbar extends Component {
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
-  handleClick = () =>{
-    this.setState({path: window.location.pathname})
-  }
+  handleClick = () => {
+    this.setState({ path: window.location.pathname });
+  };
+  handleLogout = () => {
+    this.setState({ loading: true });
+    this.props.logoutUser().then(()=>{
+      persistor.purge()
+      localStorage.removeItem('persist:root')
+    })
+    this.setState({ direct: true });
+  };
 
   drawer = () => {
     const icon = [
@@ -101,7 +111,10 @@ class DrawerAppbar extends Component {
                   sx={{
                     height: "100%",
                     width: "100%",
-                    borderRight: this.state.path == path[index]? '2px solid blue': 'inherit',
+                    borderRight:
+                      this.state.path == path[index]
+                        ? "2px solid blue"
+                        : "inherit",
                   }}
                   onClick={this.handleClick}
                 >
@@ -109,9 +122,26 @@ class DrawerAppbar extends Component {
                     to={path[index]}
                     style={{ textDecoration: "none", color: "inherit" }}
                   >
-                    <ListItemButton >
-                      <ListItemIcon sx={{color:this.state.path == path[index]? "#11469c": 'inherit'}}>{icon[index]}</ListItemIcon>
-                      <ListItemText sx={{color:this.state.path == path[index]? "#11469c": 'inherit'}} primary={text} />
+                    <ListItemButton>
+                      <ListItemIcon
+                        sx={{
+                          color:
+                            this.state.path == path[index]
+                              ? "#11469c"
+                              : "inherit",
+                        }}
+                      >
+                        {icon[index]}
+                      </ListItemIcon>
+                      <ListItemText
+                        sx={{
+                          color:
+                            this.state.path == path[index]
+                              ? "#11469c"
+                              : "inherit",
+                        }}
+                        primary={text}
+                      />
                     </ListItemButton>
                   </Link>
                 </Paper>
@@ -177,12 +207,12 @@ class DrawerAppbar extends Component {
               open={Boolean(this.state.anchorEl)}
               onClose={this.handleClose}
             >
-              <Link
+              {/* <Link
                 to="/login"
                 style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <MenuItem onClick={logoutUser}>Logout</MenuItem>
-              </Link>
+              > */}
+              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
+              {/* </Link> */}
               <Link
                 to="/account"
                 style={{ textDecoration: "none", color: "inherit" }}
@@ -239,7 +269,10 @@ class DrawerAppbar extends Component {
           }}
         >
           <Toolbar />
-          <Outlet />
+          
+          {this.state.loading ? <Loading /> : null}
+          {this.state.direct? <Navigate to='/login' replace={true}/> : <Outlet />}
+          {/* {this.state.direct && <Navigate to="/login" replace={true} />} */}
           {/* page content */}
         </Box>
         {this.state.toggleSnack ? (

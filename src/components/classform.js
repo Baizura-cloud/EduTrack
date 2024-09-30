@@ -33,14 +33,7 @@ class Classform extends Component {
       error: false,
       error1: false,
       importdata: [],
-      student: [
-        {
-          id: 1,
-          name: "",
-          ic: "",
-          class: "",
-        },
-      ],
+      student: [],
     };
   }
   componentDidMount() {}
