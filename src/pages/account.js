@@ -15,6 +15,7 @@ import { fetchProfile, updateProfile } from "../redux/profileSlice";
 import { connect } from "react-redux";
 import Grid from "@mui/material/Grid2";
 import Snack from "../components/snackbar"
+import CircularProgress from '@mui/material/CircularProgress';
 
 class Account extends Component {
   constructor(props) {
@@ -23,6 +24,7 @@ class Account extends Component {
       activeItem: {},
       error: false,
       error1: false,
+      loading: false,
       popup: false, //snackbar open@close
       popupContent: {
         //snackbar type & message
@@ -64,25 +66,27 @@ class Account extends Component {
   };
 
   handleSubmit = (data) => {
+    this.setState({loading:true})
     if(data == null || Object.keys(data).length === 0){
+      this.setState({ loading: false });
       return;
     }
     const newdata = {...data, id: this.props.profile.data[0].id}
     if(data.firstname == ''){
       this.setState({ error: true });
-      this.setState({popupContent: {message: 'First name must not be empty', severity:'error'}})
+      this.setState({loading: false,popupContent: {message: 'First name must not be empty', severity:'error'}})
       this.togglesnack()
       return
     }
     if(data.lastname == ''){
       this.setState({ error1: true });
-      this.setState({popupContent: {message: 'Last name must not be empty', severity:'error'}})
+      this.setState({loading: false,popupContent: {message: 'Last name must not be empty', severity:'error'}})
       this.togglesnack()
       return
     }
     this.props.updateProfile(newdata).then(() =>{
       this.refreshData()
-      this.setState({popupContent: {message: 'Profile updated successfully', severity:'success'}})
+      this.setState({loading: false, popupContent: {message: 'Profile updated successfully', severity:'success'}})
       this.togglesnack()
     })
   };
@@ -214,6 +218,7 @@ class Account extends Component {
               variant="contained"
               color="success"
               onClick={() => this.handleSubmit(this.state.activeItem)}
+              startIcon={this.state.loading? <CircularProgress size="20px"/> :null}
             >
               Save
             </Button>

@@ -58,11 +58,15 @@ export const deleteStudent = createAsyncThunk(
     if (!id) {
       throw new Error("Data undefined");
     }
-    const { error } = await supabase.from("student").delete().eq("id", id);
-    if (error) {
+    try {
+      const { error } = await supabase.from("student").delete().eq("id", id);
+      if (error) {
+        return error;
+      }
+      return;
+    } catch (error) {
       rejectWithValue(error.message);
     }
-    return;
   }
 );
 export const updateStudent = createAsyncThunk(
@@ -71,69 +75,88 @@ export const updateStudent = createAsyncThunk(
     if (!data) {
       throw new Error("Data undefined");
     }
-    const { response, error } = await supabase
-      .from("student")
-      .update(data)
-      .eq("id", data.id);
-    if (error) {
-      return error
+    try {
+      const { response, error } = await supabase
+        .from("student")
+        .update(data)
+        .eq("id", data.id);
+      if (error) {
+        return error;
+      }
+      return response;
+    } catch (error) {
+      rejectWithValue(error.message);
     }
-    return response;
   }
 );
 const studentSlice = createSlice({
   name: "student",
-  initialState: { data: [], fetchstatus: "" },
+  initialState: { data: [], loading: false, error:null },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(createStudent.fulfilled, (state, action) => {
-        state.fetchstatus = "success";
+      .addCase(createStudent.fulfilled, (state) => {
+        state.loading = false
+        state.error = null
       })
       .addCase(createStudent.pending, (state) => {
-        state.fetchstatus = "pending";
+        state.loading = true
+        state.error = null
       })
-      .addCase(createStudent.rejected, (state) => {
-        state.fetchstatus = "rejected";
+      .addCase(createStudent.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
       })
       .addCase(fetchStudent.fulfilled, (state, action) => {
         state.data = action.payload.data;
-        state.fetchstatus = "success";
+        state.loading = false
+        state.error = null
       })
       .addCase(fetchStudent.pending, (state) => {
-        state.fetchstatus = "pending";
+        state.loading = true
+        state.error = null
       })
-      .addCase(fetchStudent.rejected, (state) => {
-        state.fetchstatus = "error";
+      .addCase(fetchStudent.rejected, (state, action) => {
+        state.error = action.payload
+        state.loading = false
       })
-      .addCase(updateStudent.fulfilled, (state, action) => {
-        state.fetchstatus = "success";
+      .addCase(updateStudent.fulfilled, (state) => {
+        state.loading = false
+        state.error = null
       })
       .addCase(updateStudent.pending, (state) => {
-        state.fetchstatus = "pending";
+        state.loading = true
+        state.error = null
       })
-      .addCase(updateStudent.rejected, (state) => {
-        state.fetchstatus = "rejected";
+      .addCase(updateStudent.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
       })
       .addCase(deleteStudent.fulfilled, (state) => {
-        state.fetchstatus = "success";
+        state.loading = false
+        state.error = null
       })
       .addCase(deleteStudent.pending, (state) => {
-        state.fetchstatus = "pending";
+        state.loading = true
+        state.error = null
       })
-      .addCase(deleteStudent.rejected, (state) => {
-        state.fetchstatus = "rejected";
+      .addCase(deleteStudent.rejected, (state,action) => {
+        state.loading = false
+        state.error = action.payload
       })
       .addCase(fetchmultipleStudent.fulfilled, (state, action) => {
         state.data = action.payload.data;
-        state.fetchstatus = "success";
+        state.loading = false
+        state.error = null
       })
       .addCase(fetchmultipleStudent.pending, (state) => {
-        state.fetchstatus = "pending";
+        state.loading = true
+        state.error = null
       })
-      .addCase(fetchmultipleStudent.rejected, (state) => {
-        state.fetchstatus = "error";
-      })
+      .addCase(fetchmultipleStudent.rejected, (state, action) => {
+        state.error = action.payload
+        state.loading = false
+      });
   },
 });
 

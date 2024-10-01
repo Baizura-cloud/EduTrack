@@ -24,7 +24,13 @@ import {
   fetchStudent,
   updateStudent,
 } from "../redux/studentSlice";
-import { Button, Card, CardContent, CardHeader } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+} from "@mui/material";
 
 class Student extends Component {
   constructor(props) {
@@ -57,33 +63,15 @@ class Student extends Component {
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
     if (snacktype == "delete") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Student deleted successfully",
-        },
-      });
+      this.setState({popupContent:{severity: "success",message: "Student deleted successfully"}});
     } else if (snacktype == "submit") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Student submitted successfully",
-        },
-      });
+      this.setState({popupContent:{severity:"success",message:"Student submitted successfully"}});
     } else if (snacktype == "edit") {
-      this.setState({
-        popupContent: {
-          severity: "success",
-          message: "Student edited successfully",
-        },
-      });
+      this.setState({popupContent:{severity:"success",message:"Student edited successfully"}});
     } else if (snacktype == "error") {
-      this.setState({
-        popupContent: {
-          severity: "error",
-          message: "Error: please make sure the data are valid",
-        },
-      });
+      this.setState({popupContent:{severity:"error",message:"Error: please make sure the data are valid"}});
+    } else if (snacktype == "duplicate") {
+      this.setState({popupContent:{severity:"error",message:"Error: please make sure the IC number are not duplicate"}});
     }
   };
   handlecreateStudent = () => {
@@ -128,24 +116,29 @@ class Student extends Component {
     this.toggle();
     console.log(item);
     if (item.id) {
-        this.props.updateStudent(item).then(() => {
-          this.refreshList();
-          this.togglesnack("edit");
-        });
+      this.props.updateStudent(item).then(() => {
+        this.refreshList();
+        this.togglesnack("edit");
+      });
     } else {
-        const newItem = {
-          ...item,
-          class: this.props.activeClass.name,
-        };
-        this.props.createStudent(newItem).then(() => {
+      const newItem = {
+        ...item,
+        class: this.props.activeClass.name,
+      };
+      this.props.createStudent(newItem).then((res) => {
+        if(res.payload){
+          this.togglesnack('duplicate')
+        }else{
           this.refreshList();
           this.togglesnack("submit");
-        });
+        }
+      });
     }
   };
 
   render() {
     const { studentList } = this.props;
+    const { data, loading } = studentList;
     return (
       <Box sx={{ width: "100%" }}>
         {this.state.toggleDrawer ? (
@@ -173,56 +166,64 @@ class Student extends Component {
                 </div>
               }
             />
-            <CardContent>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small">
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Name</TableCell>
-                      <TableCell align="right">
-                        Identification Card No. (IC)
-                      </TableCell>
-                      <TableCell align="right">Action</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {studentList
-                      ? studentList.data.map((data) => {
-                          return (
-                            <TableRow
-                              key={data.id}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                              }}
-                            >
-                              <TableCell component="th" scope="row">
-                                {data.name}
-                              </TableCell>
-                              <TableCell align="right">{data.ic}</TableCell>
-                              <TableCell align="right">
-                                <Tooltip title={"edit"} arrow>
-                                  <IconButton
-                                    onClick={() => this.handleedit(data)}
-                                  >
-                                    <EditIcon color="secondary" />
-                                  </IconButton>
-                                  <IconButton
-                                    onClick={() => this.handleDelete(data)}
-                                  >
-                                    <DeleteIcon color="error" />
-                                  </IconButton>
-                                </Tooltip>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        })
-                      : null}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </CardContent>
+            {loading ? (
+              <CardContent>
+                <CircularProgress />
+              </CardContent>
+            ) : (
+              <CardContent>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 650 }} size="small">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Name</TableCell>
+                        <TableCell align="right">
+                          Identification Card No. (IC)
+                        </TableCell>
+                        <TableCell align="right">Action</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {data
+                        ? data.map((student) => {
+                            return (
+                              <TableRow
+                                key={student.id}
+                                sx={{
+                                  "&:last-child td, &:last-child th": {
+                                    border: 0,
+                                  },
+                                }}
+                              >
+                                <TableCell component="th" scope="row">
+                                  {student.name}
+                                </TableCell>
+                                <TableCell align="right">{student.ic}</TableCell>
+                                <TableCell align="right">
+                                  <Tooltip title={"edit"} arrow>
+                                    <IconButton
+                                      onClick={() => this.handleedit(student)}
+                                    >
+                                      <EditIcon color="secondary" />
+                                    </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title={"delete"} arrow>
+                                    <IconButton
+                                      onClick={() => this.handleDelete(student)}
+                                    >
+                                      <DeleteIcon color="error" />
+                                    </IconButton>
+                                  </Tooltip>
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })
+                        : null}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </CardContent>
+            )}
           </Card>
         </Paper>
         {this.state.confirmDel ? (

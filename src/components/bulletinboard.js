@@ -136,8 +136,8 @@ class Bulletin extends React.Component {
       <>
         {bulletin
           ? bulletin.data.map((post) => (
-            <Card >
-              <CardContent key={post.id} >
+            <Card key={post.id} >
+              <CardContent  >
                 {post.created_by == this.props.auth.data.user.email ? (
                   <CardHeader
                     action={

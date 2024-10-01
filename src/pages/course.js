@@ -5,7 +5,14 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, List, ListItem, ListItemText, Stack } from "@mui/material";
+import {
+  CardHeader,
+  CircularProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
@@ -214,50 +221,65 @@ class Course extends React.Component {
 
   rendersCourseDetails = () => {
     const details = this.state.activeDetails;
-    const studentList = this.props.student.data;
+    const { data, loading } = this.props.student;
 
     return (
       <>
         <Card variant="outlined" sx={{ textAlign: "start" }}>
           <CardHeader title={details.name} subheader={details.type} />
-          <CardContent>
-            {details.tagclass
-              ? details.tagclass.map((name) => {
-                  return (
-                    <Accordion>
-                      <AccordionSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1-content"
-                        id="panel1-header"
-                      >
-                        Class {name}
-                      </AccordionSummary>
-                      <AccordionDetails>
-                        <List>
-                          {studentList
-                            ? studentList.map((stud) => {
-                                return stud.class === name ? (
-                                  <ListItem
-                                    key={stud.id}
-                                    secondaryAction={
-                                      <IconButton edge="end">
-                                        <CommentIcon color="secondary" />
-                                      </IconButton>
-                                    }
-                                    disablePadding
-                                  >
-                                    <ListItemText primary={stud.name} />
-                                  </ListItem>
-                                ) : null;
-                              })
-                            : null}
-                        </List>
-                      </AccordionDetails>
-                    </Accordion>
-                  );
-                })
-              : null}
-          </CardContent>
+          {loading ? (
+            <CardContent>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "10vh", // Adjust height as needed
+                }}
+              >
+                <CircularProgress size="3rem" />
+              </Box>
+            </CardContent>
+          ) : (
+            <CardContent>
+              {details.tagclass
+                ? details.tagclass.map((name) => {
+                    return (
+                      <Accordion>
+                        <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1-content"
+                          id="panel1-header"
+                        >
+                          Class {name}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                          <List>
+                            {data
+                              ? data.map((stud) => {
+                                  return stud.class === name ? (
+                                    <ListItem
+                                      key={stud.id}
+                                      secondaryAction={
+                                        <IconButton edge="end">
+                                          <CommentIcon color="secondary" />
+                                        </IconButton>
+                                      }
+                                      disablePadding
+                                    >
+                                      <ListItemText primary={stud.name} />
+                                    </ListItem>
+                                  ) : null;
+                                })
+                              : null}
+                          </List>
+                        </AccordionDetails>
+                      </Accordion>
+                    );
+                  })
+                : null}
+            </CardContent>
+          )}
         </Card>
       </>
     );
