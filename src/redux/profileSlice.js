@@ -1,16 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {supabase} from "../client"
 
-export const fetchProfile = createAsyncThunk('fetch-profile', async(email) =>{
+export const fetchProfile = createAsyncThunk('fetch-profile', async(email,{rejectWithValue}) =>{
     try {
         const response = await supabase.from('profile').select('*').eq('email', email)
         return response
     } catch (error) {
-        console.log(error)
+        rejectWithValue(error.message)
     }
-
 })
-
 export const updateProfile = createAsyncThunk('edit-profile', async(data, {rejectWithValue})=>{
     if(!data){
         throw new Error("Data undefined")
@@ -18,39 +16,44 @@ export const updateProfile = createAsyncThunk('edit-profile', async(data, {rejec
     try {
         const {response, error} = await supabase.from('profile').update(data).eq("id", data.id)
         if(error){
-            return rejectWithValue(error.message)
+            return error
         }
         return response
     } catch (error) {
-        console.log(error)
+        rejectWithValue(error.message)
     }
 })
 
 const profileSilce = createSlice({
     name:'profile',
-    initialState:{data:[], fetchstatus:''},
+    initialState:{data:[], loading: false, error: null},
     reducers:{},
     extraReducers: (builder) =>{
         builder
         .addCase(fetchProfile.fulfilled, (state,action)=>{
             state.data = action.payload.data
-            state.fetchstatus = 'success'
+            state.loading = false
+            state.error = null
         })
         .addCase(fetchProfile.pending, (state) =>{
-            state.fetchstatus = 'pending'
+            state.loading = true
+            state.error = null
         } )
-        .addCase(fetchProfile.rejected, (state)=>{
-            state.fetchstatus = 'error'
+        .addCase(fetchProfile.rejected, (state, action)=>{
+            state.loading = false
+            state.error = action.payload
         })
-        .addCase(updateProfile.fulfilled, (state,action) =>{
-           // state.data = action.payload.data
-            state.fetchstatus = 'success'
+        .addCase(updateProfile.fulfilled, (state) =>{
+            state.loading = false
+            state.error = null
         })
         .addCase(updateProfile.pending, (state) =>{
-            state.fetchstatus = 'pending'
+            state.loading = true
+            state.error =null
         })
-        .addCase(updateProfile.rejected, (state) =>{
-            state.fetchstatus = 'error'
+        .addCase(updateProfile.rejected, (state, action) =>{
+            state.loading = false
+            state.error = action.payload
         })
     }
 })
