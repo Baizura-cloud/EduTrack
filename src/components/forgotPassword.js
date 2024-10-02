@@ -14,8 +14,10 @@ import {
   FormHelperText,
   Typography,
 } from "@mui/material";
+import { connect } from "react-redux";
+import { resetPasswordEmail } from "../redux/authSlice";
 
-export default class ForgotPassword extends Component {
+class ForgotPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -37,26 +39,18 @@ export default class ForgotPassword extends Component {
       this.setState({ error: false });
       if (emailValidation(this.state.data.email)) {
         this.setState({ error: false });
-        this.resetEmail(this.state.data.email);
+        console.log(this.state.data.email)
+        this.props.resetPasswordEmail(this.state.data.email)
+        .then((res) =>{
+          this.setState({ toggleSnack: true, messageSnack: 'Email Sent', severitySnack: 'success' });
+          this.props.toggle()
+        })
+        
       } else {
         this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
       }
     }
   };
-  async resetEmail(email) {
-    try {
-      const { data, error } = await supabase.auth.resetPasswordForEmail(email);
-      if (error) {
-        console.log(error);
-        this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
-      } else {
-        this.setState({ error: false,  toggleSnack: true, messageSnack: 'Email sent', severitySnack: 'success' });
-      }
-    } catch (error) {
-      this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
-      console.log(error);
-    }
-  }
 
   render() {
     const { toggle } = this.props;
@@ -108,3 +102,10 @@ export default class ForgotPassword extends Component {
     );
   }
 }
+// const mapStateToProps = (state) => ({
+// });
+const mapDispatchToProps = (dispatch) => ({
+  resetPasswordEmail: (email) => dispatch(resetPasswordEmail(email))
+})
+export default connect(null,mapDispatchToProps)(ForgotPassword);
+//export default ForgotPassword

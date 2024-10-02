@@ -179,7 +179,7 @@ class Course extends React.Component {
                       </Stack>
                     ) : (
                       <Stack direction="row">
-                        <Tooltip title={"created by " + course.admin} arrow>
+                        <Tooltip title={"Author: " + course.admin} arrow>
                           <IconButton color="secondary">
                             <ContactPageIcon />
                           </IconButton>
@@ -245,7 +245,7 @@ class Course extends React.Component {
               {details.tagclass
                 ? details.tagclass.map((name) => {
                     return (
-                      <Accordion>
+                      <Accordion key={details.id}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon />}
                           aria-controls="panel1-content"

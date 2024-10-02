@@ -114,7 +114,6 @@ class Student extends Component {
   };
   handleSubmitItem = (item) => {
     this.toggle();
-    console.log(item);
     if (item.id) {
       this.props.updateStudent(item).then(() => {
         this.refreshList();

@@ -18,7 +18,7 @@ export const RequireAuth = () => {
   if (!token) {
     return (
       <Navigate
-        to={{ pathname: "/login", state: { from: location } }}
+        to={{ pathname: "/", state: { from: location } }}
         replace
       />
     );

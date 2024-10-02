@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import FormDrawer from "./formdrawer";
+import { createAvatar } from "./utils";
 import {
   createBulletin,
   deleteBulletin,
@@ -19,7 +20,7 @@ import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Stack, Tooltip } from "@mui/material";
+import { Avatar, Stack, Tooltip } from "@mui/material";
 import Snack from "./snackbar";
 
 class Bulletin extends React.Component {
@@ -79,7 +80,6 @@ class Bulletin extends React.Component {
       });
     }
   };
-
   handleDelete = (item) => {
     //open modal confirm delete
     this.setState({ activeItem: item, confirmDel: !this.state.confirmDel });
@@ -97,6 +97,7 @@ class Bulletin extends React.Component {
       console.log(error);
     }
   };
+
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
     if (snacktype == "delete") {
@@ -136,48 +137,66 @@ class Bulletin extends React.Component {
       <>
         {bulletin
           ? bulletin.data.map((post) => (
-            <Card key={post.id} >
-              <CardContent  >
-                {post.created_by == this.props.auth.data.user.email ? (
-                  <CardHeader
-                    action={
-                      <Stack direction="row">
-                        <Tooltip title={"edit"} arrow>
-                          <IconButton
-                            color="secondary"
-                            onClick={() => this.editpost(post)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"delete"} arrow>
-                          <IconButton
-                            color="error"
-                            onClick={() => this.handleDelete(post)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    }
-                  />
-                ) : null}
-                <Typography
-                  gutterBottom
-                  sx={{ textAlign: "start", fontSize: 16 }}
-                >
-                  {post.title}
-                </Typography>
-                <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
-                  {post.details}
-                  <br />
-                </Typography>
-                <Stack alignItems={'start'}>
-                  <Tooltip title={"created by " + post.created_by} arrow>
+              <Card key={post.id}>
+                <CardContent>
+                  {post.created_by == this.props.auth.data.user.email ? (
+                    <CardHeader
+                      action={
+                        <Stack direction="row">
+                          <Tooltip title={"edit"} arrow>
+                            <IconButton
+                              color="secondary"
+                              onClick={() => this.editpost(post)}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title={"delete"} arrow>
+                            <IconButton
+                              color="error"
+                              onClick={() => this.handleDelete(post)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Stack>
+                      }
+                    />
+                  ) : null}
+                  <Typography
+                    gutterBottom
+                    sx={{ textAlign: "start", fontSize: 16 }}
+                  >
+                    {post.title}
+                  </Typography>
+                  <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
+                    {post.details}
+                    <br />
+                  </Typography>
+                  
+                  <Stack alignItems={"start"} direction="row" spacing={1} sx={{marginTop:2}}>
+                    <Tooltip title={"Author: " + post.created_by} arrow>
                       <ContactPageIcon color="secondary" />
-                  </Tooltip>
-                </Stack>
-              </CardContent>
+                    </Tooltip>
+                    {post.tag !== null
+                      ? post.tag.map((usertag) => (
+                          <Tooltip title={usertag.firstname + " " + usertag.lastname} arrow>
+                            <Avatar
+                              sx={{ bgcolor: '#1a237e', width: 24, height: 24, fontSize:10 }}
+                              alt={usertag.firstname + usertag.lastname}
+                              variant="rounded"
+                            >
+                              
+                              {createAvatar(
+                                usertag.firstname,
+                                usertag.lastname
+                              )}
+                            </Avatar>
+                          </Tooltip>
+                        ))
+                      : null}
+                  </Stack>
+                </CardContent>
               </Card>
             ))
           : null}

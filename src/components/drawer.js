@@ -27,7 +27,7 @@ import "../App.css";
 import Snack from "./snackbar";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
-import { logoutUser } from "../redux/authSlice2";
+import { logoutUser } from "../redux/authSlice";
 import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
 import { persistor } from "../redux/store";
 import Loading from "./loading";
@@ -95,7 +95,7 @@ class DrawerAppbar extends Component {
       <TodayIcon />,
       <AccountBoxIcon />,
     ];
-    const path = ["/", "/studentclass", "/course", "/event", "/account"];
+    const path = ["/dashboard", "/studentclass", "/course", "/event", "/account"];
     return (
       <div>
         <Toolbar>
@@ -271,8 +271,7 @@ class DrawerAppbar extends Component {
           <Toolbar />
           
           {this.state.loading ? <Loading /> : null}
-          {this.state.direct? <Navigate to='/login' replace={true}/> : <Outlet />}
-          {/* {this.state.direct && <Navigate to="/login" replace={true} />} */}
+          {this.state.direct? <Navigate to='/' replace={true}/> : <Outlet />}
           {/* page content */}
         </Box>
         {this.state.toggleSnack ? (

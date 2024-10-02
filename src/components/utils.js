@@ -21,3 +21,6 @@ export function emailValidation(email) {  //validate email : return false if inv
       return true;
     }
   }
+  export function createAvatar(firstname, lastname){
+    return firstname.charAt(0).toUpperCase() + lastname.charAt(0).toUpperCase()
+  }

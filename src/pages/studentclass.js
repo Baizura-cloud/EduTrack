@@ -55,7 +55,7 @@ class StudentClass extends React.Component {
     this.refreshList();
   }
   refreshList = () => {
-    this.props.fetchClassStudent(this.props.auth.data.user.email);
+    this.props.fetchClassStudent();
     this.setState({ classList: this.props.classstudent.data });
   };
   togglesnack = (snacktype) => {
@@ -109,7 +109,6 @@ class StudentClass extends React.Component {
       };
       if(newClassItem.name == ""){ //import data from excel
         this.props.createStudent(studentItem).then((res) => {
-          console.log(res)
           if(res.payload !== undefined){
             if(res.payload.code == '23503'){
               this.togglesnack('nonexist')
@@ -123,7 +122,6 @@ class StudentClass extends React.Component {
         });
       }else{ 
       this.props.createClassStudent([newClassItem]).then((res) => {
-        console.log(res)
         if(res.payload !== undefined){
           if(res.payload.code == '23505'){
             this.togglesnack('duplicate')
@@ -203,7 +201,7 @@ class StudentClass extends React.Component {
                       </Stack>
                     ) : (
                       <Stack direction="row">
-                        <Tooltip title={"created by " + clStudent.admin} arrow>
+                        <Tooltip title={"Author: " + clStudent.admin} arrow>
                           <IconButton color="secondary">
                             <ContactPageIcon />
                           </IconButton>

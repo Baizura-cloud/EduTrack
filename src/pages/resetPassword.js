@@ -19,7 +19,7 @@ import {
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import logo from "../logo.png";
+import logo from "../logo2.png";
 
 class ResetPassword extends Component {
   constructor(props) {

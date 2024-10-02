@@ -5,10 +5,8 @@ import FacebookIcon from "@mui/icons-material/Facebook";
 import GoogleIcon from "@mui/icons-material/Google";
 import ForgotPassword from "./forgotPassword";
 import Snack from "./snackbar";
-//import CircularLoading from "./loading";
 import { emailValidation } from "./utils";
 import { connect } from "react-redux";
-//import { loginUser } from "../redux/authSlice2";
 import {
   Link,
   Box,

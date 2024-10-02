@@ -4,7 +4,7 @@ import ErrorPage from "./pages/404";
 import Account from "./pages/account"
 import Dashboard from "./pages/dashboard";
 import Drawer from "./components/drawer";
-import Unauthorized from "./pages/unautharized";
+import ResetPassword from "./pages/resetPassword";
 import StudentClass from "./pages/studentclass";
 import Course from "./pages/course";
 import Event from "./pages/event";
@@ -16,12 +16,12 @@ function App() {
     <AuthProvider>
     <BrowserRouter>
       <Routes>
-        <Route  element={<div className="App"><header className="App-header"><Auth /></header></div>}path="/login"/>
+        <Route  element={<div className="App"><header className="App-header"><Auth /></header></div>}path="/"/>
+        <Route element={<div className="App"><ResetPassword /></div>}path="/resetpassword"/>
         <Route element={<Drawer />}>
-        <Route element={<div className="App"><Unauthorized /></div>}path="/unauthorized"/>
         <Route element={<div className="App"><ErrorPage /></div>}path="/error"/>
         <Route element={<RequireAuth />}>
-           <Route element={<div className="App"><Dashboard /></div>}path="/"/>
+           <Route element={<div className="App"><Dashboard /></div>}path="/dashboard"/>
            <Route element={<div className="App"><StudentClass /></div>}path="/studentclass"/>
            <Route element={<div className="App"><Course /></div>}path="/course"/>
            <Route element={<div className="App"><Event /></div>}path="/event"/>

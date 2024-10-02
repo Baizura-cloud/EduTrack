@@ -8,9 +8,10 @@ import logo from "../logo2.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { loginUser } from "../redux/authSlice2";
+import { loginUser, signupUser } from "../redux/authSlice";
 import Snack from "../components/snackbar";
 import Loading from "../components/loading";
+import { createProfile } from "../redux/profileSlice";
 
 export default function Auth() {
   const [value, setValue] = useState("1");
@@ -32,34 +33,37 @@ export default function Auth() {
       setShow(true);
     }
   };
-
   const handleloginuser = (data) => {
     setloading(true);
-    dispatch(loginUser(data));
-    setTimeout(function () {
-      const local = localStorage.getItem("persist:root"); //get local storage auth
-      if (local !== null) {
-        const jsonLocal = JSON.parse(local);  // local data as json
-        if (jsonLocal) {
-          const authr = JSON.parse(jsonLocal.auth); //get auth response
-          if (authr.fetchstatus == "success") {
-            navigate("/");
-            setloading(false);
-          } else {
-            settoggleSnack(true);
-            setmessageSnack("Invalid Credentials");
-            setSeveritySnack("error");
-            setloading(false);
-          }
-        } else {
-          settoggleSnack(true);
-          setmessageSnack("Invalid Credentials");
-          setSeveritySnack("error");
-          setloading(false);
-        }
+    dispatch(loginUser(data)).then((response) => {
+      if (response.payload.message) {
+        settoggleSnack(true);
+        setmessageSnack(response.payload.message);
+        setSeveritySnack("error");
+        setloading(false);
+      } else {
+        navigate("/dashboard");
+        setloading(false);
       }
-    }, 2000);
+    });
   };
+  const handlesignupuser = (data) =>{
+    setloading(true);
+    const {Cpassword, password, name, email} = data
+    dispatch(signupUser({email: email, password: password})).then((response) =>{
+      if(response.payload.message){
+        settoggleSnack(true);
+        setmessageSnack(response.payload.message);
+        setSeveritySnack("error");
+        setloading(false);
+      }else{
+        dispatch(createProfile({firstname:name,email:email,role:'admin'})).then((res) =>{
+          navigate("/dashboard");
+          setloading(false);
+        })
+      }
+    })
+  }
   return (
     <>
       {loading ? <Loading openload={loading} /> : null}
@@ -92,7 +96,7 @@ export default function Auth() {
                 />
               </TabPanel>
               <TabPanel value="2">
-                <Signup handlechangetab={handlechangetab} />
+                <Signup handlechangetab={handlechangetab} handlesignupuser={handlesignupuser} />
               </TabPanel>
             </TabContext>
           </Box>

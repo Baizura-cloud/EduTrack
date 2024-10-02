@@ -189,7 +189,7 @@ class Event extends React.Component {
                     {event.details}
                   </Typography>
                   <Stack alignItems={"start"}>
-                    <Tooltip title={"created by " + event.created_by} arrow>
+                    <Tooltip title={"Author: " + event.created_by} arrow>
                       <IconButton color="secondary">
                         <ContactPageIcon />
                       </IconButton>

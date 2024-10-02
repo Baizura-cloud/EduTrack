@@ -3,15 +3,15 @@ import { supabase } from "../client";
 
 export const fetchClassStudent = createAsyncThunk(
   "fetch-class",
-  async (email) => {
-    if (!email) {
-      throw new Error("Data undefined");
-    }
+  async () => {
+    // if (!email) {
+    //   throw new Error("Data undefined");
+    // }
     try {
       const response = await supabase
         .from("class")
         .select("*")
-        .eq("admin", email);
+       // .eq("admin", email);
       return response;
     } catch (error) {
       console.log(error);

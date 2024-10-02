@@ -2,7 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import profileSlice from './profileSlice'
-import authSlice from "./authSlice2";
+import authSlice from "./authSlice";
 import taskSlice from "./taskSlice";
 import classSlice from "./classSlice";
 import bulletinSlice from "./bulletinSlice";

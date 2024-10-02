@@ -25,7 +25,7 @@ class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loginData: {},
+      signupData: {},
       showPassword: false,
       checked: false,
       errorName: false,
@@ -40,67 +40,46 @@ class SignUp extends Component {
   }
   handleChange = (e) => {
     let { name, value } = e.target;
-    const loginData = { ...this.state.loginData, [name]: value };
-    this.setState({ loginData });
+    const signupData = { ...this.state.signupData, [name]: value };
+    this.setState({ signupData });
   };
   onSubmit = () => {
     this.setState({ errorName: false, errorEmail: false, errorPassword:false });
 
-    if (Object.keys(this.state.loginData).length === 0){  //validate if all is empty
+    if (Object.keys(this.state.signupData).length === 0){  //validate if all is empty
       this.setState({ errorName: true, errorEmail: true, errorPassword:true, toggleSnack:true, messageSnack: 'Please fill in the form to sign up', severitySnack: 'error' });
       return;
     }
-    if(this.state.loginData.name == null || ""){  //validate name
+    if(this.state.signupData.name == null || ""){  //validate name
       this.setState({errorName:true, toggleSnack:true, messageSnack: 'Name is required', severitySnack: 'error'})
       return;
     }else{
       this.setState({errorName:false})
     }
-    if(!emailValidation(this.state.loginData.email)){  //validate email
+    if(!emailValidation(this.state.signupData.email)){  //validate email
       this.setState({ errorEmail: true, toggleSnack:true, messageSnack: 'Invalid email', severitySnack: 'error' });
       return;
     }else{
       this.setState({errorEmail:false})
     }
-    if(!passwordValidation(this.state.loginData.password)){ //validate password
+    if(!passwordValidation(this.state.signupData.password)){ //validate password
       this.setState({ errorPassword: true, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
       return;
     }else{
       this.setState({errorPassword:false})
     }
-    if(this.state.loginData.password !== this.state.loginData.Cpassword){  //validate Cpassword
+    if(this.state.signupData.password !== this.state.signupData.Cpassword){  //validate Cpassword
       this.setState({ errorPassword: true, match: false, toggleSnack:true, messageSnack: 'Invalid password', severitySnack: 'error' });
       return;
     }else{
       this.setState({errorPassword:false})
     }
     if((this.state.errorName == false && this.state.errorEmail) == false && this.state.errorPassword == false){
-      console.log("backend")
-      this.signupUser(this.state.loginData)
+      this.props.handlesignupuser(this.state.signupData)
     }
 
   };
-  
-  async signupUser(loginData) {
-    try {
-      const { data, error } = await supabase.auth
-        .signUp({
-          name: loginData.name,
-          email: loginData.email,
-          password: loginData.password,
-        })
-        .then(console.log("sign in"));
-      if (error) {
-        console.log(error);
-        this.setState({ errorEmail: true, errorPassword: true, toggleSnack:true, messageSnack: 'Email or password are invalid', severitySnack: 'error' });
-      } else {
-        this.setState({ errorEmail: false, errorPassword: false });
-      }
-    } catch (error) {
-      this.setState({ errorEmail: true, errorPassword: true, toggleSnack:true, messageSnack: 'Email or password are invalid', severitySnack: 'error' });
-      console.log(error);
-    }
-  }
+
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
