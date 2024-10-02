@@ -1,9 +1,8 @@
 This project is currently work in progress
 
-database sketch:
+requirement v1:
 
-
-![data_diagram](https://github.com/user-attachments/assets/8bf6f288-d2e5-4791-bcee-6a84c5c9b5d6)
+![image](https://github.com/user-attachments/assets/8b2e9eb4-503c-40bb-9a01-4d19bd56f51d)
 
 
 
