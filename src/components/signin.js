@@ -153,7 +153,7 @@ class SignIn extends Component {
             <Grid2 size={12}>
               <Button
                 variant="contained"
-                sx={{ width: "90%", backgroundColor:'#AF1763' }}
+                sx={{ width: "90%" }}
                 onClick={this.onSubmit}
               >
                 Sign In

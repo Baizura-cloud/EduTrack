@@ -2,7 +2,7 @@ import * as React from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function Loading(openload) {
+export default function Loading({openload}) {
   const [open, setOpen] = React.useState(openload);
   const handleClose = () => {
     setOpen(false);

@@ -1,7 +1,16 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer, persistStore } from "redux-persist";
-import profileSlice from './profileSlice'
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import profileSlice from "./profileSlice";
 import authSlice from "./authSlice";
 import taskSlice from "./taskSlice";
 import classSlice from "./classSlice";
@@ -12,26 +21,32 @@ import eventSlice from "./eventSlice";
 import studentSlice from "./studentSlice";
 
 const persistConfig = {
-    key: 'root',
-    storage,
-}
+  key: "root",
+  storage,
+};
 
 const rootReducer = combineReducers({
-    auth: authSlice.reducer,
-    profile: profileSlice.reducer,
-    task: taskSlice.reducer,
-    classstudent: classSlice.reducer,
-    bulletin: bulletinSlice.reducer,
-    otherprofile: otherprofileSlice.reducer,
-    course: courseSlice.reducer,
-    event: eventSlice.reducer,
-    student: studentSlice.reducer
-})
+  auth: authSlice.reducer,
+  profile: profileSlice.reducer,
+  task: taskSlice.reducer,
+  classstudent: classSlice.reducer,
+  bulletin: bulletinSlice.reducer,
+  otherprofile: otherprofileSlice.reducer,
+  course: courseSlice.reducer,
+  event: eventSlice.reducer,
+  student: studentSlice.reducer,
+});
 
-const persistedReducer = persistReducer(persistConfig, rootReducer)
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
-    reducer:persistedReducer   
-})
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
+});
 
-export const persistor = persistStore(store)
+export const persistor = persistStore(store);

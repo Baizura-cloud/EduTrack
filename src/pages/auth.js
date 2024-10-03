@@ -24,6 +24,9 @@ export default function Auth() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handletoggleSnack = () => {
+    settoggleSnack(!toggleSnack);
+  };
   const handlechangetab = (event, newValue) => {
     setValue(newValue);
     if (newValue == 2) {
@@ -47,23 +50,27 @@ export default function Auth() {
       }
     });
   };
-  const handlesignupuser = (data) =>{
+  const handlesignupuser = (data) => {
     setloading(true);
-    const {Cpassword, password, name, email} = data
-    dispatch(signupUser({email: email, password: password})).then((response) =>{
-      if(response.payload.message){
-        settoggleSnack(true);
-        setmessageSnack(response.payload.message);
-        setSeveritySnack("error");
-        setloading(false);
-      }else{
-        dispatch(createProfile({firstname:name,email:email,role:'admin'})).then((res) =>{
-          navigate("/dashboard");
+    const { password, name, email } = data;
+    dispatch(signupUser({ email: email, password: password })).then(
+      (response) => {
+        if (response.payload.message) {
+          settoggleSnack(true);
+          setmessageSnack(response.payload.message);
+          setSeveritySnack("error");
           setloading(false);
-        })
+        } else {
+          dispatch(
+            createProfile({ firstname: name, email: email, role: "admin" })
+          ).then((res) => {
+            navigate("/dashboard");
+            setloading(false);
+          });
+        }
       }
-    })
-  }
+    );
+  };
   return (
     <>
       {loading ? <Loading openload={loading} /> : null}
@@ -83,7 +90,6 @@ export default function Auth() {
                 <TabList
                   onChange={handlechangetab}
                   centered={true}
-                  TabIndicatorProps={{ sx: { backgroundColor: "#AF1763" } }}
                 >
                   <Tab label="Sign In" value="1" />
                   <Tab label="Sign Up" value="2" />
@@ -96,13 +102,17 @@ export default function Auth() {
                 />
               </TabPanel>
               <TabPanel value="2">
-                <Signup handlechangetab={handlechangetab} handlesignupuser={handlesignupuser} />
+                <Signup
+                  handlechangetab={handlechangetab}
+                  handlesignupuser={handlesignupuser}
+                />
               </TabPanel>
             </TabContext>
           </Box>
         </CardContent>
         {toggleSnack ? (
           <Snack
+            togglesnack={handletoggleSnack}
             open={toggleSnack}
             message={messageSnack}
             severity={severitySnack}

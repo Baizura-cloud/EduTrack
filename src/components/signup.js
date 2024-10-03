@@ -92,6 +92,9 @@ class SignUp extends Component {
   handleReset = () => {
     this.setState({ onReset: !this.state.onReset });
   };
+  togglesnack = () => {
+    this.setState({ toggleSnack: !this.state.toggleSnack });
+  };
 
   render() {
     const { handlechangetab } = this.props;
@@ -212,7 +215,7 @@ class SignUp extends Component {
             <Grid2 size={12}>
               <Button
                 variant="contained"
-                sx={{ width: "90%", marginTop: 2, backgroundColor:'#AF1763' }}
+                sx={{ width: "90%", marginTop: 2 }}
                 onClick={this.onSubmit}
               >
                 Sign Up
@@ -264,7 +267,7 @@ class SignUp extends Component {
             </Grid2>
           </Grid2>
         </FormControl>
-        {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
+        {this.state.toggleSnack? <Snack togglesnack={this.togglesnack} open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
       </Box>
     );
   }

@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import FormDrawer from "./formdrawer";
 import { createAvatar } from "./utils";
 import {
@@ -138,55 +139,81 @@ class Bulletin extends React.Component {
         {bulletin
           ? bulletin.data.map((post) => (
               <Card key={post.id}>
+                {post.created_by == this.props.auth.data.user.email ? (
+                  <CardHeader
+                    title={
+                      <Typography
+                        gutterBottom
+                        sx={{ textAlign: "start", fontSize: 16 }}
+                      >
+                        {post.title}
+                      </Typography>
+                    }
+                    action={
+                      <Stack direction="row">
+                        <Tooltip title={"edit"} arrow>
+                          <IconButton
+                            color="secondary"
+                            onClick={() => this.editpost(post)}
+                          >
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title={"delete"} arrow>
+                          <IconButton
+                            color="error"
+                            onClick={() => this.handleDelete(post)}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
+                      </Stack>
+                    }
+                  />
+                ) : (
+                  <CardHeader
+                    title={
+                      <Typography
+                        gutterBottom
+                        sx={{ textAlign: "start", fontSize: 16 }}
+                      >
+                        {post.title}
+                      </Typography>
+                    }
+                  />
+                )}
                 <CardContent>
-                  {post.created_by == this.props.auth.data.user.email ? (
-                    <CardHeader
-                      action={
-                        <Stack direction="row">
-                          <Tooltip title={"edit"} arrow>
-                            <IconButton
-                              color="secondary"
-                              onClick={() => this.editpost(post)}
-                            >
-                              <EditIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title={"delete"} arrow>
-                            <IconButton
-                              color="error"
-                              onClick={() => this.handleDelete(post)}
-                            >
-                              <DeleteIcon />
-                            </IconButton>
-                          </Tooltip>
-                        </Stack>
-                      }
-                    />
-                  ) : null}
-                  <Typography
-                    gutterBottom
-                    sx={{ textAlign: "start", fontSize: 16 }}
-                  >
-                    {post.title}
-                  </Typography>
                   <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
                     {post.details}
                     <br />
                   </Typography>
-                  
-                  <Stack alignItems={"start"} direction="row" spacing={1} sx={{marginTop:2}}>
+
+                  <Stack
+                    alignItems={"start"}
+                    direction="row"
+                    spacing={1}
+                    sx={{ marginTop: 2 }}
+                  >
                     <Tooltip title={"Author: " + post.created_by} arrow>
                       <ContactPageIcon color="secondary" />
                     </Tooltip>
                     {post.tag !== null
-                      ? post.tag.map((usertag) => (
-                          <Tooltip title={usertag.firstname + " " + usertag.lastname} arrow>
+                      ? post.tag.map((usertag, index) => (
+                          <Tooltip
+                            title={usertag.firstname + " " + usertag.lastname}
+                            arrow
+                            key={index}
+                          >
                             <Avatar
-                              sx={{ bgcolor: '#1a237e', width: 24, height: 24, fontSize:10 }}
+                              sx={{
+                                bgcolor: "#ab47bc",
+                                width: 20,
+                                height: 20,
+                                fontSize: 8,
+                              }}
                               alt={usertag.firstname + usertag.lastname}
                               variant="rounded"
                             >
-                              
                               {createAvatar(
                                 usertag.firstname,
                                 usertag.lastname

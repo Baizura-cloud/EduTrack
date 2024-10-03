@@ -4,29 +4,21 @@ import { Alert, Snackbar } from "@mui/material";
 class Snack extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      open: this.props.open,
-      message: this.props.message,
-      severity: this.props.severity
-    };
+    this.state = {};
   }
 
   render() {
-    const {togglesnack} = this.props
+    const { togglesnack, open, message, severity } = this.props;
     return (
       <div>
-        <Snackbar
-          open={this.state.open}
-          autoHideDuration={3000}
-          onClose={togglesnack}
-        >
+        <Snackbar open={open} autoHideDuration={3000} onClose={togglesnack}>
           <Alert
             onClose={togglesnack}
-            severity={this.state.severity}
+            severity={severity}
             variant="filled"
             sx={{ width: "100%" }}
           >
-            {this.state.message}
+            {message}
           </Alert>
         </Snackbar>
       </div>

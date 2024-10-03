@@ -40,9 +40,9 @@ class DrawerAppbar extends Component {
       auth: true,
       anchorEl: null,
       drawerWidth: 240,
-      toggleSnack: false,
-      messageSnack: "",
-      severitySnack: "",
+      // toggleSnack: false,
+      // messageSnack: "",
+      // severitySnack: "",
       loading: false,
       path: "",
       direct: false,
@@ -274,13 +274,13 @@ class DrawerAppbar extends Component {
           {this.state.direct? <Navigate to='/' replace={true}/> : <Outlet />}
           {/* page content */}
         </Box>
-        {this.state.toggleSnack ? (
+        {/* {this.state.toggleSnack ? (
           <Snack
             open={this.state.toggleSnack}
             message={this.state.messageSnack}
             severity={this.state.severitySnack}
           />
-        ) : null}
+        ) : null} */}
       </Box>
     );
   }
