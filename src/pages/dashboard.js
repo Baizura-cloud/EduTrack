@@ -15,23 +15,25 @@ class Dashboard extends React.Component {
   render() {
     return (
       <Box sx={{ minWidth: 275, flexGrow: 1 }}>
-        <Card variant="outlined" sx={{ padding: 2}}>
-          <CardHeader title="Dashboard" sx={{ textAlign: "start" , margin:2 }} />
+        <Card variant="outlined" sx={{ padding: 2 }}>
+          <CardHeader
+            title="Dashboard"
+            sx={{ textAlign: "start", margin: 2 }}
+          />
           <CardContent>
-          <Grid container spacing={2}>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Tasklist  />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <Bulletin />
-          </Grid>
-          <Grid size={{ xs: 12, md: 4 }}>
-            <ScheduleTimeline />
-          </Grid>
-        </Grid>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 8 }}>
+                <Tasklist />
+              </Grid>
+              <Grid size={{ xs: 12, md: 4 }}>
+                <Bulletin />
+              </Grid>
+              {/* <Grid size={{ xs: 12, md: 4 }}>
+                <ScheduleTimeline />
+              </Grid> */}
+            </Grid>
           </CardContent>
         </Card>
-
       </Box>
     );
   }

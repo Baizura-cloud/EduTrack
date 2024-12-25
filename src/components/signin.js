@@ -24,7 +24,6 @@ import {
   Divider,
 } from "@mui/material";
 
-
 class SignIn extends Component {
   constructor(props) {
     super(props);
@@ -36,8 +35,8 @@ class SignIn extends Component {
       error1: false,
       onReset: false,
       toggleSnack: false,
-      messageSnack: '',
-      severitySnack: '',
+      messageSnack: "",
+      severitySnack: "",
       //loading: false
     };
   }
@@ -47,22 +46,28 @@ class SignIn extends Component {
     this.setState({ loginData });
   };
   onSubmit = () => {
+    console.log("In the submit function")
     if (emailValidation(this.state.loginData.email)) {
       try {
         this.setState({ error: false });
         try {
-          this.props.handleloginuser(this.state.loginData)
+          this.props.handleloginuser(this.state.loginData);
         } catch (error) {
-          console.log(error)          
+          console.log(error);
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     } else {
-      this.setState({ error: true, toggleSnack: true, messageSnack: 'Invalid Email', severitySnack: 'error' });
+      this.setState({
+        error: true,
+        toggleSnack: true,
+        messageSnack: "Invalid Email",
+        severitySnack: "error",
+      });
     }
   };
-  
+
   handleClickShowPassword = () => {
     this.setState({ showPassword: !this.state.showPassword });
   };
@@ -77,11 +82,12 @@ class SignIn extends Component {
   };
 
   render() {
-    const {  handlechangetab } = this.props;
+    const { handlechangetab } = this.props;
 
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
-        <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+      {/* <form onSubmit={this.onSubmit}> */}
+      <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
           <InputLabel htmlFor="email">Email</InputLabel>
           <OutlinedInput
             fullWidth
@@ -152,6 +158,7 @@ class SignIn extends Component {
             </Grid2>
             <Grid2 size={12}>
               <Button
+                //type="submit"
                 variant="contained"
                 sx={{ width: "90%" }}
                 onClick={this.onSubmit}
@@ -205,15 +212,25 @@ class SignIn extends Component {
             </Grid2>
           </Grid2>
         </FormControl>
-        {this.state.onReset ? (<ForgotPassword toggle={this.handleReset} />) : null}
-        {this.state.toggleSnack? <Snack open={this.state.toggleSnack} message={this.state.messageSnack} severity={this.state.severitySnack} />:null}
+        {this.state.onReset ? (
+          <ForgotPassword toggle={this.handleReset} />
+        ) : null}
+        {this.state.toggleSnack ? (
+          <Snack
+            open={this.state.toggleSnack}
+            message={this.state.messageSnack}
+            severity={this.state.severitySnack}
+          />
+        ) : null}
+      {/* </form> */}
+        
       </Box>
     );
   }
 }
 
-const mapStateToProps = (state) =>({
-  auth: state.auth
-})
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
 
 export default connect(mapStateToProps, null)(SignIn);

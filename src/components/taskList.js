@@ -3,23 +3,15 @@ import AlertDialog from "./confirmDialog";
 import "../App.css";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import Box from "@mui/material/Box";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
-import Accordion from "@mui/material/Accordion";
-import AccordionActions from "@mui/material/AccordionActions";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Snack from "./snackbar";
-import { CardHeader, Tooltip } from "@mui/material";
+import { CardHeader, Tooltip, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import {
@@ -29,6 +21,7 @@ import {
   updateTask,
 } from "../redux/taskSlice";
 import { connect } from "react-redux";
+import { useDraggable, useDroppable } from "@dnd-kit/core";
 import FormDrawer from "./formdrawer";
 
 class Tasklist extends Component {
@@ -161,99 +154,102 @@ class Tasklist extends Component {
   renderTabList = () => {
     const { value } = this.state;
     return (
-      <Tabs
-        centered
-        value={value}
-        onChange={this.handleChange}
-        textColor="primary"
-        indicatorColor="primary"
-      >
-        <Tab
-          label="Completed Task"
-          icon={<TaskAltIcon />}
-          iconPosition="end"
-          onClick={() => this.displayCompleted(true)}
-        />
-        <Tab
-          label="Incompleted Task"
-          icon={<NotInterestedIcon />}
-          iconPosition="end"
-          textColor="secondary"
-          onClick={() => this.displayCompleted(false)}
-        />
-      </Tabs>
+      <>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <CardContent sx={{ justifyItems: "center" }}>
+            <Stack direction="row" spacing={2}>
+              <Typography>Incompleted Task</Typography>
+              <NotInterestedIcon />
+            </Stack>
+          </CardContent>
+        </Grid>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <CardContent sx={{ justifyItems: "center" }}>
+            <Stack direction="row" spacing={2}>
+              <Typography>Completed Task</Typography>
+              <TaskAltIcon />
+            </Stack>
+          </CardContent>
+        </Grid>
+      </>
     );
   };
-  renderSmallTabList = () => {
-    const { value } = this.state;
-    return (
-      <Box sx={{ width: "100%", borderColor: "divider" }}>
-        <Tabs
-          centered
-          value={value}
-          onChange={this.handleChange}
-          textColor="primary"
-          indicatorColor="primary"
-        >
-          <Tab
-            label="Completed"
-            icon={<TaskAltIcon />}
-            iconPosition="end"
-            onClick={() => this.displayCompleted(true)}
-          />
-          <Tab
-            label="Incompleted"
-            icon={<NotInterestedIcon />}
-            iconPosition="end"
-            textColor="secondary"
-            onClick={() => this.displayCompleted(false)}
-          />
-        </Tabs>
-      </Box>
-    );
-  };
-
-  renderItems = () => {
-    const { viewCompleted } = this.state;
-    const { task } = this.props;
-    if (task.data == null) {
-      return;
-    }
-    const newItems = task.data.filter(
-      (item) => item.completed === viewCompleted
-    );
-
-    return newItems.map((item) => (
-      <li key={item.id}>
-        <Accordion sx={{ marginTop: 2, textAlign: "start" }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            aria-controls="panel3-content"
-            id={item.id}
-          >
-            <Typography>{item.title}</Typography>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="subtitle2">{item.description}</Typography>
-          </AccordionDetails>
-          <AccordionActions>
-            <Tooltip title={"edit"} arrow>
-              <IconButton color="secondary" onClick={() => this.editItem(item)}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title={"delete"} arrow>
-              <IconButton color="error" onClick={() => this.handleDelete(item)}>
-                <DeleteIcon />
-              </IconButton>
-            </Tooltip>
-          </AccordionActions>
-        </Accordion>
+  // renderSmallTabList = () => {
+  //   const { value } = this.state;
+  //   return (
+  //     <Box sx={{ width: "100%", borderColor: "divider" }}>
+  //       <Tabs
+  //         centered
+  //         value={value}
+  //         onChange={this.handleChange}
+  //         textColor="primary"
+  //         indicatorColor="primary"
+  //       >
+  //         <Tab
+  //           label="Completed"
+  //           icon={<TaskAltIcon />}
+  //           iconPosition="end"
+  //           onClick={() => this.displayCompleted(true)}
+  //         />
+  //         <Tab
+  //           label="Incompleted"
+  //           icon={<NotInterestedIcon />}
+  //           iconPosition="end"
+  //           textColor="secondary"
+  //           onClick={() => this.displayCompleted(false)}
+  //         />
+  //       </Tabs>
+  //     </Box>
+  //   );
+  // };
+  renderItems = (taskItems) => {
+    //drag and drog
+    return taskItems.map((item) => (
+      <li>
+        <Card sx={{ margin: 1 }}>
+          <Grid container spacing={2} sx={{ margin: 2 }}>
+            <Grid size={{ xs: 8, md: 10 }}>
+              <Typography sx={{ textAlign: "start", fontSize: 16 }}>
+                {item.title}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ textAlign: "start" }}>
+                {item.description}
+              </Typography>
+            </Grid>
+            <Grid size={{ xs: 4, md: 2 }}>
+              <Stack direction="row">
+                <Tooltip title={"edit"} arrow>
+                  <IconButton
+                    color="secondary"
+                    onClick={() => this.editItem(item)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={"delete"} arrow>
+                  <IconButton
+                    color="error"
+                    onClick={() => this.handleDelete(item)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Card>
       </li>
     ));
   };
 
   render() {
+    const { task } = this.props;
+    // if (task.data == null) {
+    //   return;
+    // } // if list empty put image empty list
+    const incomplete = task.data.filter((item) => item.completed === false);
+    const complete = task.data.filter((item) => item.completed === true);
+
     return (
       <>
         <Card variant="outlined" sx={{ minWidth: 275 }}>
@@ -273,17 +269,27 @@ class Tasklist extends Component {
             }
           />
           <CardContent>
-            <Grid container spacing={2}>
-              <Grid xs={12} sx={{ display: { xs: "none", md: "block" } }}>
+            <Card>
+              <Grid container spacing={2}>
                 {this.renderTabList()}
+                {task.data !== null ? (
+                  <>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <ul className="list-group list-group-flush border-top-0  ">
+                        {this.renderItems(incomplete)}
+                      </ul>
+                    </Grid>
+                    <Grid size={{ xs: 12, md: 6 }}>
+                      <ul className="list-group list-group-flush border-top-0  ">
+                        {this.renderItems(complete)}
+                      </ul>
+                    </Grid>
+                  </>
+                ) : (
+                  <></>
+                )}
               </Grid>
-              <Grid xs={12} sx={{ display: { xs: "block", md: "none" } }}>
-                {this.renderSmallTabList()}
-              </Grid>
-            </Grid>
-            <ul className="list-group list-group-flush border-top-0  ">
-              {this.renderItems()}
-            </ul>
+            </Card>
           </CardContent>
         </Card>
         {this.state.modal ? (
