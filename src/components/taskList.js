@@ -14,6 +14,7 @@ import Snack from "./snackbar";
 import { CardHeader, Tooltip, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import {
   createTask,
   deleteTask,
@@ -21,7 +22,7 @@ import {
   updateTask,
 } from "../redux/taskSlice";
 import { connect } from "react-redux";
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import FormDrawer from "./formdrawer";
 
 class Tasklist extends Component {
@@ -51,8 +52,21 @@ class Tasklist extends Component {
         completed: false,
       },
     };
+    this.handleDragEnd = this.handleDragEnd.bind(this);
   }
+  handleDragEnd(result){
+    const {source , destination} = result
 
+    if(!destination){
+      return;
+    }
+    if(source.droppableId === destination.droppableId && source.index === destination.index){
+      return;
+    }
+
+    //update the task status
+
+  }
   handleChange = (event, newValue) => {
     this.setState({ value: newValue });
   };
@@ -204,41 +218,53 @@ class Tasklist extends Component {
   // };
   renderItems = (taskItems) => {
     //drag and drog
-    return taskItems.map((item) => (
-      <li>
-        <Card sx={{ margin: 1 }}>
-          <Grid container spacing={2} sx={{ margin: 2 }}>
-            <Grid size={{ xs: 8, md: 10 }}>
-              <Typography sx={{ textAlign: "start", fontSize: 16 }}>
-                {item.title}
-              </Typography>
-              <Typography variant="subtitle2" sx={{ textAlign: "start" }}>
-                {item.description}
-              </Typography>
-            </Grid>
-            <Grid size={{ xs: 4, md: 2 }}>
-              <Stack direction="row">
-                <Tooltip title={"edit"} arrow>
-                  <IconButton
-                    color="secondary"
-                    onClick={() => this.editItem(item)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={"delete"} arrow>
-                  <IconButton
-                    color="error"
-                    onClick={() => this.handleDelete(item)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Tooltip>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Card>
-      </li>
+    return taskItems.map((item, index) => (
+      <Draggable key={item.id} draggableId={(item.id.toString())} index={index}>
+        {(provided) => (
+          <li
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            
+          >
+            <Card sx={{ margin: 1 }}>
+              <Grid container spacing={2} sx={{ margin: 2 }}>
+                <Grid {...provided.dragHandleProps} size={{ xs: 1, md: 1 }}>
+                  <DragIndicatorIcon />
+                </Grid>
+                <Grid size={{ xs: 8, md: 10 }}>
+                 
+                  <Typography sx={{ textAlign: "start", fontSize: 16 }}>
+                    {item.title}
+                  </Typography>
+                  <Typography variant="subtitle2" sx={{ textAlign: "start" }}>
+                    {item.description}
+                  </Typography>
+                </Grid>
+                <Grid size={{ xs: 1, md: 1 }}>
+                  <Stack direction="row">
+                    {/* <Tooltip title={"edit"} arrow>
+                      <IconButton
+                        color="secondary"
+                        onClick={() => this.editItem(item)}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip> */}
+                    <Tooltip title={"delete"} arrow>
+                      <IconButton
+                        color="error"
+                        onClick={() => this.handleDelete(item)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </Card>
+          </li>
+        )}
+      </Draggable>
     ));
   };
 
@@ -274,16 +300,36 @@ class Tasklist extends Component {
                 {this.renderTabList()}
                 {task.data !== null ? (
                   <>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <ul className="list-group list-group-flush border-top-0  ">
-                        {this.renderItems(incomplete)}
-                      </ul>
-                    </Grid>
-                    <Grid size={{ xs: 12, md: 6 }}>
-                      <ul className="list-group list-group-flush border-top-0  ">
-                        {this.renderItems(complete)}
-                      </ul>
-                    </Grid>
+                    <DragDropContext onDragEnd={this.handleDragEnd}>
+                      <Droppable droppableId="incomplete" direction="vertical">
+                        {(provided) => (
+                          <Grid size={{ xs: 12, md: 6 }}>
+                            <ul
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                              className="list-group list-group-flush border-top-0  "
+                            >
+                              {this.renderItems(incomplete)}
+                              {provided.placeholder}
+                            </ul>
+                          </Grid>
+                        )}
+                      </Droppable>
+                      <Droppable droppableId="complete" direction="vertical">
+                        {(provided) => (
+                          <Grid size={{ xs: 12, md: 6 }}>
+                            <ul
+                              ref={provided.innerRef}
+                              {...provided.droppableProps}
+                              className="list-group list-group-flush border-top-0  "
+                            >
+                              {this.renderItems(complete)}
+                              {provided.placeholder}
+                            </ul>
+                          </Grid>
+                        )}
+                      </Droppable>
+                    </DragDropContext>
                   </>
                 ) : (
                   <></>
