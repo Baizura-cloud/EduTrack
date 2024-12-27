@@ -54,7 +54,7 @@ class Tasklist extends Component {
     };
     this.handleDragEnd = this.handleDragEnd.bind(this);
   }
-  handleDragEnd(result){
+  handleDragEnd=(result)=>{
     const {source , destination} = result
 
     if(!destination){
@@ -63,9 +63,26 @@ class Tasklist extends Component {
     if(source.droppableId === destination.droppableId && source.index === destination.index){
       return;
     }
-
+    console.log(source)
+    console.log(destination)
+    this.dndUpdateTask(source,destination)
     //update the task status
 
+  }
+  dndUpdateTask=(source, destination)=>{
+    const taskfrom = source.droppableId
+    const taskTo = destination.droppableId
+    const taskId = source.index
+    const task = this.props.task.data.filter((item) => item.id === taskId)
+    let newTask = [task[0]]
+    newTask = newTask.map(item =>
+      taskTo === 'complete' ? { ...item, completed: true } : { ...item, completed: false }
+    );
+    console.log(newTask)
+    this.props.updateTask(newTask[0]).then(()=>{
+     // this.refreshList()
+      this.togglesnack("edit")
+    })
   }
   handleChange = (event, newValue) => {
     this.setState({ value: newValue });
@@ -115,6 +132,7 @@ class Tasklist extends Component {
   handleSubmitItem = (item) => {
     this.toggle();
     if (item.id) {
+      console.log(item)
       this.props.updateTask(item).then(() => {
         this.refreshList();
         this.togglesnack("edit");
@@ -219,7 +237,7 @@ class Tasklist extends Component {
   renderItems = (taskItems) => {
     //drag and drog
     return taskItems.map((item, index) => (
-      <Draggable key={item.id} draggableId={(item.id.toString())} index={index}>
+      <Draggable key={item.id} draggableId={(item.id.toString())} index={item.id}>
         {(provided) => (
           <li
             ref={provided.innerRef}
@@ -242,14 +260,14 @@ class Tasklist extends Component {
                 </Grid>
                 <Grid size={{ xs: 1, md: 1 }}>
                   <Stack direction="row">
-                    {/* <Tooltip title={"edit"} arrow>
+                    <Tooltip title={"edit"} arrow>
                       <IconButton
                         color="secondary"
                         onClick={() => this.editItem(item)}
                       >
                         <EditIcon />
                       </IconButton>
-                    </Tooltip> */}
+                    </Tooltip>
                     <Tooltip title={"delete"} arrow>
                       <IconButton
                         color="error"
