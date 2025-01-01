@@ -14,7 +14,7 @@ import Snack from "./snackbar";
 import { CardHeader, Tooltip, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import {
   createTask,
   deleteTask,
@@ -24,6 +24,7 @@ import {
 import { connect } from "react-redux";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import FormDrawer from "./formdrawer";
+import EmptyList from "./taskListempty";
 
 class Tasklist extends Component {
   constructor(props) {
@@ -54,36 +55,40 @@ class Tasklist extends Component {
     };
     this.handleDragEnd = this.handleDragEnd.bind(this);
   }
-  handleDragEnd=(result)=>{
-    const {source , destination} = result
+  handleDragEnd = (result) => {
+    const { source, destination } = result;
 
-    if(!destination){
+    if (!destination) {
       return;
     }
-    if(source.droppableId === destination.droppableId && source.index === destination.index){
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
       return;
     }
-    console.log(source)
-    console.log(destination)
-    this.dndUpdateTask(source,destination)
+    console.log(source);
+    console.log(destination);
+    this.dndUpdateTask(source, destination);
     //update the task status
-
-  }
-  dndUpdateTask=(source, destination)=>{
-    const taskfrom = source.droppableId
-    const taskTo = destination.droppableId
-    const taskId = source.index
-    const task = this.props.task.data.filter((item) => item.id === taskId)
-    let newTask = [task[0]]
-    newTask = newTask.map(item =>
-      taskTo === 'complete' ? { ...item, completed: true } : { ...item, completed: false }
+  };
+  dndUpdateTask = (source, destination) => {
+    const taskfrom = source.droppableId;
+    const taskTo = destination.droppableId;
+    const taskId = source.index;
+    const task = this.props.task.data.filter((item) => item.id === taskId);
+    let newTask = [task[0]];
+    newTask = newTask.map((item) =>
+      taskTo === "complete"
+        ? { ...item, completed: true }
+        : { ...item, completed: false }
     );
-    console.log(newTask)
-    this.props.updateTask(newTask[0]).then(()=>{
-     // this.refreshList()
-      this.togglesnack("edit")
-    })
-  }
+    console.log(newTask);
+    this.props.updateTask(newTask[0]).then(() => {
+      // this.refreshList()
+      this.togglesnack("edit");
+    });
+  };
   handleChange = (event, newValue) => {
     this.setState({ value: newValue });
   };
@@ -132,7 +137,7 @@ class Tasklist extends Component {
   handleSubmitItem = (item) => {
     this.toggle();
     if (item.id) {
-      console.log(item)
+      console.log(item);
       this.props.updateTask(item).then(() => {
         this.refreshList();
         this.togglesnack("edit");
@@ -237,28 +242,25 @@ class Tasklist extends Component {
   renderItems = (taskItems) => {
     //drag and drog
     return taskItems.map((item, index) => (
-      <Draggable key={item.id} draggableId={(item.id.toString())} index={item.id}>
+      <Draggable key={item.id} draggableId={item.id.toString()} index={item.id}>
         {(provided) => (
-          <li
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            
-          >
+          <li ref={provided.innerRef} {...provided.draggableProps}>
             <Card sx={{ margin: 1 }}>
               <Grid container spacing={2} sx={{ margin: 2 }}>
                 <Grid {...provided.dragHandleProps} size={{ xs: 1, md: 1 }}>
                   <DragIndicatorIcon />
                 </Grid>
-                <Grid size={{ xs: 8, md: 10 }}>
-                 
-                  <Typography sx={{ textAlign: "start", fontSize: 16 }}>
-                    {item.title}
-                  </Typography>
-                  <Typography variant="subtitle2" sx={{ textAlign: "start" }}>
-                    {item.description}
-                  </Typography>
+                <Grid size={{ xs: 8, md: 9 }}>
+                  <Stack direction="column">
+                    <Typography sx={{ textAlign: "start", fontSize: 16 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography variant="subtitle2" sx={{ textAlign: "start" }}>
+                      {item.description}
+                    </Typography>
+                  </Stack>
                 </Grid>
-                <Grid size={{ xs: 1, md: 1 }}>
+                <Grid size={{ xs: 1, md: 2 }}>
                   <Stack direction="row">
                     <Tooltip title={"edit"} arrow>
                       <IconButton
@@ -316,7 +318,7 @@ class Tasklist extends Component {
             <Card>
               <Grid container spacing={2}>
                 {this.renderTabList()}
-                {task.data !== null ? (
+                {task.data !== null && task.data.length !== 0 ? (
                   <>
                     <DragDropContext onDragEnd={this.handleDragEnd}>
                       <Droppable droppableId="incomplete" direction="vertical">
@@ -350,7 +352,11 @@ class Tasklist extends Component {
                     </DragDropContext>
                   </>
                 ) : (
-                  <></>
+                  <>
+                    <Grid size={{ xs: 12, md: 12 }}>
+                      <EmptyList />
+                    </Grid>
+                  </>
                 )}
               </Grid>
             </Card>

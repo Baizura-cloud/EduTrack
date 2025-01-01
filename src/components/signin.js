@@ -46,7 +46,6 @@ class SignIn extends Component {
     this.setState({ loginData });
   };
   onSubmit = () => {
-    console.log("In the submit function")
     if (emailValidation(this.state.loginData.email)) {
       try {
         this.setState({ error: false });
