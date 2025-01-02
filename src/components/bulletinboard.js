@@ -10,6 +10,7 @@ import AddIcon from "@mui/icons-material/Add";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import RecentActorsIcon from "@mui/icons-material/RecentActors";
 import FormDrawer from "./formdrawer";
+import DialogForm from "./dialogform";
 import { createAvatar } from "./utils";
 import {
   createBulletin,
@@ -132,6 +133,43 @@ class Bulletin extends React.Component {
     }
   };
 
+  renderTooltip = (post) => {
+    return (
+      <Stack
+        alignItems={"start"}
+        direction="row"
+        spacing={1}
+        sx={{ marginTop: 2 }}
+      >
+        <Tooltip title={"Author: " + post.created_by} arrow>
+          <ContactPageIcon color="secondary" />
+        </Tooltip>
+        {post.tag !== null
+          ? post.tag.map((usertag, index) => (
+              <Tooltip
+                title={usertag.firstname + " " + usertag.lastname}
+                arrow
+                key={index}
+              >
+                <Avatar
+                  sx={{
+                    bgcolor: "#ab47bc",
+                    width: 20,
+                    height: 20,
+                    fontSize: 8,
+                  }}
+                  alt={usertag.firstname + usertag.lastname}
+                  variant="rounded"
+                >
+                  {createAvatar(usertag.firstname, usertag.lastname)}
+                </Avatar>
+              </Tooltip>
+            ))
+          : null}
+      </Stack>
+    );
+  };
+
   renderCard = () => {
     const { bulletin } = this.props;
     return (
@@ -139,7 +177,7 @@ class Bulletin extends React.Component {
         {bulletin
           ? bulletin.data.map((post) => (
               <Card key={post.id}>
-                {post.created_by == this.props.auth.data.user.email ? (
+                {/* {post.created_by == this.props.auth.data.user.email ? (
                   <CardHeader
                     title={
                       <Typography
@@ -181,48 +219,14 @@ class Bulletin extends React.Component {
                       </Typography>
                     }
                   />
-                )}
+                )} */}
                 <CardContent>
                   <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
-                    {post.details}
-                    <br />
+                    {post.title}
                   </Typography>
-
-                  <Stack
-                    alignItems={"start"}
-                    direction="row"
-                    spacing={1}
-                    sx={{ marginTop: 2 }}
-                  >
-                    <Tooltip title={"Author: " + post.created_by} arrow>
-                      <ContactPageIcon color="secondary" />
-                    </Tooltip>
-                    {post.tag !== null
-                      ? post.tag.map((usertag, index) => (
-                          <Tooltip
-                            title={usertag.firstname + " " + usertag.lastname}
-                            arrow
-                            key={index}
-                          >
-                            <Avatar
-                              sx={{
-                                bgcolor: "#ab47bc",
-                                width: 20,
-                                height: 20,
-                                fontSize: 8,
-                              }}
-                              alt={usertag.firstname + usertag.lastname}
-                              variant="rounded"
-                            >
-                              {createAvatar(
-                                usertag.firstname,
-                                usertag.lastname
-                              )}
-                            </Avatar>
-                          </Tooltip>
-                        ))
-                      : null}
-                  </Stack>
+                  <Typography sx={{ textAlign: "justify", fontSize: 12 }}>
+                    {post.details}
+                  </Typography>
                 </CardContent>
               </Card>
             ))
@@ -233,9 +237,9 @@ class Bulletin extends React.Component {
 
   render() {
     return (
-      <Box sx={{ minWidth: 275 }}>
+      <>
         {this.state.toggleDrawer ? (
-          <FormDrawer
+          <DialogForm
             toggle={this.toggle}
             activeItem={this.state.activeItem}
             onSave={this.handleSubmitItem}
@@ -245,7 +249,7 @@ class Bulletin extends React.Component {
         <Card variant="outlined">
           <CardHeader
             title="Bulletin Board"
-            subheader="Your daily announcement"
+            subheader="Your daily announcements & events"
             action={
               <div align="right">
                 <Button
@@ -276,7 +280,7 @@ class Bulletin extends React.Component {
             severity={this.state.popupContent.severity}
           />
         ) : null}
-      </Box>
+      </>
     );
   }
 }

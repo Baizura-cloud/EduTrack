@@ -23,7 +23,7 @@ import {
 } from "../redux/taskSlice";
 import { connect } from "react-redux";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
-import FormDrawer from "./formdrawer";
+import DialogForm from "./dialogform";
 import EmptyList from "./taskListempty";
 
 class Tasklist extends Component {
@@ -363,11 +363,11 @@ class Tasklist extends Component {
           </CardContent>
         </Card>
         {this.state.modal ? (
-          <FormDrawer
-            activeItem={this.state.activeItem}
-            toggle={this.toggle}
-            onSave={this.handleSubmitItem}
-            flag="task"
+          <DialogForm 
+          activeItem={this.state.activeItem}
+          toggle={this.toggle}
+          onSave={this.handleSubmitItem}
+          flag="task"
           />
         ) : null}
         {this.state.confirmDel ? (
