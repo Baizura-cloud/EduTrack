@@ -7,8 +7,8 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import ContactPageIcon from "@mui/icons-material/ContactPage";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
+import PersonIcon from "@mui/icons-material/Person";
+import PeopleIcon from "@mui/icons-material/People";
 import FormDrawer from "./formdrawer";
 import DialogForm from "./dialogform";
 import { createAvatar } from "./utils";
@@ -22,7 +22,8 @@ import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Avatar, Stack, Tooltip } from "@mui/material";
+import { Avatar, Paper, Stack, Tooltip } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import Snack from "./snackbar";
 
 class Bulletin extends React.Component {
@@ -135,37 +136,25 @@ class Bulletin extends React.Component {
 
   renderTooltip = (post) => {
     return (
-      <Stack
-        alignItems={"start"}
-        direction="row"
-        spacing={1}
-        sx={{ marginTop: 2 }}
-      >
+      <Stack alignItems={"start"} direction="row" sx={{ marginTop: 2 }}>
+         {post.created_by == this.props.auth.data.user.email ? (
+          <div>
+            <Tooltip title={"edit"} arrow>
+              <IconButton sx={{padding:0}} color="secondary" onClick={() => this.editpost(post)}>
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+            <Tooltip title={"delete"} arrow>
+              <IconButton sx={{padding:0}} color="error" onClick={() => this.handleDelete(post)}>
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          </div>
+        ) : null}
         <Tooltip title={"Author: " + post.created_by} arrow>
-          <ContactPageIcon color="secondary" />
+          <PersonIcon color="primary" sx={{margin:0}}  />
         </Tooltip>
-        {post.tag !== null
-          ? post.tag.map((usertag, index) => (
-              <Tooltip
-                title={usertag.firstname + " " + usertag.lastname}
-                arrow
-                key={index}
-              >
-                <Avatar
-                  sx={{
-                    bgcolor: "#ab47bc",
-                    width: 20,
-                    height: 20,
-                    fontSize: 8,
-                  }}
-                  alt={usertag.firstname + usertag.lastname}
-                  variant="rounded"
-                >
-                  {createAvatar(usertag.firstname, usertag.lastname)}
-                </Avatar>
-              </Tooltip>
-            ))
-          : null}
+       
       </Stack>
     );
   };
@@ -173,65 +162,36 @@ class Bulletin extends React.Component {
   renderCard = () => {
     const { bulletin } = this.props;
     return (
-      <>
+      <Paper elevation={0}>
         {bulletin
           ? bulletin.data.map((post) => (
-              <Card key={post.id}>
-                {/* {post.created_by == this.props.auth.data.user.email ? (
-                  <CardHeader
-                    title={
-                      <Typography
-                        gutterBottom
-                        sx={{ textAlign: "start", fontSize: 16 }}
-                      >
+              <li key={post.id}>
+                <Paper elevation={2} sx={{ marginTop: 1, padding: 2 }}>
+                  <Grid size={{ xs: 12, md: 12 }}>
+                    <Stack
+                      direction={"row"}
+                      spacing={2}
+                      sx={{
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
                         {post.title}
                       </Typography>
-                    }
-                    action={
-                      <Stack direction="row">
-                        <Tooltip title={"edit"} arrow>
-                          <IconButton
-                            color="secondary"
-                            onClick={() => this.editpost(post)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"delete"} arrow>
-                          <IconButton
-                            color="error"
-                            onClick={() => this.handleDelete(post)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    }
-                  />
-                ) : (
-                  <CardHeader
-                    title={
-                      <Typography
-                        gutterBottom
-                        sx={{ textAlign: "start", fontSize: 16 }}
-                      >
-                        {post.title}
-                      </Typography>
-                    }
-                  />
-                )} */}
-                <CardContent>
-                  <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
-                    {post.title}
-                  </Typography>
-                  <Typography sx={{ textAlign: "justify", fontSize: 12 }}>
-                    {post.details}
-                  </Typography>
-                </CardContent>
-              </Card>
+                      {this.renderTooltip(post)}
+                    </Stack>
+                  </Grid>
+                  <Grid size={{ xs: 12, md: 12 }}>
+                    <Typography sx={{ textAlign: "justify", fontSize: 12 }}>
+                      {post.details}
+                    </Typography>
+                  </Grid>
+                </Paper>
+              </li>
             ))
           : null}
-      </>
+      </Paper>
     );
   };
 
@@ -262,7 +222,9 @@ class Bulletin extends React.Component {
               </div>
             }
           />
-          <CardContent>{this.renderCard()}</CardContent>
+          <CardContent>
+            <ul>{this.renderCard()}</ul>
+          </CardContent>
         </Card>
         {this.state.confirmDel ? (
           <AlertDialog
