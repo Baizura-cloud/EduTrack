@@ -11,7 +11,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import PeopleIcon from "@mui/icons-material/People";
 import FormDrawer from "./formdrawer";
 import DialogForm from "./dialogform";
-import { createAvatar } from "./utils";
+import CampaignIcon from "@mui/icons-material/Campaign";
 import {
   createBulletin,
   deleteBulletin,
@@ -137,24 +137,31 @@ class Bulletin extends React.Component {
   renderTooltip = (post) => {
     return (
       <Stack alignItems={"start"} direction="row" sx={{ marginTop: 2 }}>
-         {post.created_by == this.props.auth.data.user.email ? (
+        {post.created_by == this.props.auth.data.user.email ? (
           <div>
             <Tooltip title={"edit"} arrow>
-              <IconButton sx={{padding:0}} color="secondary" onClick={() => this.editpost(post)}>
+              <IconButton
+                sx={{ padding: 0 }}
+                color="secondary"
+                onClick={() => this.editpost(post)}
+              >
                 <EditIcon fontSize="small" />
               </IconButton>
             </Tooltip>
             <Tooltip title={"delete"} arrow>
-              <IconButton sx={{padding:0}} color="error" onClick={() => this.handleDelete(post)}>
+              <IconButton
+                sx={{ padding: 0 }}
+                color="error"
+                onClick={() => this.handleDelete(post)}
+              >
                 <DeleteIcon fontSize="small" />
               </IconButton>
             </Tooltip>
           </div>
         ) : null}
         <Tooltip title={"Author: " + post.created_by} arrow>
-          <PersonIcon color="primary" sx={{margin:0}}  />
+          <PersonIcon color="primary" sx={{ margin: 0 }} />
         </Tooltip>
-       
       </Stack>
     );
   };
@@ -176,9 +183,14 @@ class Bulletin extends React.Component {
                         alignItems: "center",
                       }}
                     >
-                      <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
-                        {post.title}
-                      </Typography>
+                      <Stack direction={"row"} spacing={2}>
+                        <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
+                          {post.title}
+                        </Typography>
+                        <Tooltip title={"Announcement"}>
+                          <CampaignIcon fontSize="small" sx={{ margin: 0 }} />
+                        </Tooltip>
+                      </Stack>
                       {this.renderTooltip(post)}
                     </Stack>
                   </Grid>

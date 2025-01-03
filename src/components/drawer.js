@@ -95,7 +95,7 @@ class DrawerAppbar extends Component {
       <TodayIcon />,
       <AccountBoxIcon />,
     ];
-    const path = ["/dashboard", "/studentclass", "/course", "/event", "/account"];
+    const path = ["/dashboard", "/studentclass", "/course", "/exam", "/account"];
     return (
       <div>
         <Toolbar>
@@ -103,7 +103,7 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider sx={{ borderWidth: 2 }} />
         <List>
-          {["Dashboard", "Class", "Course", "Event", "Account"].map(
+          {["Dashboard", "Class", "Course", "Exam", "Account"].map(
             (text, index) => (
               <ListItem key={index} sx={{}}>
                 <Paper

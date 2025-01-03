@@ -7,7 +7,7 @@ import Drawer from "./components/drawer";
 import ResetPassword from "./pages/resetPassword";
 import StudentClass from "./pages/studentclass";
 import Course from "./pages/course";
-import Event from "./pages/event";
+import Exam from "./pages/exam";
 import { AuthProvider, RequireAuth } from "./context/auth";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -24,7 +24,7 @@ function App() {
            <Route element={<div className="App"><Dashboard /></div>}path="/dashboard"/>
            <Route element={<div className="App"><StudentClass /></div>}path="/studentclass"/>
            <Route element={<div className="App"><Course /></div>}path="/course"/>
-           <Route element={<div className="App"><Event /></div>}path="/event"/>
+           <Route element={<div className="App"><Exam /></div>}path="/exam"/>
           <Route element={<div className="App"><Account /></div>}path="/account"/>
         </Route>
         </Route>
