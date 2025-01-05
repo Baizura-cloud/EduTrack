@@ -1,15 +1,12 @@
 import * as React from "react";
 import AlertDialog from "./confirmDialog";
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import PersonIcon from "@mui/icons-material/Person";
-import PeopleIcon from "@mui/icons-material/People";
-import FormDrawer from "./formdrawer";
 import DialogForm from "./dialogform";
 import CampaignIcon from "@mui/icons-material/Campaign";
 import {
@@ -22,7 +19,7 @@ import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Avatar, Paper, Stack, Tooltip } from "@mui/material";
+import {Paper, Stack, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Snack from "./snackbar";
 
@@ -224,13 +221,12 @@ class Bulletin extends React.Component {
             subheader="Your daily announcements & events"
             action={
               <div align="right">
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.createpost}
+                <IconButton
+                color="primary"
+                onClick={this.createpost}
                 >
-                  New post
-                </Button>
+                  <AddBoxIcon fontSize="large" />
+                </IconButton>
               </div>
             }
           />

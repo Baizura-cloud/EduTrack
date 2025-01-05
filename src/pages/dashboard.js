@@ -22,10 +22,10 @@ class Dashboard extends React.Component {
           />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 8 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Tasklist />
               </Grid>
-              <Grid size={{ xs: 12, md: 4 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <Bulletin />
               </Grid>
               {/* <Grid size={{ xs: 12, md: 4 }}>

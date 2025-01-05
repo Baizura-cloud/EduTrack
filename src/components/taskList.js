@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import AlertDialog from "./confirmDialog";
 import "../App.css";
-import Button from "@mui/material/Button";
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from '@mui/icons-material/AddBox';
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import NotInterestedIcon from "@mui/icons-material/NotInterested";
@@ -25,11 +24,11 @@ import { connect } from "react-redux";
 import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
 import DialogForm from "./dialogform";
 import EmptyList from "./taskListempty";
-import { withTheme } from "@mui/styles";
 class Tasklist extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isSmallScreen: window.matchMedia("(max-width: 600px)").matches,
       viewCompleted: true, // active tab
       value: 0,
       todoList: [],
@@ -54,6 +53,7 @@ class Tasklist extends Component {
       },
     };
     this.handleDragEnd = this.handleDragEnd.bind(this);
+    this.handleResize = this.handleResize.bind(this);
   }
   handleDragEnd = (result) => {
     const { source, destination } = result;
@@ -85,7 +85,7 @@ class Tasklist extends Component {
     );
     console.log(newTask);
     this.props.updateTask(newTask[0]).then(() => {
-      // this.refreshList()
+      this.refreshList();
       this.togglesnack("edit");
     });
   };
@@ -94,6 +94,14 @@ class Tasklist extends Component {
   };
   componentDidMount() {
     this.refreshList();
+    this.mediaQuery = window.matchMedia("(max-width: 600px)");
+    this.mediaQuery.addEventListener("change", this.handleResize);
+  }
+  componentWillUnmount() {
+    this.mediaQuery.removeEventListener("change", this.handleResize); // Clean up the listener
+  }
+  handleResize(event) {
+    this.setState({ isSmallScreen: event.matches }); // Update state when the screen size changes
   }
   refreshList = () => {
     this.props.fetchTask(this.props.auth.data.user.email);
@@ -189,14 +197,13 @@ class Tasklist extends Component {
   };
 
   renderTabList = () => {
-    const { value } = this.state;
     return (
       <>
         <Grid size={{ xs: 12, md: 6 }}>
           <CardContent sx={{ justifyItems: "center" }}>
             <Stack direction="row" spacing={2}>
               <Typography>Incompleted Task</Typography>
-              <NotInterestedIcon />
+              <NotInterestedIcon color="error" />
             </Stack>
           </CardContent>
         </Grid>
@@ -204,41 +211,35 @@ class Tasklist extends Component {
           <CardContent sx={{ justifyItems: "center" }}>
             <Stack direction="row" spacing={2}>
               <Typography>Completed Task</Typography>
-              <TaskAltIcon />
+              <TaskAltIcon  color="success"/>
             </Stack>
           </CardContent>
         </Grid>
       </>
     );
   };
-  // renderSmallTabList = () => {
-  //   const { value } = this.state;
-  //   return (
-  //     <Box sx={{ width: "100%", borderColor: "divider" }}>
-  //       <Tabs
-  //         centered
-  //         value={value}
-  //         onChange={this.handleChange}
-  //         textColor="primary"
-  //         indicatorColor="primary"
-  //       >
-  //         <Tab
-  //           label="Completed"
-  //           icon={<TaskAltIcon />}
-  //           iconPosition="end"
-  //           onClick={() => this.displayCompleted(true)}
-  //         />
-  //         <Tab
-  //           label="Incompleted"
-  //           icon={<NotInterestedIcon />}
-  //           iconPosition="end"
-  //           textColor="secondary"
-  //           onClick={() => this.displayCompleted(false)}
-  //         />
-  //       </Tabs>
-  //     </Box>
-  //   );
-  // };
+  renderSmallTabList = () => {
+    return (
+      <>
+        <Grid size={{ xs: 6, md: 6 }}>
+          <CardContent sx={{ justifyItems: "center" }}>
+            <Stack direction="row">
+            <Typography>Incompleted</Typography>
+              <NotInterestedIcon color="error" />
+            </Stack>
+          </CardContent>
+        </Grid>
+        <Grid size={{ xs: 6, md: 6 }}>
+          <CardContent sx={{ justifyItems: "center" }}>
+            <Stack direction="row" >
+            <Typography>Completed</Typography>
+              <TaskAltIcon  color="success"/>
+            </Stack>
+          </CardContent>
+        </Grid>
+      </>
+    );
+  };
   renderItems = (taskItems) => {
     //drag and drog
     return taskItems.map((item, index) => (
@@ -246,7 +247,7 @@ class Tasklist extends Component {
         {(provided) => (
           <li ref={provided.innerRef} {...provided.draggableProps}>
             <Card sx={{ margin: 1 }}>
-              <Grid container spacing={2} sx={{ margin: 2 }}>
+              <Grid container spacing={2} sx={{ margin: 1 }}>
                 <Grid {...provided.dragHandleProps} size={{ xs: 1, md: 1 }}>
                   <DragIndicatorIcon />
                 </Grid>
@@ -264,18 +265,20 @@ class Tasklist extends Component {
                   <Stack direction="row">
                     <Tooltip title={"edit"} arrow>
                       <IconButton
+                        sx={{ padding: 0 }}
                         color="secondary"
                         onClick={() => this.editItem(item)}
                       >
-                        <EditIcon />
+                        <EditIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                     <Tooltip title={"delete"} arrow>
                       <IconButton
+                        sx={{ padding: 0 }}
                         color="error"
                         onClick={() => this.handleDelete(item)}
                       >
-                        <DeleteIcon />
+                        <DeleteIcon fontSize="small" />
                       </IconButton>
                     </Tooltip>
                   </Stack>
@@ -288,11 +291,58 @@ class Tasklist extends Component {
     ));
   };
 
+  renderSmallItems = (taskItems) =>{
+    return taskItems.map((item, index) => (
+      <Draggable key={item.id} draggableId={item.id.toString()} index={item.id}>
+        {(provided) => (
+          <li ref={provided.innerRef} {...provided.draggableProps}>
+            <Card sx={{ marginTop: 1 }}>
+              <Grid container  sx={{ margin: 1 }}>
+                {/* <Grid {...provided.dragHandleProps} size={{ xs: 1, md: 1 }}>
+                  <DragIndicatorIcon />
+                </Grid> */}
+                <Grid {...provided.dragHandleProps} size={{ xs: 10, md: 9 }}>
+                  <Stack direction="column">
+                    <Typography sx={{ textAlign: "start",   fontSize: 14 }}>
+                      {item.title}
+                    </Typography>
+                    <Typography  sx={{ textAlign: "start", fontSize: 12 }}>
+                      {item.description}
+                    </Typography>
+                  </Stack>
+                </Grid>
+                <Grid size={{ xs: 2, md: 2 }}>
+                  <Stack direction="column">
+                    <Tooltip title={"edit"} arrow>
+                      <IconButton
+                        sx={{ padding: 0 }}
+                        color="secondary"
+                        onClick={() => this.editItem(item)}
+                      >
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title={"delete"} arrow>
+                      <IconButton
+                        sx={{ padding: 0 }}
+                        color="error"
+                        onClick={() => this.handleDelete(item)}
+                      >
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </Stack>
+                </Grid>
+              </Grid>
+            </Card>
+          </li>
+        )}
+      </Draggable>
+    ));
+  }
+
   render() {
     const { task } = this.props;
-    // if (task.data == null) {
-    //   return;
-    // } // if list empty put image empty list
     const incomplete = task.data.filter((item) => item.completed === false);
     const complete = task.data.filter((item) => item.completed === true);
 
@@ -304,32 +354,31 @@ class Tasklist extends Component {
             subheader="Breakdown your daily task"
             action={
               <div align="right">
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.createItem}
+                <IconButton
+                color="primary"
+                onClick={this.createItem}
                 >
-                  New task
-                </Button>
+                  <AddBoxIcon fontSize="large" />
+                </IconButton>
               </div>
             }
           />
           <CardContent>
             <Card>
               <Grid container spacing={2}>
-                {this.renderTabList()}
+                {this.state.isSmallScreen ? this.renderSmallTabList() : this.renderTabList()}
                 {task.data !== null && task.data.length !== 0 ? (
                   <>
                     <DragDropContext onDragEnd={this.handleDragEnd}>
                       <Droppable droppableId="incomplete" direction="vertical">
                         {(provided) => (
-                          <Grid size={{ xs: 12, md: 6 }}>
+                          <Grid size={{ xs: 6, md: 6 }}>
                             <ul
                               ref={provided.innerRef}
                               {...provided.droppableProps}
                               className="list-group list-group-flush border-top-0  "
                             >
-                              {this.renderItems(incomplete)}
+                              {this.state.isSmallScreen ? this.renderSmallItems(incomplete) : this.renderItems(incomplete)}
                               {provided.placeholder}
                             </ul>
                           </Grid>
@@ -337,13 +386,13 @@ class Tasklist extends Component {
                       </Droppable>
                       <Droppable droppableId="complete" direction="vertical">
                         {(provided) => (
-                          <Grid size={{ xs: 12, md: 6 }}>
+                          <Grid size={{ xs: 6, md: 6 }}>
                             <ul
                               ref={provided.innerRef}
                               {...provided.droppableProps}
                               className="list-group list-group-flush border-top-0  "
                             >
-                              {this.renderItems(complete)}
+                              {this.state.isSmallScreen ? this.renderSmallItems(incomplete) : this.renderItems(incomplete)}
                               {provided.placeholder}
                             </ul>
                           </Grid>
@@ -363,11 +412,11 @@ class Tasklist extends Component {
           </CardContent>
         </Card>
         {this.state.modal ? (
-          <DialogForm 
-          activeItem={this.state.activeItem}
-          toggle={this.toggle}
-          onSave={this.handleSubmitItem}
-          flag="task"
+          <DialogForm
+            activeItem={this.state.activeItem}
+            toggle={this.toggle}
+            onSave={this.handleSubmitItem}
+            flag="task"
           />
         ) : null}
         {this.state.confirmDel ? (
