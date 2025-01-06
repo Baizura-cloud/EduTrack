@@ -21,7 +21,7 @@ import {
   updateTask,
 } from "../redux/taskSlice";
 import { connect } from "react-redux";
-import { Draggable, Droppable, DragDropContext } from "react-beautiful-dnd";
+import { Draggable, Droppable, DragDropContext } from "@hello-pangea/dnd";
 import DialogForm from "./dialogform";
 import EmptyList from "./taskListempty";
 class Tasklist extends Component {
