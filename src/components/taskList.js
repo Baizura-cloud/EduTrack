@@ -392,7 +392,7 @@ class Tasklist extends Component {
                               {...provided.droppableProps}
                               className="list-group list-group-flush border-top-0  "
                             >
-                              {this.state.isSmallScreen ? this.renderSmallItems(incomplete) : this.renderItems(incomplete)}
+                              {this.state.isSmallScreen ? this.renderSmallItems(complete) : this.renderItems(complete)}
                               {provided.placeholder}
                             </ul>
                           </Grid>
