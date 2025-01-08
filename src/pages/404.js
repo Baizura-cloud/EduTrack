@@ -1,15 +1,13 @@
-export default function ErrorPage() {
-  //const error = useRouteError();
-  //console.error(error);
+import React, { Component } from 'react'
+import CardContent from "@mui/material/CardContent";
+import error4 from "../404.png"
 
-  return (
-    <div id="error-page">
-      <h1>Oops!404</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      {/* <p>
-        <i>{error.statusText || error.message}</i>
-      </p> */}
-    </div>
-  );
+export default class ErrorPage extends Component {
+  render() {
+    return (
+        <CardContent sx={{ maxWidth: 345, justifySelf: "center", alignSelf:'center'}}>
+        <img src={error4} alt="Error" />
+      </CardContent>
+    )
+  }
 }
-
