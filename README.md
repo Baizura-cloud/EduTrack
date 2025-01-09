@@ -2,6 +2,9 @@ This project is currently work in progress (Version 2)
 
 Data design v2:
 
+![Edutrack v2](https://github.com/user-attachments/assets/acfdeb4a-fb1a-4fef-b00f-7799575f17ed)
+
+
 requirement v2:
 
 current updated ui v2: 
