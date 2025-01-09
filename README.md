@@ -1,10 +1,20 @@
-This project is currently work in progress
+This project is currently work in progress (Version 2)
+
+Data design v2:
+
+requirement v2:
+
+current updated ui v2: 
+
+![image](https://github.com/user-attachments/assets/af0d55f6-b04e-4a0d-9dde-a66ffa011aa4)
+
+
 
 requirement v1:
 
 ![image](https://github.com/user-attachments/assets/8b2e9eb4-503c-40bb-9a01-4d19bd56f51d)
 
-current ui:
+current ui v1:
 
 ![image](https://github.com/user-attachments/assets/2616cd5b-e2bd-435c-8962-b895c8466023)
 
