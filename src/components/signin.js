@@ -45,7 +45,8 @@ class SignIn extends Component {
     const loginData = { ...this.state.loginData, [name]: value };
     this.setState({ loginData });
   };
-  onSubmit = () => {
+  onSubmit = (e) => {
+    e.preventDefault(); 
     if (emailValidation(this.state.loginData.email)) {
       try {
         this.setState({ error: false });
@@ -85,7 +86,7 @@ class SignIn extends Component {
 
     return (
       <Box sx={{ width: 500, maxWidth: "100%" }}>
-      {/* <form onSubmit={this.onSubmit}> */}
+      <form onSubmit={this.onSubmit}>
       <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
           <InputLabel htmlFor="email">Email</InputLabel>
           <OutlinedInput
@@ -157,7 +158,7 @@ class SignIn extends Component {
             </Grid2>
             <Grid2 size={12}>
               <Button
-                //type="submit"
+                type="submit"
                 variant="contained"
                 sx={{ width: "90%" }}
                 onClick={this.onSubmit}
@@ -189,7 +190,7 @@ class SignIn extends Component {
                   backgroundColor: "#e85b23",
                   "&:hover": { backgroundColor: "#a64119" },
                 }}
-                onClick={this.onSubmit}
+                // onClick={this.onSubmit}
               >
                 <GoogleIcon sx={{ marginRight: 2 }} />
                 Sign In with Google
@@ -203,7 +204,7 @@ class SignIn extends Component {
                   backgroundColor: "#1031eb",
                   "&:hover": { backgroundColor: "#0d27bd" },
                 }}
-                onClick={this.onSubmit}
+                // onClick={this.onSubmit}
               >
                 <FacebookIcon sx={{ marginRight: 2 }} />
                 Sign In with Facebook
@@ -221,7 +222,7 @@ class SignIn extends Component {
             severity={this.state.severitySnack}
           />
         ) : null}
-      {/* </form> */}
+      </form>
         
       </Box>
     );
