@@ -3,18 +3,13 @@ import { supabase } from "../client";
 
 export const fetchClassStudent = createAsyncThunk(
   "fetch-class",
-  async () => {
-    // if (!email) {
-    //   throw new Error("Data undefined");
-    // }
+  async (_,{ rejectWithValue }) => {
     try {
-      const response = await supabase
-        .from("class")
-        .select("*")
-       // .eq("admin", email);
-      return response;
+      const { data, error } = await supabase.from("class").select("*");
+      if (error) throw error;
+      return data;
     } catch (error) {
-      console.log(error);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -26,13 +21,11 @@ export const createClassStudent = createAsyncThunk(
       throw new Error("Data undefined");
     }
     try {
-      const { response, error } = await supabase.from("class").insert(data);
-      if (error) {
-        return error;
-      }
-      return response;
+      const { data: newData, error } = await supabase.from("class").insert(data);
+      if (error) throw error;
+      return newData[0];
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -44,32 +37,25 @@ export const updateClassStudent = createAsyncThunk(
       throw new Error("Data undefined");
     }
     try {
-        const { response, error } = await supabase
-        .from("class")
-        .update(data)
-        .eq("id", data.id);
-      if (error) {
-        return error;
-      }
-      return response;
+      const { data:upDatedData, error } = await supabase.from("class").update(data).eq("id", data.id);
+      if (error) throw error;
+      return upDatedData[0];
     } catch (error) {
-        rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
-
   }
 );
 
 export const deleteClassStudent = createAsyncThunk(
   "delete-class",
-  async (id) => {
-    if (!id) {
-      throw new Error("Data undefined");
+  async (id, {rejectWithValue}) => {
+    try {
+      const {error} = await supabase.from("class").delete().eq("id", id)
+      if(error) throw error
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message)
     }
-    const { error } = await supabase.from("class").delete().eq("id", id);
-    if (error) {
-      return error;
-    }
-    return;
   }
 );
 
@@ -80,17 +66,18 @@ const classSlice = createSlice({
   extraReducers: (buider) => {
     buider
       .addCase(fetchClassStudent.fulfilled, (state, action) => {
-        state.data = action.payload.data;
+        state.data = action.payload;
         state.fetchstatus = "success";
       })
       .addCase(fetchClassStudent.pending, (state) => {
         state.fetchstatus = "pending";
       })
       .addCase(fetchClassStudent.rejected, (state) => {
+        console.error(state);
         state.fetchstatus = "error";
       })
       .addCase(createClassStudent.fulfilled, (state, action) => {
-        // state.data = action.payload.data
+        state.data.push(action.payload);
         state.fetchstatus = "success";
       })
       .addCase(createClassStudent.pending, (state) => {
@@ -100,7 +87,8 @@ const classSlice = createSlice({
         state.fetchstatus = "error";
       })
       .addCase(updateClassStudent.fulfilled, (state, action) => {
-        //state.data = action.payload.data
+        const index = state.data.findIndex((item) => item.id === action.payload.id);
+        if (index !== -1) state.data[index] = action.payload;
         state.fetchstatus = "success";
       })
       .addCase(updateClassStudent.pending, (state) => {
@@ -109,7 +97,8 @@ const classSlice = createSlice({
       .addCase(updateClassStudent.rejected, (state) => {
         state.fetchstatus = "error";
       })
-      .addCase(deleteClassStudent.fulfilled, (state) => {
+      .addCase(deleteClassStudent.fulfilled, (state, action) => {
+        state.data = state.data.filter((item) => item.id !== action.payload);
         state.fetchstatus = "success";
       })
       .addCase(deleteClassStudent.pending, (state) => {
