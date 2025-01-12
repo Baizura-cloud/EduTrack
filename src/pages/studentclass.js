@@ -52,7 +52,7 @@ class StudentClass extends React.Component {
   }
 
   componentDidMount() {
-    // this.refreshList();
+     this.refreshList();
   }
   refreshList = () => {
     this.props.fetchClassStudent();
@@ -129,7 +129,7 @@ class StudentClass extends React.Component {
           this.togglesnack("error");
           return;
         }
-        this.refreshList();
+      //  this.refreshList();
         this.togglesnack("edit");
       });
     } else {
@@ -148,7 +148,7 @@ class StudentClass extends React.Component {
             this.togglesnack("error");
             return;
           }
-          this.refreshList();
+         // this.refreshList();
           this.togglesnack("submit");
         });
       } else {
@@ -166,7 +166,7 @@ class StudentClass extends React.Component {
               this.togglesnack("error");
               return;
             }
-            this.refreshList();
+         //   this.refreshList();
             this.togglesnack("submit");
           });
         });
@@ -190,7 +190,7 @@ class StudentClass extends React.Component {
     item = this.state.activeItem;
     try {
       this.props.deleteClassStudent(item.id).then(() => {
-        this.refreshList();
+      //  this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {

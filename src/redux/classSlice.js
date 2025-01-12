@@ -17,13 +17,10 @@ export const fetchClassStudent = createAsyncThunk(
 export const createClassStudent = createAsyncThunk(
   "create-class",
   async (data, { rejectWithValue }) => {
-    if (!data) {
-      throw new Error("Data undefined");
-    }
     try {
       const { data: newData, error } = await supabase.from("class").insert(data);
       if (error) throw error;
-      return newData[0];
+      return data[0];
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -33,13 +30,10 @@ export const createClassStudent = createAsyncThunk(
 export const updateClassStudent = createAsyncThunk(
   "update-class",
   async (data, { rejectWithValue }) => {
-    if (!data) {
-      throw new Error("Data undefined");
-    }
     try {
       const { data:upDatedData, error } = await supabase.from("class").update(data).eq("id", data.id);
       if (error) throw error;
-      return upDatedData[0];
+      return upDatedData;
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -25,6 +25,7 @@ class FormDrawer extends React.Component {
           ModalProps={{
             keepMounted: true,
           }}
+          disableScrollLock
         >
           <Box sx={{ width: 600, p: 2 }} role="presentation">
             {/* Your form content here */}
