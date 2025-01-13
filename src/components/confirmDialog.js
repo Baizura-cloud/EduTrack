@@ -18,7 +18,7 @@ export default class AlertDialog extends Component {
     const { handleDelete, deleteItem, alertContent } = this.props;
     return (
       <React.Fragment>
-        <Dialog open={true} onClose={handleDelete}>
+        <Dialog open={true} onClose={handleDelete} disableScrollLock>
           <DialogTitle sx={{ textAlign: "center" }} id="alert-dialog-title">
             <Box pb={3}>
               <WarningIcon color="error" fontSize="large" />

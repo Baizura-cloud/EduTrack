@@ -5,9 +5,14 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { CardHeader, Stack } from "@mui/material";
+import { AccordionActions, CardHeader, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import PeopleIcon from "@mui/icons-material/People";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   createClassStudent,
   deleteClassStudent,
@@ -52,7 +57,7 @@ class StudentClass extends React.Component {
   }
 
   componentDidMount() {
-     this.refreshList();
+    this.refreshList();
   }
   refreshList = () => {
     this.props.fetchClassStudent();
@@ -129,7 +134,7 @@ class StudentClass extends React.Component {
           this.togglesnack("error");
           return;
         }
-      //  this.refreshList();
+        //  this.refreshList();
         this.togglesnack("edit");
       });
     } else {
@@ -148,7 +153,7 @@ class StudentClass extends React.Component {
             this.togglesnack("error");
             return;
           }
-         // this.refreshList();
+          // this.refreshList();
           this.togglesnack("submit");
         });
       } else {
@@ -166,7 +171,7 @@ class StudentClass extends React.Component {
               this.togglesnack("error");
               return;
             }
-         //   this.refreshList();
+            //   this.refreshList();
             this.togglesnack("submit");
           });
         });
@@ -190,7 +195,7 @@ class StudentClass extends React.Component {
     item = this.state.activeItem;
     try {
       this.props.deleteClassStudent(item.id).then(() => {
-      //  this.refreshList();
+        //  this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -198,70 +203,80 @@ class StudentClass extends React.Component {
       console.log(error);
     }
   };
-  renderclassCard = () => {
+  renderclasstable = () => {
     const classStudent = this.props.classstudent.data;
     return (
-      <>
+      <div>
         {classStudent
           ? classStudent.map((clStudent) => (
-              <Card
-                key={clStudent.id}
-                variant="outlined"
-                sx={{ width: 200, height: 200 }}
-              >
-                <CardHeader
-                  action={
-                    clStudent.created_by == this.props.auth.data.user.email ? (
+              <Accordion key={clStudent.id}>
+                <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
+                  <Typography>Class {clStudent.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    Suspendisse malesuada lacus ex, sit amet blandit leo
+                    lobortis eget.
+                  </Typography>
+                  <AccordionActions>
+                    {clStudent.created_by == this.props.auth.data.user.email ? (
                       <Stack direction="row">
+                        <Tooltip title={"Student List"} arrow>
+                          <IconButton
+                            sx={{ padding: 0 }}
+                            color="primary"
+                            onClick={() => this.handleStudentlist(clStudent)}
+                          >
+                            <PeopleIcon fontSize="medium" />
+                          </IconButton>
+                        </Tooltip>
                         <Tooltip title={"edit"} arrow>
                           <IconButton
+                            sx={{ padding: 0 }}
                             color="secondary"
                             onClick={() => this.handleeditClass(clStudent)}
                           >
-                            <EditIcon />
+                            <EditIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                         <Tooltip title={"delete"} arrow>
                           <IconButton
+                            sx={{ padding: 0 }}
                             color="error"
                             onClick={() => this.handleDelete(clStudent)}
                           >
-                            <DeleteIcon />
+                            <DeleteIcon fontSize="small" />
                           </IconButton>
                         </Tooltip>
                       </Stack>
                     ) : (
                       <Stack direction="row">
-                        <Tooltip title={"Author: " + clStudent.created_by} arrow>
+                        <Tooltip title={"Student List"} arrow>
+                          <IconButton
+                            sx={{ padding: 0 }}
+                            color="primary"
+                            onClick={() => this.handleStudentlist(clStudent)}
+                          >
+                            <PeopleIcon fontSize="medium" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                          title={"Author: " + clStudent.created_by}
+                          arrow
+                        >
                           <IconButton color="secondary">
                             <ContactPageIcon />
                           </IconButton>
                         </Tooltip>
                       </Stack>
-                    )
-                  }
-                />
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    sx={{ color: "text.primary", fontSize: 16 }}
-                  >
-                    Class {clStudent.name}
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "end" }}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => this.handleStudentlist(clStudent)}
-                  >
-                    Details
-                  </Button>
-                </CardActions>
-              </Card>
+                    )}
+                  </AccordionActions>
+                </AccordionDetails>
+              </Accordion>
             ))
           : null}
-      </>
+      </div>
     );
   };
 
@@ -278,32 +293,19 @@ class StudentClass extends React.Component {
         ) : null}
         <Card variant="outlined" sx={{ padding: 2 }}>
           <CardHeader
-            title="Class"
-            sx={{ textAlign: "start", margin: 2 }}
-            action={
-              <div align="right">
-                <Button
-                  variant="contained"
-                  startIcon={<AddIcon />}
-                  onClick={this.handlecreateClass}
-                >
-                  New class
-                </Button>
+            title={
+              <div>
+                Class
+                <IconButton color="primary" onClick={this.createpost}>
+                  <AddBoxIcon fontSize="medium" />
+                </IconButton>
               </div>
             }
+            sx={{ textAlign: "start", margin: 2 }}
           />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <Stack
-                  spacing={{ xs: 1, sm: 2 }}
-                  direction="row"
-                  useFlexGap
-                  sx={{ flexWrap: "wrap" }}
-                >
-                  {this.renderclassCard()}
-                </Stack>
-              </Grid>
+              <Grid size={{ xs: 12, md: 6 }}>{this.renderclasstable()}</Grid>
               <Grid size={{ xs: 12, md: 6 }}>
                 {this.state.openList ? (
                   <Student
