@@ -21,6 +21,7 @@ import {
 } from "../redux/classSlice";
 import { connect } from "react-redux";
 import FormDrawer from "../components/formdrawer";
+import DialogForm from "../components/dialogform";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -40,7 +41,7 @@ class StudentClass extends React.Component {
       studentList: [],
       openList: false,
       activeClass: {},
-      toggleDrawer: false,
+      modal: false,
       confirmDel: false, //confirm delete dialog open@close
       popup: false, //snackbar open@close
       popupContent: {
@@ -118,23 +119,22 @@ class StudentClass extends React.Component {
   };
   handlecreateClass = () => {
     const item = { name: "" };
-    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+    this.setState({ activeItem: item, modal: !this.state.modal }); //open modal
   };
   handleeditClass = (item) => {
-    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+    this.setState({ activeItem: item, modal: !this.state.modal }); // open moda
   };
   toggle = () => {
-    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
+    this.setState({ modal: !this.state.modal });
   };
   handleSubmitItem = (classItem, studentItem) => {
     this.toggle();
     if (classItem.id) {
       this.props.updateClassStudent(classItem).then((res) => {
-        if (res.payload !== undefined) {
+        if (res.error !== undefined) {
           this.togglesnack("error");
           return;
         }
-        //  this.refreshList();
         this.togglesnack("edit");
       });
     } else {
@@ -153,7 +153,6 @@ class StudentClass extends React.Component {
             this.togglesnack("error");
             return;
           }
-          // this.refreshList();
           this.togglesnack("submit");
         });
       } else {
@@ -171,7 +170,6 @@ class StudentClass extends React.Component {
               this.togglesnack("error");
               return;
             }
-            //   this.refreshList();
             this.togglesnack("submit");
           });
         });
@@ -179,7 +177,6 @@ class StudentClass extends React.Component {
     }
   };
   handleDelete = (item) => {
-    //open modal confirm delete
     this.setState({
       activeItem: item,
       confirmDel: !this.state.confirmDel,
@@ -195,7 +192,6 @@ class StudentClass extends React.Component {
     item = this.state.activeItem;
     try {
       this.props.deleteClassStudent(item.id).then(() => {
-        //  this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -209,7 +205,7 @@ class StudentClass extends React.Component {
       <div>
         {classStudent
           ? classStudent.map((clStudent) => (
-              <Accordion key={clStudent.id}>
+              <Accordion key={clStudent.id} >
                 <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                   <Typography>Class {clStudent.name}</Typography>
                 </AccordionSummary>
@@ -221,7 +217,7 @@ class StudentClass extends React.Component {
                   </Typography>
                   <AccordionActions>
                     {clStudent.created_by == this.props.auth.data.user.email ? (
-                      <Stack direction="row">
+                      <Stack direction="row" spacing={1}>
                         <Tooltip title={"Student List"} arrow>
                           <IconButton
                             sx={{ padding: 0 }}
@@ -283,8 +279,8 @@ class StudentClass extends React.Component {
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
-        {this.state.toggleDrawer ? (
-          <FormDrawer
+        {this.state.modal ? (
+          <DialogForm
             toggle={this.toggle}
             activeItem={this.state.activeItem}
             onSave={this.handleSubmitItem}
@@ -296,7 +292,7 @@ class StudentClass extends React.Component {
             title={
               <div>
                 Class
-                <IconButton color="primary" onClick={this.createpost}>
+                <IconButton color="primary" onClick={this.handlecreateClass}>
                   <AddBoxIcon fontSize="medium" />
                 </IconButton>
               </div>

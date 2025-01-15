@@ -104,7 +104,7 @@ class Student extends Component {
     item = this.state.activeStudent;
     try {
       this.props.deleteStudent(item.id).then((data) => {
-        this.refreshList();
+       // this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -116,7 +116,7 @@ class Student extends Component {
     this.toggle();
     if (item.id) {
       this.props.updateStudent(item).then(() => {
-        this.refreshList();
+       // this.refreshList();
         this.togglesnack("edit");
       });
     } else {
@@ -125,10 +125,10 @@ class Student extends Component {
         class: this.props.activeClass.name,
       };
       this.props.createStudent(newItem).then((res) => {
-        if(res.payload){
+        if(res.error){
           this.togglesnack('duplicate')
         }else{
-          this.refreshList();
+         // this.refreshList();
           this.togglesnack("submit");
         }
       });

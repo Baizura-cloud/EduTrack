@@ -33,7 +33,7 @@ export const updateClassStudent = createAsyncThunk(
     try {
       const { data:upDatedData, error } = await supabase.from("class").update(data).eq("id", data.id);
       if (error) throw error;
-      return upDatedData;
+      return data;
     } catch (error) {
       return rejectWithValue(error.message);
     }
