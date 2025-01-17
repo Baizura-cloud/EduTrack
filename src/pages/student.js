@@ -8,16 +8,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
-import FormDrawer from "../components/formdrawer";
+import DialogForm from "../components/dialogform";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
-import AddIcon from "@mui/icons-material/Add";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import {
   createStudent,
   deleteStudent,
@@ -104,7 +102,6 @@ class Student extends Component {
     item = this.state.activeStudent;
     try {
       this.props.deleteStudent(item.id).then((data) => {
-       // this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -116,7 +113,6 @@ class Student extends Component {
     this.toggle();
     if (item.id) {
       this.props.updateStudent(item).then(() => {
-       // this.refreshList();
         this.togglesnack("edit");
       });
     } else {
@@ -128,7 +124,6 @@ class Student extends Component {
         if(res.error){
           this.togglesnack('duplicate')
         }else{
-         // this.refreshList();
           this.togglesnack("submit");
         }
       });
@@ -141,12 +136,12 @@ class Student extends Component {
     return (
       <Box sx={{ width: "100%" }}>
         {this.state.toggleDrawer ? (
-          <FormDrawer
-            toggle={this.toggle}
-            activeItem={this.state.activeStudent}
-            onSave={this.handleSubmitItem}
-            flag="student"
-          />
+          <DialogForm
+          toggle={this.toggle}
+          activeItem={this.state.activeStudent}
+          onSave={this.handleSubmitItem}
+          flag="student"
+        />
         ) : null}
         <Paper sx={{ width: "100%", mb: 2 }}>
           <Card>
@@ -155,13 +150,9 @@ class Student extends Component {
               sx={{ textAlign: "start" }}
               action={
                 <div align="right">
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={this.handlecreateStudent}
-                  >
-                    New Student
-                  </Button>
+                  <IconButton color="primary" onClick={this.handlecreateStudent}>
+                  <AddBoxIcon fontSize="medium" />
+                </IconButton>
                 </div>
               }
             />
