@@ -157,6 +157,7 @@ class StudentClass extends React.Component {
         });
       } else {
         this.props.createClassStudent([newClassItem]).then((res) => {
+          console.log(res)
           if (res.payload !== undefined) {
             if (res.payload.code == "23505") {
               this.togglesnack("duplicate");

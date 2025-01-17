@@ -3,7 +3,7 @@ import { supabase } from "../client";
 
 export const fetchClassStudent = createAsyncThunk(
   "fetch-class",
-  async (_,{ rejectWithValue }) => {
+  async (_, { rejectWithValue }) => {
     try {
       const { data, error } = await supabase.from("class").select("*");
       if (error) throw error;
@@ -18,9 +18,12 @@ export const createClassStudent = createAsyncThunk(
   "create-class",
   async (data, { rejectWithValue }) => {
     try {
-      const { data: newData, error } = await supabase.from("class").insert(data);
+      const { data: newData, error } = await supabase
+        .from("class")
+        .insert(data)
+        .select();
       if (error) throw error;
-      return data[0];
+      return newData[0];
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -31,9 +34,13 @@ export const updateClassStudent = createAsyncThunk(
   "update-class",
   async (data, { rejectWithValue }) => {
     try {
-      const { data:upDatedData, error } = await supabase.from("class").update(data).eq("id", data.id);
+      const { data: upDatedData, error } = await supabase
+        .from("class")
+        .update(data)
+        .eq("id", data.id)
+        .select();
       if (error) throw error;
-      return data;
+      return upDatedData[0];
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -42,13 +49,13 @@ export const updateClassStudent = createAsyncThunk(
 
 export const deleteClassStudent = createAsyncThunk(
   "delete-class",
-  async (id, {rejectWithValue}) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const {error} = await supabase.from("class").delete().eq("id", id)
-      if(error) throw error
+      const { error } = await supabase.from("class").delete().eq("id", id);
+      if (error) throw error;
       return id;
     } catch (error) {
-      return rejectWithValue(error.message)
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -81,7 +88,9 @@ const classSlice = createSlice({
         state.fetchstatus = "error";
       })
       .addCase(updateClassStudent.fulfilled, (state, action) => {
-        const index = state.data.findIndex((item) => item.id === action.payload.id);
+        const index = state.data.findIndex(
+          (item) => item.id === action.payload.id
+        );
         if (index !== -1) state.data[index] = action.payload;
         state.fetchstatus = "success";
       })

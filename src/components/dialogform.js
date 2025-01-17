@@ -25,6 +25,7 @@ class DialogForm extends React.Component {
           PaperProps={{
             component: "form",
           }}
+          disableScrollLock
         >
           <DialogContent>
             {/* Your form content here */}

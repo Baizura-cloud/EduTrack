@@ -21,19 +21,33 @@ export const createStudent = createAsyncThunk(
   "create-student",
   async (data, { rejectWithValue }) => {
     try {
-      const { data:newData, error } = await supabase
+      const { data: newData, error } = await supabase
         .from("student")
-        .insert(data);
+        .insert(data)
+        .select();
       if (error) throw error;
-      console.log(data)
-      console.log(newData)
-      return data[0];
+      return newData[0];
     } catch (error) {
       return rejectWithValue(error.message);
     }
   }
 );
-
+export const updateStudent = createAsyncThunk(
+  "update-student",
+  async (data, { rejectWithValue }) => {
+    try {
+      const { data: upDatedData, error } = await supabase
+        .from("student")
+        .update(data)
+        .eq("id", data.id)
+        .select();
+      if (error) throw error;
+      return upDatedData[0];
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 export const fetchmultipleStudent = createAsyncThunk(
   "fetch-mulstudent",
   async (mulclassname, { rejectWithValue }) => {
@@ -61,21 +75,7 @@ export const deleteStudent = createAsyncThunk(
     }
   }
 );
-export const updateStudent = createAsyncThunk(
-  "update-student",
-  async (data, { rejectWithValue }) => {
-    try {
-      const { data: upDatedData, error } = await supabase
-        .from("student")
-        .update(data)
-        .eq("id", data.id);
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+
 const studentSlice = createSlice({
   name: "student",
   initialState: { data: [], loading: false, error: null },
@@ -110,7 +110,9 @@ const studentSlice = createSlice({
       })
 
       .addCase(updateStudent.fulfilled, (state, action) => {
-        const index = state.data.findIndex((item) => item.id === action.payload.id);
+        const index = state.data.findIndex(
+          (item) => item.id === action.payload.id
+        );
         if (index !== -1) state.data[index] = action.payload;
         state.loading = false;
         state.error = null;
