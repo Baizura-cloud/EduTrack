@@ -15,7 +15,6 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import * as XLSX from "xlsx";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -159,7 +158,7 @@ class Classform extends Component {
     const { activeItem } = this.props;
 
     return (
-      <Card>
+      <>
         <CardHeader
           title={"Class"}
           action={
@@ -288,7 +287,7 @@ class Classform extends Component {
             Save
           </Button>
         </CardActions>
-      </Card>
+      </>
     );
   }
 }

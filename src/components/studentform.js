@@ -1,12 +1,9 @@
 import React, { Component } from "react";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Button from "@mui/material/Button";
-import Checkbox from "@mui/material/Checkbox";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -63,7 +60,7 @@ export default class StudentForm extends Component {
     const { activeItem } = this.props;
 
     return (
-      <Card>
+      <>
         <CardHeader title={"Student"} />
         <CardContent>
           <Grid container spacing={1}>
@@ -124,7 +121,7 @@ export default class StudentForm extends Component {
             Save
           </Button>
         </CardActions>
-      </Card>
+      </>
     );
   }
 }

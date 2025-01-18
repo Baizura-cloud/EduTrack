@@ -6,7 +6,6 @@ import Checkbox from "@mui/material/Checkbox";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -64,7 +63,7 @@ export default class TaskForm extends Component {
     const {activeItem } = this.props;
 
     return (
-      <Card>
+      <>
         <CardHeader title={"Task"} />
         <CardContent>
           <Grid container spacing={1}>
@@ -133,7 +132,7 @@ export default class TaskForm extends Component {
             Save
           </Button>
         </CardActions>
-      </Card>
+      </>
     );
   }
 }

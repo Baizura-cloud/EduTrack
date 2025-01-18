@@ -9,7 +9,6 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -79,7 +78,7 @@ class BulletinForm extends Component {
     const { activeItem } = this.props;
 
     return (
-      <Card>
+      <>
         <CardHeader title={"Bulletin"} />
         <CardContent>
           <Grid container spacing={1}>
@@ -123,7 +122,7 @@ class BulletinForm extends Component {
             </Grid>
           </Grid>
 
-          <Grid container spacing={1}>
+          {/* <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
               <InputLabel sx={{ padding: 2 }}>Tag others</InputLabel>
             </Grid>
@@ -157,7 +156,7 @@ class BulletinForm extends Component {
                 renderInput={(params) => <TextField {...params} />}
               />
             </Grid>
-          </Grid>
+          </Grid> */}
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button
@@ -168,7 +167,7 @@ class BulletinForm extends Component {
             Save
           </Button>
         </CardActions>
-      </Card>
+      </>
     );
   }
 }

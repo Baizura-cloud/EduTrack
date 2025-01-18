@@ -1,7 +1,6 @@
 import * as React from "react";
 import Dialog from "@mui/material/Dialog";
-import Box from "@mui/material/Box";
-import DialogContent from "@mui/material/DialogContent";
+import { Card } from "@mui/material";
 import TaskForm from "./taskform";
 import BulletinForm from "./bulletinform";
 import Courseform from "./courseform";
@@ -11,9 +10,18 @@ import StudentForm from "./studentform";
 class DialogForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      isSmallScreen: window.matchMedia("(max-width: 600px)").matches,
+    };
+    this.handleResize = this.handleResize.bind(this);
   }
-
+  componentDidMount() {
+    this.mediaQuery = window.matchMedia("(max-width: 600px)");
+    this.mediaQuery.addEventListener("change", this.handleResize);
+  }
+  handleResize(event) {
+    this.setState({ isSmallScreen: event.matches }); // Update state when the screen size changes
+  }
   render() {
     const { activeItem, toggle, onSave, flag } = this.props;
     return (
@@ -27,9 +35,8 @@ class DialogForm extends React.Component {
           }}
           disableScrollLock
         >
-          <DialogContent>
             {/* Your form content here */}
-            <Box sx={{ width: 600, p: 2 }} role="presentation">
+            <Card sx={{  minWidth: this.state.isSmallScreen? 300 : 600, p: 1 }} role="presentation">
               {flag == "task" ? (
                 <TaskForm activeItem={activeItem} onSave={onSave} />
               ) : null}
@@ -48,8 +55,7 @@ class DialogForm extends React.Component {
               {flag == "student" ? (
                 <StudentForm activeItem={activeItem} onSave={onSave} />
               ) : null}
-            </Box>
-          </DialogContent>
+            </Card>
         </Dialog>
       </div>
     );
