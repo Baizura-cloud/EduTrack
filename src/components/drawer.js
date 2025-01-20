@@ -21,6 +21,7 @@ import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import TodayIcon from "@mui/icons-material/Today";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../logo2.png";
 import "../App.css";
@@ -87,12 +88,12 @@ class DrawerAppbar extends Component {
   drawer = () => {
     const icon = [
       <DashboardIcon />,
-      <GroupsIcon />,
+      <RecentActorsIcon />,
       <ImportContactsIcon />,
       <TodayIcon />,
       <AccountBoxIcon />,
     ];
-    const path = ["/dashboard", "/studentclass", "/course", "/exam", "/account"];
+    const path = ["/dashboard", "/classroom", "/course", "/exam", "/account"];
     return (
       <div>
         <Toolbar>
@@ -100,7 +101,7 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider sx={{ borderWidth: 2 }} />
         <List>
-          {["Dashboard", "Class", "Course", "Exam", "Account"].map(
+          {["Dashboard", "Classroom", "Course", "Exam", "Account"].map(
             (text, index) => (
               <ListItem key={index} sx={{}}>
                 <Paper
@@ -204,12 +205,7 @@ class DrawerAppbar extends Component {
               open={Boolean(this.state.anchorEl)}
               onClose={this.handleClose}
             >
-              {/* <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "inherit" }}
-              > */}
               <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-              {/* </Link> */}
               <Link
                 to="/account"
                 style={{ textDecoration: "none", color: "inherit" }}

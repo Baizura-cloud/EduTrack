@@ -5,7 +5,7 @@ import Account from "./pages/account"
 import Dashboard from "./pages/dashboard";
 import Drawer from "./components/drawer";
 import ResetPassword from "./pages/resetPassword";
-import StudentClass from "./pages/studentclass";
+import Classroom from "./pages/classroom";
 import Course from "./pages/course";
 import Exam from "./pages/exam";
 import { AuthProvider, RequireAuth } from "./context/auth";
@@ -22,7 +22,7 @@ function App() {
         <Route element={<div className="App"><ErrorPage /></div>}path="/error"/>
         <Route element={<RequireAuth />}>
            <Route element={<div className="App"><Dashboard /></div>}path="/dashboard"/>
-           <Route element={<div className="App"><StudentClass /></div>}path="/studentclass"/>
+           <Route element={<div className="App"><Classroom /></div>}path="/classroom"/>
            <Route element={<div className="App"><Course /></div>}path="/course"/>
            <Route element={<div className="App"><Exam /></div>}path="/exam"/>
           <Route element={<div className="App"><Account /></div>}path="/account"/>

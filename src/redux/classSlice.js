@@ -61,7 +61,7 @@ export const deleteClassStudent = createAsyncThunk(
 );
 
 const classSlice = createSlice({
-  name: "studentclass",
+  name: "classroom",
   initialState: { data: [], fetchstatus: "" },
   reducers: {},
   extraReducers: (buider) => {

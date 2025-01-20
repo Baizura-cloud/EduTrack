@@ -11,6 +11,13 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import PeopleIcon from "@mui/icons-material/People";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
 import {
   createClassStudent,
   deleteClassStudent,
@@ -18,18 +25,18 @@ import {
   updateClassStudent,
 } from "../redux/classSlice";
 import { connect } from "react-redux";
-import DialogForm from "../components/dialogform";
+import DialogForm from "./dialogform";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Snack from "../components/snackbar";
-import AlertDialog from "../components/confirmDialog";
+import Snack from "./snackbar";
+import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
 import Student from "./student";
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
-class StudentClass extends React.Component {
+class Classes extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -154,7 +161,7 @@ class StudentClass extends React.Component {
         });
       } else {
         this.props.createClassStudent([newClassItem]).then((res) => {
-          console.log(res)
+          console.log(res);
           if (res.payload !== undefined) {
             if (res.payload.code == "23505") {
               this.togglesnack("duplicate");
@@ -203,7 +210,7 @@ class StudentClass extends React.Component {
       <div>
         {classStudent
           ? classStudent.map((clStudent) => (
-              <Accordion key={clStudent.id} >
+              <Accordion key={clStudent.id}>
                 <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
                   <Typography>Class {clStudent.name}</Typography>
                 </AccordionSummary>
@@ -274,9 +281,89 @@ class StudentClass extends React.Component {
     );
   };
 
+  rendertable = () => {
+    const classStudent = this.props.classstudent.data;
+    return (
+      <TableContainer>
+        <Table sx={{ minWidth: 300 }} size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Name</TableCell>
+              <TableCell align="left">Year</TableCell>
+              <TableCell align="left">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {classStudent.map((clStudent) => (
+              <TableRow
+                key={clStudent.id}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {clStudent.name}
+                </TableCell>
+                <TableCell align="left">{clStudent.year}</TableCell>
+                <TableCell align="left">
+                  {clStudent.created_by == this.props.auth.data.user.email ? (
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title={"Student List"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 }}
+                          color="primary"
+                          onClick={() => this.handleStudentlist(clStudent)}
+                        >
+                          <PeopleIcon fontSize="medium" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={"edit"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 }}
+                          color="secondary"
+                          onClick={() => this.handleeditClass(clStudent)}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={"delete"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 }}
+                          color="error"
+                          onClick={() => this.handleDelete(clStudent)}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  ) : (
+                    <Stack direction="row">
+                      <Tooltip title={"Student List"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 }}
+                          color="primary"
+                          onClick={() => this.handleStudentlist(clStudent)}
+                        >
+                          <PeopleIcon fontSize="medium" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title={"Author: " + clStudent.created_by} arrow>
+                        <IconButton color="secondary" sx={{ padding: 0 }}>
+                          <ContactPageIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Stack>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  };
+
   render() {
     return (
-      <Box sx={{ minWidth: 275 }}>
+      <>
         {this.state.modal ? (
           <DialogForm
             toggle={this.toggle}
@@ -285,29 +372,30 @@ class StudentClass extends React.Component {
             flag="class"
           />
         ) : null}
-        <Card variant="outlined" sx={{ padding: 2 }}>
+        <Card variant="outlined" sx={{ minWidth: 275 }}>
           <CardHeader
-            title={
-              <div>
-                Class
+            title="Class"
+            subheader="List of classes"
+            action={
+              <div align="right">
                 <IconButton color="primary" onClick={this.handlecreateClass}>
-                  <AddBoxIcon fontSize="medium" />
+                  <AddBoxIcon fontSize="large" />
                 </IconButton>
               </div>
             }
-            sx={{ textAlign: "start", margin: 2 }}
           />
           <CardContent>
             <Grid container spacing={2}>
-              <Grid size={{ xs: 12, md: 6 }}>{this.renderclasstable()}</Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 12 }}>{this.rendertable()}</Grid>
+              {/* <Grid size={{ xs: 12, md: 12 }}>{this.renderclasstable()}</Grid> */}
+              {/* <Grid size={{ xs: 12, md: 6 }}>
                 {this.state.openList ? (
                   <Student
                     activeClass={this.state.activeClass}
                     studentList={this.props.student}
                   />
                 ) : null}
-              </Grid>
+              </Grid> */}
             </Grid>
           </CardContent>
         </Card>
@@ -327,7 +415,7 @@ class StudentClass extends React.Component {
             severity={this.state.popupContent.severity}
           />
         ) : null}
-      </Box>
+      </>
     );
   }
 }
@@ -347,4 +435,4 @@ const mapDispatchToProps = (dispatch) => ({
   fetchStudent: (classname) => dispatch(fetchStudent(classname)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(StudentClass);
+export default connect(mapStateToProps, mapDispatchToProps)(Classes);
