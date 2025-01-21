@@ -1,23 +1,16 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import { AccordionActions, CardHeader, Stack } from "@mui/material";
+import {  CardHeader, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
 import PeopleIcon from "@mui/icons-material/People";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
 import {
   createClassStudent,
   deleteClassStudent,
@@ -33,7 +26,6 @@ import Snack from "./snackbar";
 import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import ContactPageIcon from "@mui/icons-material/ContactPage";
-import Student from "./student";
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class Classes extends React.Component {
@@ -128,6 +120,9 @@ class Classes extends React.Component {
   handleeditClass = (item) => {
     this.setState({ activeItem: item, modal: !this.state.modal }); // open moda
   };
+  stoggle = () => {
+    this.setState({ openList: !this.state.openList });
+  };
   toggle = () => {
     this.setState({ modal: !this.state.modal });
   };
@@ -204,83 +199,7 @@ class Classes extends React.Component {
       console.log(error);
     }
   };
-  renderclasstable = () => {
-    const classStudent = this.props.classstudent.data;
-    return (
-      <div>
-        {classStudent
-          ? classStudent.map((clStudent) => (
-              <Accordion key={clStudent.id}>
-                <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
-                  <Typography>Class {clStudent.name}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Suspendisse malesuada lacus ex, sit amet blandit leo
-                    lobortis eget.
-                  </Typography>
-                  <AccordionActions>
-                    {clStudent.created_by == this.props.auth.data.user.email ? (
-                      <Stack direction="row" spacing={1}>
-                        <Tooltip title={"Student List"} arrow>
-                          <IconButton
-                            sx={{ padding: 0 }}
-                            color="primary"
-                            onClick={() => this.handleStudentlist(clStudent)}
-                          >
-                            <PeopleIcon fontSize="medium" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"edit"} arrow>
-                          <IconButton
-                            sx={{ padding: 0 }}
-                            color="secondary"
-                            onClick={() => this.handleeditClass(clStudent)}
-                          >
-                            <EditIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"delete"} arrow>
-                          <IconButton
-                            sx={{ padding: 0 }}
-                            color="error"
-                            onClick={() => this.handleDelete(clStudent)}
-                          >
-                            <DeleteIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    ) : (
-                      <Stack direction="row">
-                        <Tooltip title={"Student List"} arrow>
-                          <IconButton
-                            sx={{ padding: 0 }}
-                            color="primary"
-                            onClick={() => this.handleStudentlist(clStudent)}
-                          >
-                            <PeopleIcon fontSize="medium" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip
-                          title={"Author: " + clStudent.created_by}
-                          arrow
-                        >
-                          <IconButton color="secondary">
-                            <ContactPageIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    )}
-                  </AccordionActions>
-                </AccordionDetails>
-              </Accordion>
-            ))
-          : null}
-      </div>
-    );
-  };
-
+ 
   rendertable = () => {
     const classStudent = this.props.classstudent.data;
     return (
@@ -364,14 +283,6 @@ class Classes extends React.Component {
   render() {
     return (
       <>
-        {this.state.modal ? (
-          <DialogForm
-            toggle={this.toggle}
-            activeItem={this.state.activeItem}
-            onSave={this.handleSubmitItem}
-            flag="class"
-          />
-        ) : null}
         <Card variant="outlined" sx={{ minWidth: 275 }}>
           <CardHeader
             title="Class"
@@ -387,18 +298,25 @@ class Classes extends React.Component {
           <CardContent>
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, md: 12 }}>{this.rendertable()}</Grid>
-              {/* <Grid size={{ xs: 12, md: 12 }}>{this.renderclasstable()}</Grid> */}
-              {/* <Grid size={{ xs: 12, md: 6 }}>
-                {this.state.openList ? (
-                  <Student
-                    activeClass={this.state.activeClass}
-                    studentList={this.props.student}
-                  />
-                ) : null}
-              </Grid> */}
             </Grid>
           </CardContent>
         </Card>
+        {this.state.openList ? (
+          <DialogForm
+            toggle={this.stoggle}
+            activeClass={this.state.activeClass}
+            studentList={this.props.student}
+            flag="student"
+          />
+        ) : null}
+        {this.state.modal ? (
+          <DialogForm
+            toggle={this.toggle}
+            activeItem={this.state.activeItem}
+            onSave={this.handleSubmitItem}
+            flag="class"
+          />
+        ) : null}
         {this.state.confirmDel ? (
           <AlertDialog
             activeItem={this.state.activeItem}

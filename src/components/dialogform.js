@@ -6,7 +6,7 @@ import BulletinForm from "./bulletinform";
 import Courseform from "./courseform";
 import EventForm from "./eventform";
 import Classform from "./classform";
-import StudentForm from "./studentform";
+import Student from "./student";
 class DialogForm extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +23,7 @@ class DialogForm extends React.Component {
     this.setState({ isSmallScreen: event.matches }); // Update state when the screen size changes
   }
   render() {
-    const { activeItem, toggle, onSave, flag } = this.props;
+    const { activeItem, toggle, onSave, flag, studentList, activeClass } = this.props;
     return (
       <div>
         <Dialog
@@ -53,7 +53,7 @@ class DialogForm extends React.Component {
                 <Classform activeItem={activeItem} onSave={onSave} />
               ) : null}
               {flag == "student" ? (
-                <StudentForm activeItem={activeItem} onSave={onSave} />
+                <Student activeClass={activeClass} studentList={studentList} />
               ) : null}
             </Card>
         </Dialog>
