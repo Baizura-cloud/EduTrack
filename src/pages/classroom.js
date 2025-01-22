@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Classes from "../components/classes";
-import Calendar from "../components/calendar";
+import Calendarr from "../components/calendar";
 import { Card, CardHeader, CardContent } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 export class classroom extends Component {
@@ -21,7 +21,7 @@ export class classroom extends Component {
               <Classes />
             </Grid>
             <Grid size={{ xs: 12, md: 8 }}>
-              <Calendar />
+              <Calendarr />
             </Grid>
           </Grid>
         </CardContent>
