@@ -57,11 +57,10 @@ export default class StudentForm extends Component {
   };
 
   render() {
-    const { activeItem } = this.props;
+    const { activeItem, toggle } = this.props;
 
     return (
       <>
-        <CardHeader title={"Student"} />
         <CardContent>
           <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
@@ -119,6 +118,9 @@ export default class StudentForm extends Component {
             onClick={this.handlesubmit}
           >
             Save
+          </Button>
+          <Button variant="contained" color="error" onClick={toggle}>
+            Cancel
           </Button>
         </CardActions>
       </>

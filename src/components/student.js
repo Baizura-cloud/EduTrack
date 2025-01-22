@@ -6,7 +6,6 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import DialogForm from "../components/dialogform";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -14,6 +13,7 @@ import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import StudentForm from "./studentform";
 import {
   createStudent,
   deleteStudent,
@@ -33,7 +33,7 @@ class Student extends Component {
     super(props);
     this.state = {
       activeStudent: {},
-      toggleDrawer: false,
+      toggleForm: false,
       confirmDel: false, //confirm delete dialog open@close
       popup: false, //snackbar open@close
       popupContent: {
@@ -54,7 +54,7 @@ class Student extends Component {
     this.props.fetchStudent(activeClass.name);
   };
   toggle = () => {
-    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
+    this.setState({ toggleForm: !this.state.toggleForm }); // show/hide form
   };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
@@ -99,13 +99,13 @@ class Student extends Component {
     const item = { name: "", ic: "" };
     this.setState({
       activeStudent: item,
-      toggleDrawer: !this.state.toggleDrawer,
+      toggleForm: !this.state.toggleForm,
     }); //open drawer
   };
   handleedit = (item) => {
     this.setState({
       activeStudent: item,
-      toggleDrawer: !this.state.toggleDrawer,
+      toggleForm: !this.state.toggleForm,
     }); //open drawer
   };
   handleDelete = (item) => {
@@ -153,30 +153,9 @@ class Student extends Component {
     }
   };
 
-  render() {
-    const { studentList } = this.props;
-    const { data, loading } = studentList;
+  renderStudentList = (data, loading) => {
     return (
       <>
-        {this.state.toggleDrawer ? (
-          <DialogForm
-            toggle={this.toggle}
-            activeItem={this.state.activeStudent}
-            onSave={this.handleSubmitItem}
-            flag="student"
-          />
-        ) : null}
-        <CardHeader
-          title={"Student"}
-          sx={{ textAlign: "start" }}
-          action={
-            <div align="right">
-              <IconButton color="primary" onClick={this.handlecreateStudent}>
-                <AddBoxIcon fontSize="medium" />
-              </IconButton>
-            </div>
-          }
-        />
         {loading ? (
           <CardContent>
             <CircularProgress />
@@ -184,7 +163,7 @@ class Student extends Component {
         ) : (
           <CardContent>
             <TableContainer>
-              <Table stickyHeader  sx={{ minWidth: 300 }} size="small">
+              <Table stickyHeader sx={{ minWidth: 300 }} size="small">
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
@@ -234,6 +213,37 @@ class Student extends Component {
               </Table>
             </TableContainer>
           </CardContent>
+        )}
+      </>
+    );
+  };
+
+  render() {
+    const { studentList } = this.props;
+    const { data, loading } = studentList;
+    return (
+      <>
+        <CardHeader
+          title={"Student"}
+          sx={{ textAlign: "start" }}
+          action={
+            this.state.toggleForm ? null : (
+              <div align="right">
+                <IconButton color="primary" onClick={this.handlecreateStudent}>
+                  <AddBoxIcon fontSize="medium" />
+                </IconButton>
+              </div>
+            )
+          }
+        />
+        {this.state.toggleForm ? (
+          <StudentForm
+            toggle={this.toggle}
+            activeItem={this.state.activeStudent}
+            onSave={this.handleSubmitItem}
+          />
+        ) : (
+          this.renderStudentList(data, loading)
         )}
         {this.state.confirmDel ? (
           <AlertDialog
