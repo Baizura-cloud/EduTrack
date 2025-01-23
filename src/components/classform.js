@@ -62,7 +62,6 @@ class Classform extends Component {
         this.setState({ error: false });
       }
     }
-
     if (e.target.name == "sname") {
       const updatedStudent = [...this.state.student];
       updatedStudent[index].name = e.target.value;
@@ -94,19 +93,22 @@ class Classform extends Component {
     return item;
   };
   handlesubmit = () => {
-    if (this.state.importdata) {
-      const studentItem = this.state.importdata.map((student) => {
-        const { Nama, KP, Kelas } = student;
-        const newstudent = { class: Kelas, name: Nama, ic: KP };
-        return newstudent;
-      });
-      const classItem = this.state.activeItem;
-      this.props.onSave(classItem, studentItem)
-    } else {
+    // if (this.state.importdata) {
+    //   const studentItem = this.state.importdata.map((student) => {
+    //     const { Nama, KP, Kelas } = student;
+    //     const newstudent = { class: Kelas, name: Nama, ic: KP };
+    //     return newstudent;
+    //   });
+    //   console.log(this.state.student)
+    //   const classItem = this.state.activeItem;
+    //   this.props.onSave(classItem, studentItem)
+    // } else {
       const classItem = this.state.activeItem;
       const studentItem = this.handleclassname(classItem.name);
+      
+      
       this.props.onSave(classItem, studentItem);
-    }
+    // }
   };
   handleFileUpload = (e) => {
     const file = e.target.files[0];

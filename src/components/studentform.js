@@ -112,15 +112,15 @@ export default class StudentForm extends Component {
           </Grid>
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
+          <Button variant="contained" color="error" onClick={toggle}>
+            Cancel
+          </Button>
           <Button
             variant="contained"
             color="success"
             onClick={this.handlesubmit}
           >
             Save
-          </Button>
-          <Button variant="contained" color="error" onClick={toggle}>
-            Cancel
           </Button>
         </CardActions>
       </>

@@ -25,7 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Snack from "./snackbar";
 import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
-import ContactPageIcon from "@mui/icons-material/ContactPage";
+import AttributionIcon from '@mui/icons-material/Attribution';
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class Classes extends React.Component {
@@ -129,7 +129,7 @@ class Classes extends React.Component {
   handleSubmitItem = (classItem, studentItem) => {
     this.toggle();
     if (classItem.id) {
-      this.props.updateClassStudent(classItem).then((res) => {
+      this.props.updateClassStudent(classItem).then((res) => { //update class
         if (res.error !== undefined) {
           this.togglesnack("error");
           return;
@@ -141,39 +141,40 @@ class Classes extends React.Component {
         ...classItem,
         created_by: this.props.auth.data.user.email,
       };
-      if (newClassItem.name == "") {
-        //import data from excel
-        this.props.createStudent(studentItem).then((res) => {
-          if (res.payload !== undefined) {
-            if (res.payload.code == "23503") {
-              this.togglesnack("nonexist");
-              return;
-            }
-            this.togglesnack("error");
-            return;
-          }
-          this.togglesnack("submit");
-        });
-      } else {
+      // if (newClassItem.name == "") {
+      //   //import data from excel
+      //   this.props.createStudent(studentItem).then((res) => {
+      //     if (res.error !== undefined) {
+      //       // if (res.payload.code == "23503") {
+      //       //   this.togglesnack("nonexist");
+      //       //   return;
+      //       // }
+      //       this.togglesnack("error");
+      //       return;
+      //     }
+      //     this.togglesnack("submit");
+      //   });
+      // } else {
+      console.log(newClassItem)
+      console.log(studentItem)
         this.props.createClassStudent([newClassItem]).then((res) => {
-          console.log(res);
-          if (res.payload !== undefined) {
-            if (res.payload.code == "23505") {
-              this.togglesnack("duplicate");
-              return;
-            }
+          if (res.error !== undefined) {
+            // if (res.payload.code == "23505") {
+            //   this.togglesnack("duplicate");
+            //   return;
+            // }
             this.togglesnack("error");
             return;
           }
           this.props.createStudent(studentItem).then((res) => {
-            if (res.payload !== undefined) {
+            if (res.error !== undefined) {
               this.togglesnack("error");
               return;
             }
             this.togglesnack("submit");
           });
         });
-      }
+      //}
     }
   };
   handleDelete = (item) => {
@@ -265,8 +266,8 @@ class Classes extends React.Component {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={"Author: " + clStudent.created_by} arrow>
-                        <IconButton color="secondary" sx={{ padding: 0 }}>
-                          <ContactPageIcon />
+                        <IconButton color="secondary" sx={{ padding: 0, marginLeft: 1 }}>
+                          <AttributionIcon />
                         </IconButton>
                       </Tooltip>
                     </Stack>
