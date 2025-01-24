@@ -13,7 +13,9 @@ import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import FileUploadIcon from "@mui/icons-material/FileUpload";
 import StudentForm from "./studentform";
+import Studentfileupload from "./studentfileupload";
 import {
   createStudent,
   deleteStudent,
@@ -34,6 +36,7 @@ class Student extends Component {
     this.state = {
       activeStudent: {},
       toggleForm: false,
+      toggleFileUpload: false,
       confirmDel: false, //confirm delete dialog open@close
       popup: false, //snackbar open@close
       popupContent: {
@@ -53,8 +56,11 @@ class Student extends Component {
     const { activeClass } = this.props;
     this.props.fetchStudent(activeClass.name);
   };
-  toggle = () => {
+  toggleform = () => {
     this.setState({ toggleForm: !this.state.toggleForm }); // show/hide form
+  };
+  togglefileupload = () => {
+    this.setState({ toggleFileUpload: !this.state.toggleFileUpload });
   };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
@@ -95,6 +101,11 @@ class Student extends Component {
       });
     }
   };
+
+  handleimportFile = () => {
+    this.setState({ toggleFileUpload: !this.state.toggleFileUpload });
+  };
+
   handlecreateStudent = () => {
     const item = { name: "", ic: "" };
     this.setState({
@@ -133,17 +144,22 @@ class Student extends Component {
     }
   };
   handleSubmitItem = (item) => {
-    this.toggle();
+    this.toggleform();
     if (item.id) {
+      //update a student
       this.props.updateStudent(item).then(() => {
         this.togglesnack("edit");
       });
     } else {
-      const newItem = {
-        ...item,
+      const arrItem = item.map((it) => ({
+        ...it,
         class: this.props.activeClass.name,
-      };
-      this.props.createStudent(newItem).then((res) => {
+      }));
+      // const newItem = {
+      //   ...item,
+      //   class: this.props.activeClass.name,
+      // };
+      this.props.createStudent(arrItem).then((res) => {
         if (res.error) {
           this.togglesnack("duplicate");
         } else {
@@ -152,6 +168,20 @@ class Student extends Component {
       });
     }
   };
+  handleSubmitFile = (item) =>{
+    this.togglefileupload()
+    const arrItem = item.map((it) => ({
+      ...it,
+      class: this.props.activeClass.name,
+    }));
+    this.props.createStudent(arrItem).then((res) => {
+      if (res.error) {
+        this.togglesnack("duplicate");
+      } else {
+        this.togglesnack("submit");
+      }
+    });
+  }
 
   renderStudentList = (data, loading) => {
     return (
@@ -227,10 +257,13 @@ class Student extends Component {
           title={"Student"}
           sx={{ textAlign: "start" }}
           action={
-            this.state.toggleForm ? null : (
+            this.state.toggleForm || this.state.toggleFileUpload ? null : (
               <div align="right">
                 <IconButton color="primary" onClick={this.handlecreateStudent}>
                   <AddBoxIcon fontSize="medium" />
+                </IconButton>
+                <IconButton color="primary" onClick={this.handleimportFile}>
+                  <FileUploadIcon fontSize="medium" />
                 </IconButton>
               </div>
             )
@@ -238,13 +271,34 @@ class Student extends Component {
         />
         {this.state.toggleForm ? (
           <StudentForm
-            toggle={this.toggle}
+            toggle={this.toggleform}
             activeItem={this.state.activeStudent}
+            onSave={this.handleSubmitItem}
+          />
+        ) : null}
+        {this.state.toggleFileUpload ? (
+          <Studentfileupload
+            toggle={this.togglefileupload}
+            onSave={this.handleSubmitFile}
+          />
+        ) : null}
+        {!this.state.toggleForm && !this.state.toggleFileUpload
+          ? this.renderStudentList(data, loading)
+          : null}
+        {/* {this.state.toggleForm ? (
+          <StudentForm
+            toggle={this.toggleform}
+            activeItem={this.state.activeStudent}
+            onSave={this.handleSubmitItem}
+          />
+        ) : this.state.toggleFileUpload ? (
+          <Studentfileupload
+            toggle={this.togglefileupload}
             onSave={this.handleSubmitItem}
           />
         ) : (
           this.renderStudentList(data, loading)
-        )}
+        )} */}
         {this.state.confirmDel ? (
           <AlertDialog
             activeItem={this.state.activeStudent}

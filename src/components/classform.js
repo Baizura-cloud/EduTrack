@@ -3,17 +3,8 @@ import FormControl from "@mui/material/FormControl";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import FileUploadIcon from "@mui/icons-material/FileUpload";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import * as XLSX from "xlsx";
 import {
   CardActions,
   CardContent,
@@ -31,7 +22,6 @@ class Classform extends Component {
       activeItem: this.props.activeItem,
       error: false,
       error1: false,
-      importdata: [],
       student: [],
     };
   }
@@ -103,57 +93,11 @@ class Classform extends Component {
     //   const classItem = this.state.activeItem;
     //   this.props.onSave(classItem, studentItem)
     // } else {
-      const classItem = this.state.activeItem;
-      const studentItem = this.handleclassname(classItem.name);
-      
-      
-      this.props.onSave(classItem, studentItem);
+    const classItem = this.state.activeItem;
+    const studentItem = this.handleclassname(classItem.name);
+
+    this.props.onSave(classItem, studentItem);
     // }
-  };
-  handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const workbook = XLSX.read(event.target.result, { type: "binary" });
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const sheetData = XLSX.utils.sheet_to_json(sheet);
-
-      this.setState({ importdata: sheetData });
-    };
-
-    reader.readAsArrayBuffer(file);
-  };
-
-  renderimportdata = () => {
-    return this.state.importdata ? (
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 300 }} size="small">
-          <TableHead>
-            <TableRow sx={{ alignItems: "start", fontWeight: "bold" }}>
-              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>KP</TableCell>
-              <TableCell sx={{ fontWeight: "bold" }}>Class</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.state.importdata.map((row) => (
-              <TableRow
-                key={row.Bil}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell component="th" scope="row">
-                  {row.Nama}
-                </TableCell>
-                <TableCell>{row.KP}</TableCell>
-                <TableCell>{row.Kelas}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    ) : null;
   };
 
   render() {
@@ -161,124 +105,102 @@ class Classform extends Component {
 
     return (
       <>
-        <CardHeader
-          title={"Class"}
-          action={
-            <div align="right">
-              <Button
-                variant="contained"
-                startIcon={<FileUploadIcon />}
-                component="label"
-              >
-                Upload File
-                <input hidden type="file" onChange={this.handleFileUpload} />
-              </Button>
-            </div>
-          }
-        />
+        <CardHeader title={"Class"} />
         <CardContent>
-          {this.state.importdata.length == 0 ? (
-            <>
-              <Grid container spacing={1}>
-                <Grid size={{ xs: 12, md: 3 }}>
-                  <InputLabel sx={{ padding: 2 }}>Class Name</InputLabel>
-                </Grid>
-                <Grid size={{ xs: 12, md: 8 }}>
-                  <FormControl error={this.state.error} fullWidth={true}>
-                    <OutlinedInput
-                      type="text"
-                      id="class-name"
-                      name="name"
-                      defaultValue={activeItem.name}
-                      onChange={this.handleChange}
-                    />
-                    <FormHelperText id="my-helper-text">
-                      {this.state.error ? "Must not empty" : " "}
-                    </FormHelperText>
-                  </FormControl>
-                </Grid>
+          <>
+            <Grid container spacing={1}>
+              <Grid size={{ xs: 12, md: 3 }}>
+                <InputLabel sx={{ padding: 2 }}>Class Name</InputLabel>
               </Grid>
-              {activeItem.name == "" ? (
-                <>
-                  <Grid container spacing={1}>
-                    <Grid size={{ xs: 12, md: 3 }}>
-                      <Typography variant="h6" gutterBottom>
-                        Student
-                        <IconButton
-                          onClick={() => this.handleAddDeleteStudent("add")}
-                        >
-                          <AddCircleIcon color="primary" />
-                        </IconButton>
-                      </Typography>
-                    </Grid>
+              <Grid size={{ xs: 12, md: 8 }}>
+                <FormControl error={this.state.error} fullWidth={true}>
+                  <OutlinedInput
+                    type="text"
+                    id="class-name"
+                    name="name"
+                    defaultValue={activeItem.name}
+                    onChange={this.handleChange}
+                  />
+                  <FormHelperText id="my-helper-text">
+                    {this.state.error ? "Must not empty" : " "}
+                  </FormHelperText>
+                </FormControl>
+              </Grid>
+            </Grid>
+            {activeItem.name == "" ? (
+              <>
+                <Grid container spacing={1}>
+                  <Grid size={{ xs: 12, md: 3 }}>
+                    <Typography variant="h6" gutterBottom>
+                      Student
+                      <IconButton
+                        onClick={() => this.handleAddDeleteStudent("add")}
+                      >
+                        <AddCircleIcon color="primary" />
+                      </IconButton>
+                    </Typography>
                   </Grid>
-                  {this.state.student.map((data, index) => {
-                    return (
-                      <>
-                        <Grid container spacing={1}>
-                          <Grid size={{ xs: 12, md: 3 }}>
-                            <InputLabel sx={{ padding: 2 }}>Name</InputLabel>
-                          </Grid>
-                          <Grid size={{ xs: 12, md: 8 }}>
-                            <FormControl
-                              error={this.state.error}
-                              fullWidth={true}
-                            >
-                              <OutlinedInput
-                                type="text"
-                                id="student-name"
-                                name="sname"
-                                onChange={(e) => this.handleChange(e, index)}
-                              />
-                              <FormHelperText id="my-helper-text">
-                                {this.state.error ? "Must not empty" : " "}
-                              </FormHelperText>
-                            </FormControl>
-                          </Grid>
+                </Grid>
+                {this.state.student.map((data, index) => {
+                  return (
+                    <>
+                      <Grid container spacing={1}>
+                        <Grid size={{ xs: 12, md: 3 }}>
+                          <InputLabel sx={{ padding: 2 }}>Name</InputLabel>
                         </Grid>
-                        <Grid container spacing={1}>
-                          <Grid size={{ xs: 12, md: 3 }}>
-                            <InputLabel sx={{ padding: 2 }}>IC No.</InputLabel>
-                          </Grid>
-                          <Grid size={{ xs: 12, md: 8 }}>
-                            <FormControl
-                              error={this.state.error}
-                              fullWidth={true}
-                            >
-                              <OutlinedInput
-                                type="text"
-                                id="student-ic"
-                                name="ic"
-                                onChange={(e) => this.handleChange(e, index)}
-                              />
-                              <FormHelperText id="my-helper-text">
-                                {this.state.error ? "Must not empty" : " "}
-                              </FormHelperText>
-                            </FormControl>
-                          </Grid>
-                          <Grid size={{ xs: 12, md: 1 }}>
-                            <IconButton
-                              onClick={() =>
-                                this.handleAddDeleteStudent("delete", index)
-                              }
-                            >
-                              <RemoveCircleIcon color="error" />
-                            </IconButton>
-                          </Grid>
+                        <Grid size={{ xs: 12, md: 8 }}>
+                          <FormControl
+                            error={this.state.error}
+                            fullWidth={true}
+                          >
+                            <OutlinedInput
+                              type="text"
+                              id="student-name"
+                              name="sname"
+                              onChange={(e) => this.handleChange(e, index)}
+                            />
+                            <FormHelperText id="my-helper-text">
+                              {this.state.error ? "Must not empty" : " "}
+                            </FormHelperText>
+                          </FormControl>
                         </Grid>
-                      </>
-                    );
-                  })}
-                </>
-              ) : null}
-            </>
-          ) : (
-            <>
-              <Grid container spacing={1}>
-                <Grid size={{ xs: 12, md: 12 }}>{this.renderimportdata()}</Grid>
-              </Grid>
-            </>
-          )}
+                      </Grid>
+                      <Grid container spacing={1}>
+                        <Grid size={{ xs: 12, md: 3 }}>
+                          <InputLabel sx={{ padding: 2 }}>IC No.</InputLabel>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 8 }}>
+                          <FormControl
+                            error={this.state.error}
+                            fullWidth={true}
+                          >
+                            <OutlinedInput
+                              type="text"
+                              id="student-ic"
+                              name="ic"
+                              onChange={(e) => this.handleChange(e, index)}
+                            />
+                            <FormHelperText id="my-helper-text">
+                              {this.state.error ? "Must not empty" : " "}
+                            </FormHelperText>
+                          </FormControl>
+                        </Grid>
+                        <Grid size={{ xs: 12, md: 1 }}>
+                          <IconButton
+                            onClick={() =>
+                              this.handleAddDeleteStudent("delete", index)
+                            }
+                          >
+                            <RemoveCircleIcon color="error" />
+                          </IconButton>
+                        </Grid>
+                      </Grid>
+                    </>
+                  );
+                })}
+              </>
+            ) : null}
+          </>
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button
