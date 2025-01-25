@@ -1,7 +1,7 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import {  CardHeader, Stack } from "@mui/material";
+import { CardHeader, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import PeopleIcon from "@mui/icons-material/People";
@@ -25,7 +25,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Snack from "./snackbar";
 import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
-import AttributionIcon from '@mui/icons-material/Attribution';
+import AttributionIcon from "@mui/icons-material/Attribution";
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class Classes extends React.Component {
@@ -128,15 +128,7 @@ class Classes extends React.Component {
   };
   handleSubmitItem = (classItem, studentItem) => {
     this.toggle();
-    if (classItem.id) {
-      this.props.updateClassStudent(classItem).then((res) => { //update class
-        if (res.error !== undefined) {
-          this.togglesnack("error");
-          return;
-        }
-        this.togglesnack("edit");
-      });
-    } else {
+    if (studentItem) {
       const newClassItem = {
         ...classItem,
         created_by: this.props.auth.data.user.email,
@@ -155,26 +147,49 @@ class Classes extends React.Component {
       //     this.togglesnack("submit");
       //   });
       // } else {
-      console.log(newClassItem)
-      console.log(studentItem)
-        this.props.createClassStudent([newClassItem]).then((res) => {
+      console.log(newClassItem);
+      console.log(studentItem);
+      this.props.createClassStudent([newClassItem]).then((res) => {
+        if (res.error !== undefined) {
+          // if (res.payload.code == "23505") {
+          //   this.togglesnack("duplicate");
+          //   return;
+          // }
+          this.togglesnack("error");
+          return;
+        }
+        this.props.createStudent(studentItem).then((res) => {
           if (res.error !== undefined) {
-            // if (res.payload.code == "23505") {
-            //   this.togglesnack("duplicate");
-            //   return;
-            // }
             this.togglesnack("error");
             return;
           }
-          this.props.createStudent(studentItem).then((res) => {
-            if (res.error !== undefined) {
-              this.togglesnack("error");
-              return;
-            }
-            this.togglesnack("submit");
-          });
+          this.togglesnack("submit");
         });
+      });
       //}
+    }
+    if (classItem.id) {
+      this.props.updateClassStudent(classItem).then((res) => {
+        //update class
+        if (res.error !== undefined) {
+          this.togglesnack("error");
+          return;
+        }
+        this.togglesnack("edit");
+      });
+    } else {
+      //create class
+      const newClassItem = {
+        ...classItem,
+        created_by: this.props.auth.data.user.email,
+      };
+      this.props.createClassStudent(newClassItem).then((res) =>{
+        if(res.error !== undefined){
+          this.togglesnack("error")
+          return
+        }
+        this.togglesnack("submit");
+      })
     }
   };
   handleDelete = (item) => {
@@ -200,7 +215,7 @@ class Classes extends React.Component {
       console.log(error);
     }
   };
- 
+
   rendertable = () => {
     const classStudent = this.props.classstudent.data;
     return (
@@ -266,7 +281,10 @@ class Classes extends React.Component {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title={"Author: " + clStudent.created_by} arrow>
-                        <IconButton color="secondary" sx={{ padding: 0, marginLeft: 1 }}>
+                        <IconButton
+                          color="secondary"
+                          sx={{ padding: 0, marginLeft: 1 }}
+                        >
                           <AttributionIcon />
                         </IconButton>
                       </Tooltip>

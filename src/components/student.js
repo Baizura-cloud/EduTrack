@@ -23,8 +23,6 @@ import {
   updateStudent,
 } from "../redux/studentSlice";
 import {
-  Button,
-  Card,
   CardContent,
   CardHeader,
   CircularProgress,
@@ -155,10 +153,6 @@ class Student extends Component {
         ...it,
         class: this.props.activeClass.name,
       }));
-      // const newItem = {
-      //   ...item,
-      //   class: this.props.activeClass.name,
-      // };
       this.props.createStudent(arrItem).then((res) => {
         if (res.error) {
           this.togglesnack("duplicate");
@@ -285,20 +279,6 @@ class Student extends Component {
         {!this.state.toggleForm && !this.state.toggleFileUpload
           ? this.renderStudentList(data, loading)
           : null}
-        {/* {this.state.toggleForm ? (
-          <StudentForm
-            toggle={this.toggleform}
-            activeItem={this.state.activeStudent}
-            onSave={this.handleSubmitItem}
-          />
-        ) : this.state.toggleFileUpload ? (
-          <Studentfileupload
-            toggle={this.togglefileupload}
-            onSave={this.handleSubmitItem}
-          />
-        ) : (
-          this.renderStudentList(data, loading)
-        )} */}
         {this.state.confirmDel ? (
           <AlertDialog
             activeItem={this.state.activeStudent}

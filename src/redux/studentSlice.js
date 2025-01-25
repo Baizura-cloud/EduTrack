@@ -26,7 +26,7 @@ export const createStudent = createAsyncThunk(
         .insert(data)
         .select();
       if (error) throw error;
-      return newData[0];
+      return newData;
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -96,7 +96,11 @@ const studentSlice = createSlice({
         state.loading = false;
       })
       .addCase(createStudent.fulfilled, (state, action) => {
-        state.data.push(action.payload);
+        if (action.payload && Array.isArray(action.payload)) {
+          state.data.push(...action.payload); // Push all rows if `payload` is an array
+        } else if (action.payload) {
+          state.data.push(action.payload); // Push if `payload` is a single object
+        }
         state.loading = false;
         state.error = null;
       })
