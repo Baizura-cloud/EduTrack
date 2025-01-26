@@ -16,7 +16,6 @@ import {
   Paper,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import GroupsIcon from "@mui/icons-material/Groups";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import TodayIcon from "@mui/icons-material/Today";
 import ImportContactsIcon from "@mui/icons-material/ImportContacts";
@@ -25,7 +24,6 @@ import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../logo2.png";
 import "../App.css";
-import Snack from "./snackbar";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice";
@@ -93,7 +91,7 @@ class DrawerAppbar extends Component {
       <TodayIcon />,
       <AccountBoxIcon />,
     ];
-    const path = ["/dashboard", "/classroom", "/course", "/exam", "/account"];
+    const path = ["/dashboard", "/classroom", "/courses", "/exam", "/account"];
     return (
       <div>
         <Toolbar>
@@ -101,7 +99,7 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider sx={{ borderWidth: 2 }} />
         <List>
-          {["Dashboard", "Classroom", "Course", "Exam", "Account"].map(
+          {["Dashboard", "Classroom", "Courses Hub", "Exam", "Account"].map(
             (text, index) => (
               <ListItem key={index} sx={{}}>
                 <Paper

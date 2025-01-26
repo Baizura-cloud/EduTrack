@@ -23,7 +23,7 @@ function App() {
         <Route element={<RequireAuth />}>
            <Route element={<div className="App"><Dashboard /></div>}path="/dashboard"/>
            <Route element={<div className="App"><Classroom /></div>}path="/classroom"/>
-           <Route element={<div className="App"><Course /></div>}path="/course"/>
+           <Route element={<div className="App"><Course /></div>}path="/courses"/>
            <Route element={<div className="App"><Exam /></div>}path="/exam"/>
           <Route element={<div className="App"><Account /></div>}path="/account"/>
         </Route>

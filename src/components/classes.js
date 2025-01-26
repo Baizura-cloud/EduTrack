@@ -133,28 +133,8 @@ class Classes extends React.Component {
         ...classItem,
         created_by: this.props.auth.data.user.email,
       };
-      // if (newClassItem.name == "") {
-      //   //import data from excel
-      //   this.props.createStudent(studentItem).then((res) => {
-      //     if (res.error !== undefined) {
-      //       // if (res.payload.code == "23503") {
-      //       //   this.togglesnack("nonexist");
-      //       //   return;
-      //       // }
-      //       this.togglesnack("error");
-      //       return;
-      //     }
-      //     this.togglesnack("submit");
-      //   });
-      // } else {
-      console.log(newClassItem);
-      console.log(studentItem);
       this.props.createClassStudent([newClassItem]).then((res) => {
         if (res.error !== undefined) {
-          // if (res.payload.code == "23505") {
-          //   this.togglesnack("duplicate");
-          //   return;
-          // }
           this.togglesnack("error");
           return;
         }
@@ -166,7 +146,6 @@ class Classes extends React.Component {
           this.togglesnack("submit");
         });
       });
-      //}
     }
     if (classItem.id) {
       this.props.updateClassStudent(classItem).then((res) => {
