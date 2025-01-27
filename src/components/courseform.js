@@ -93,7 +93,7 @@ class CourseForm extends Component {
     const { activeItem } = this.props;
 
     return (
-      <Card>
+      <>
         <CardHeader title={"Course"} />
         <CardContent>
           <Grid container spacing={1}>
@@ -208,7 +208,7 @@ class CourseForm extends Component {
             Save
           </Button>
         </CardActions>
-      </Card>
+      </>
     );
   }
 }

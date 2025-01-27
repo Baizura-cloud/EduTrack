@@ -1,26 +1,13 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import {
   CardHeader,
-  CircularProgress,
-  List,
-  ListItem,
-  ListItemText,
   Stack,
 } from "@mui/material";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ContactPageIcon from "@mui/icons-material/ContactPage";
 import Tooltip from "@mui/material/Tooltip";
-import CommentIcon from "@mui/icons-material/Comment";
 import {
   createCourse,
   deleteCourse,
@@ -28,7 +15,6 @@ import {
   updateCourse,
 } from "../redux/courseSlice";
 import { connect } from "react-redux";
-import FormDrawer from "../components/formdrawer";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -43,14 +29,14 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AttributionIcon from "@mui/icons-material/Attribution";
 import { fetchmultipleStudent } from "../redux/studentSlice";
+import DialogForm from "./dialogform";
 class Courselist extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       activeItem: {},
-      courseList: [],
       openClass: false,
-      toggleDrawer: false,
+      toggleDialog: false,
       activeDetails: {},
       confirmDel: false, //confirm delete dialog open@close
       popup: false, //snackbar open@close
@@ -107,25 +93,23 @@ class Courselist extends React.Component {
   };
   handlecreateCourse = () => {
     const item = { name: "", type: "", credit: 0, tagclass: [] };
-    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+    this.setState({ activeItem: item, toggleDialog: !this.state.toggleDialog }); //open drawer
   };
   handleeditcourse = (item) => {
-    this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
+    this.setState({ activeItem: item, toggleDialog: !this.state.toggleDialog }); //open drawer
   };
   toggle = () => {
-    this.setState({ toggleDrawer: !this.state.toggleDrawer }); //function to be use to close drawer
+    this.setState({ toggleDialog: !this.state.toggleDialog }); //function to be use to close drawer
   };
   handleSubmitItem = (item) => {
     this.toggle();
     if (item.id) {
       this.props.updateCourse(item).then(() => {
-        this.refreshList();
         this.togglesnack("edit");
       });
     } else {
       const newItem = { ...item, admin: this.props.auth.data.user.email };
       this.props.createCourse([newItem]).then(() => {
-        this.refreshList();
         this.togglesnack("submit");
       });
     }
@@ -139,7 +123,6 @@ class Courselist extends React.Component {
     item = this.state.activeItem;
     try {
       this.props.deleteCourse(item.id).then(() => {
-        this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -166,7 +149,7 @@ class Courselist extends React.Component {
             </TableRow>
           </TableHead>
           <TableBody>
-            {allcourses.map((course) => (
+            {allcourses ? allcourses.map((course) => (
               <TableRow
                 key={course.id}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -230,163 +213,16 @@ class Courselist extends React.Component {
                   )}
                 </TableCell>
               </TableRow>
-            ))}
+            )):null}
           </TableBody>
         </Table>
       </TableContainer>
-    );
-  };
-  rendercourseCard = () => {
-    const allcourse = this.props.course.data;
-    return (
-      <>
-        {allcourse
-          ? allcourse.map((course) => (
-              <Card
-                key={course.id}
-                variant="outlined"
-                sx={{ width: 200, height: 300, textAlign: "start" }}
-              >
-                <CardHeader
-                  action={
-                    course.admin == this.props.auth.data.user.email ? (
-                      <Stack direction="row">
-                        <Tooltip title={"edit"} arrow>
-                          <IconButton
-                            color="secondary"
-                            onClick={() => this.handleeditcourse(course)}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title={"delete"} arrow>
-                          <IconButton
-                            color="error"
-                            onClick={() => this.handleDelete(course)}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    ) : (
-                      <Stack direction="row">
-                        <Tooltip title={"Author: " + course.admin} arrow>
-                          <IconButton color="secondary">
-                            <ContactPageIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </Stack>
-                    )
-                  }
-                />
-
-                <CardContent>
-                  <Typography
-                    gutterBottom
-                    sx={{ color: "text.primary", fontSize: 16 }}
-                  >
-                    {course.name}
-                  </Typography>
-                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    {course.type} Class(es)
-                  </Typography>
-                  <Typography sx={{ color: "text.secondary", mb: 1.5 }}>
-                    {course.credit} Credit
-                  </Typography>
-                </CardContent>
-                <CardActions sx={{ justifyContent: "end" }}>
-                  <Button
-                    variant="contained"
-                    size="small"
-                    onClick={() => this.handleClass(course)}
-                  >
-                    Details
-                  </Button>
-                </CardActions>
-              </Card>
-            ))
-          : null}
-      </>
-    );
-  };
-
-  rendersCourseDetails = () => {
-    const details = this.state.activeDetails;
-    const { data, loading } = this.props.student;
-
-    return (
-      <>
-        <Card variant="outlined" sx={{ textAlign: "start" }}>
-          <CardHeader title={details.name} subheader={details.type} />
-          {loading ? (
-            <CardContent>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "10vh", // Adjust height as needed
-                }}
-              >
-                <CircularProgress size="3rem" />
-              </Box>
-            </CardContent>
-          ) : (
-            <CardContent>
-              {details.tagclass
-                ? details.tagclass.map((name) => {
-                    return (
-                      <Accordion key={details.id}>
-                        <AccordionSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1-content"
-                          id="panel1-header"
-                        >
-                          Class {name}
-                        </AccordionSummary>
-                        <AccordionDetails>
-                          <List>
-                            {data
-                              ? data.map((stud) => {
-                                  return stud.class === name ? (
-                                    <ListItem
-                                      key={stud.id}
-                                      secondaryAction={
-                                        <IconButton edge="end">
-                                          <CommentIcon color="secondary" />
-                                        </IconButton>
-                                      }
-                                      disablePadding
-                                    >
-                                      <ListItemText primary={stud.name} />
-                                    </ListItem>
-                                  ) : null;
-                                })
-                              : null}
-                          </List>
-                        </AccordionDetails>
-                      </Accordion>
-                    );
-                  })
-                : null}
-            </CardContent>
-          )}
-        </Card>
-      </>
     );
   };
 
   render() {
     return (
       <Box sx={{ minWidth: 275 }}>
-        {this.state.toggleDrawer ? (
-          <FormDrawer
-            toggle={this.toggle}
-            activeItem={this.state.activeItem}
-            onSave={this.handleSubmitItem}
-            flag="course"
-          />
-        ) : null}
         <Card variant="outlined" sx={{ padding: 2 }}>
           <CardHeader
             title="Course"
@@ -411,12 +247,17 @@ class Courselist extends React.Component {
                   {this.rendertable()}
                 </Stack>
               </Grid>
-              {/* <Grid size={{ xs: 12, md: 6 }}>
-                {this.state.openList ? this.rendersCourseDetails() : null}
-              </Grid> */}
             </Grid>
           </CardContent>
         </Card>
+        {this.state.toggleDialog ? (
+          <DialogForm
+            toggle={this.toggle}
+            activeItem={this.state.activeItem}
+            onSave={this.handleSubmitItem}
+            flag="course"
+          />
+        ) : null}
         {this.state.confirmDel ? (
           <AlertDialog
             activeItem={this.state.activeItem}

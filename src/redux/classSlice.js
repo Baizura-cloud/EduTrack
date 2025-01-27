@@ -74,7 +74,6 @@ const classSlice = createSlice({
         state.fetchstatus = "pending";
       })
       .addCase(fetchClassStudent.rejected, (state) => {
-        console.error(state);
         state.fetchstatus = "error";
       })
       .addCase(createClassStudent.fulfilled, (state, action) => {
