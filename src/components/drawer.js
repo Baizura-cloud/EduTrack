@@ -16,9 +16,9 @@ import {
   Paper,
 } from "@mui/material";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import TodayIcon from "@mui/icons-material/Today";
-import ImportContactsIcon from "@mui/icons-material/ImportContacts";
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import SubjectIcon from '@mui/icons-material/Subject';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import MenuIcon from "@mui/icons-material/Menu";
@@ -27,7 +27,7 @@ import "../App.css";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";
 import { logoutUser } from "../redux/authSlice";
-import { Link, Outlet, Navigate, useNavigate } from "react-router-dom";
+import { Link, Outlet, Navigate } from "react-router-dom";
 import { persistor } from "../redux/store";
 import Loading from "./loading";
 class DrawerAppbar extends Component {
@@ -87,9 +87,9 @@ class DrawerAppbar extends Component {
     const icon = [
       <DashboardIcon />,
       <RecentActorsIcon />,
-      <ImportContactsIcon />,
-      <TodayIcon />,
-      <AccountBoxIcon />,
+      <SubjectIcon />,
+      <EventNoteIcon />,
+      <ManageAccountsIcon />,
     ];
     const path = ["/dashboard", "/classroom", "/courses", "/exam", "/account"];
     return (
@@ -99,7 +99,7 @@ class DrawerAppbar extends Component {
         </Toolbar>
         <Divider sx={{ borderWidth: 2 }} />
         <List>
-          {["Dashboard", "Classroom", "Courses Hub", "Exam", "Account"].map(
+          {["Dashboard", "Classroom", "Courses Hub", "Examination", "Account"].map(
             (text, index) => (
               <ListItem key={index} sx={{}}>
                 <Paper
@@ -108,7 +108,7 @@ class DrawerAppbar extends Component {
                     height: "100%",
                     width: "100%",
                     borderRight:
-                      this.state.path == path[index]
+                      this.state.path === path[index]
                         ? "2px solid blue"
                         : "inherit",
                   }}
@@ -122,7 +122,7 @@ class DrawerAppbar extends Component {
                       <ListItemIcon
                         sx={{
                           color:
-                            this.state.path == path[index]
+                            this.state.path === path[index]
                               ? "#11469c"
                               : "inherit",
                         }}
@@ -132,7 +132,7 @@ class DrawerAppbar extends Component {
                       <ListItemText
                         sx={{
                           color:
-                            this.state.path == path[index]
+                            this.state.path === path[index]
                               ? "#11469c"
                               : "inherit",
                         }}
@@ -150,10 +150,8 @@ class DrawerAppbar extends Component {
   };
 
   render() {
-    const { auth, logoutUser } = this.props;
     return (
       <Box sx={{ display: "flex" }}>
-        {/* {this.state.loading? <Loading openload={this.state.loading}/>: null} */}
         <AppBar
           position="fixed"
           sx={{
@@ -267,13 +265,6 @@ class DrawerAppbar extends Component {
           {this.state.direct? <Navigate to='/' replace={true}/> : <Outlet />}
           {/* page content */}
         </Box>
-        {/* {this.state.toggleSnack ? (
-          <Snack
-            open={this.state.toggleSnack}
-            message={this.state.messageSnack}
-            severity={this.state.severitySnack}
-          />
-        ) : null} */}
       </Box>
     );
   }

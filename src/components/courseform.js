@@ -9,7 +9,6 @@ import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import {
-  Card,
   CardActions,
   CardContent,
   CardHeader,
@@ -53,8 +52,8 @@ class CourseForm extends Component {
   }
   handleChange = (e, tag) => {
     let { name, value } = e.target;
-    if (e.target.name == "name") {
-      if (e.target.value == "") {
+    if (e.target.name === "name") {
+      if (e.target.value === "") {
         this.setState({ error: true });
       } else {
         this.setState({ error: false });
@@ -78,11 +77,11 @@ class CourseForm extends Component {
 
   handlesubmit = () => {
     const item = this.state.activeItem;
-    if (item.name == "" || null) {
+    if (item.name === "" || null) {
       this.setState({ error: true });
       return;
     }
-    if (item.type == "" || null) {
+    if (item.type === "" || null) {
       this.setState({ error1: true });
       return;
     }
@@ -158,8 +157,6 @@ class CourseForm extends Component {
                   activeItem.type !== null ? activeItem.type : undefined
                 }
               />
-              
-              
             </Grid>
           </Grid>
 
