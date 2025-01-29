@@ -4,9 +4,6 @@ import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import FormHelperText from "@mui/material/FormHelperText";
 import Autocomplete from "@mui/material/Autocomplete";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import Checkbox from "@mui/material/Checkbox";
 import TextField from "@mui/material/TextField";
 import {
   CardActions,
@@ -24,50 +21,54 @@ class BulletinForm extends Component {
     this.state = {
       activeItem: this.props.activeItem,
       error: false,
+      error0: false,
       error1: false,
       tagProfile: [],
+      btype: ["Announcement", "Event"],
     };
   }
-  componentDidMount() {
-    this.handleAutocomplete();
-  }
-  handleAutocomplete = () => {
-    this.props.fetchotherprofile();
-    this.setState({ tagProfile: this.props.otherprofile.data });
-  };
-  handleChange = (e, tag) => {
+
+  handleChange = (e, btype) => {
     let { name, value } = e.target;
-    
-    if (e.target.name == "title") {
-      if (e.target.value == "") {
+
+    if (name === "title") {
+      if (value === "") {
         this.setState({ error: true });
       } else {
         this.setState({ error: false });
       }
-    } else if (e.target.name == "description") {
-      if (e.target.value == "") {
+    }  else if (name === "details") {
+      if (value === "") {
         this.setState({ error1: true });
       } else {
-        this.setState({ error: false });
+        this.setState({ error1: false });
       }
     }
-    if(tag){
-      const activeItem = { ...this.state.activeItem, tag };
+    if (btype) {
+      this.setState({ error0: false });
+      const activeItem = { ...this.state.activeItem, btype };
       this.setState({ activeItem });
-    }else{
+    } else if (btype === null) {
+      this.setState({ error0: true });
+      const activeItem = { ...this.state.activeItem, btype };
+      this.setState({ activeItem });
+    } else {
       const activeItem = { ...this.state.activeItem, [name]: value };
       this.setState({ activeItem });
     }
-    
   };
 
   handlesubmit = () => {
     const item = this.state.activeItem;
-    if (item.title == "" || null) {
+    if (item.title === "" || null) {
       this.setState({ error: true });
       return;
     }
-    if (item.description == "" || null) {
+    if (!item.btype) {
+      this.setState({ error0: true });
+      return;
+    }
+    if (item.details === "" || null) {
       this.setState({ error1: true });
       return;
     }
@@ -76,7 +77,6 @@ class BulletinForm extends Component {
 
   render() {
     const { activeItem } = this.props;
-
     return (
       <>
         <CardHeader title={"Bulletin"} />
@@ -100,7 +100,29 @@ class BulletinForm extends Component {
               </FormControl>
             </Grid>
           </Grid>
-
+          <Grid container spacing={1}>
+            <Grid size={{ xs: 12, md: 3 }}>
+              <InputLabel sx={{ padding: 2 }}>Type</InputLabel>
+            </Grid>
+            <Grid size={{ xs: 12, md: 8 }}>
+              <Autocomplete
+                disablePortal
+                options={this.state.btype}
+                defaultValue={activeItem.btype}
+                onChange={(event, btype) => this.handleChange(event, btype)}
+                sx={{ width: 300 }}
+                renderInput={(params) => (
+                  <FormControl error={this.state.error0} fullWidth={true}>
+                    <TextField {...params} error={this.state.error0}/>
+                    <FormHelperText>
+                      {this.state.error0 ? "Must not empty" : " "}
+                    </FormHelperText>
+                  </FormControl>
+                )}
+                style={{ width: 200 }}
+              />
+            </Grid>
+          </Grid>
           <Grid container spacing={1}>
             <Grid size={{ xs: 12, md: 3 }}>
               <InputLabel sx={{ padding: 2 }}>Details</InputLabel>
@@ -114,6 +136,7 @@ class BulletinForm extends Component {
                   defaultValue={activeItem.details}
                   onChange={this.handleChange}
                   multiline
+                  rows={3}
                 />
                 <FormHelperText id="my-helper-text">
                   {this.state.error1 ? "Must not empty" : " "}
@@ -121,42 +144,6 @@ class BulletinForm extends Component {
               </FormControl>
             </Grid>
           </Grid>
-
-          {/* <Grid container spacing={1}>
-            <Grid size={{ xs: 12, md: 3 }}>
-              <InputLabel sx={{ padding: 2 }}>Tag others</InputLabel>
-            </Grid>
-            <Grid size={{ xs: 12, md: 8 }}>
-              <Autocomplete
-                multiple
-                id="tag-profile"
-                name="tagprofile"
-                onChange={(event, tag)=>this.handleChange(event,tag)}
-                options={this.state.tagProfile}
-                disableCloseOnSelect
-                getOptionLabel={(option) =>
-                  option.firstname + " " + option.lastname
-                }
-                defaultValue={activeItem.tag !==null? activeItem.tag : undefined}
-                renderOption={(props, option, { selected }) => {
-                  const { key, ...optionProps } = props;
-                  return (
-                    <li key={key} {...optionProps}>
-                      <Checkbox
-                        icon={<CheckBoxOutlineBlankIcon fontSize="small" />}
-                        checkedIcon={<CheckBoxIcon fontSize="small" />}
-                        style={{ marginRight: 8 }}
-                        checked={selected}
-                      />
-                      {option.firstname} {option.lastname}
-                    </li>
-                  );
-                }}
-                style={{ width: 375 }}
-                renderInput={(params) => <TextField {...params} />}
-              />
-            </Grid>
-          </Grid> */}
         </CardContent>
         <CardActions sx={{ justifyContent: "end" }}>
           <Button

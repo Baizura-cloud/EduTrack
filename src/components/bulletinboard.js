@@ -4,10 +4,11 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddBoxIcon from "@mui/icons-material/AddBox";
 import PersonIcon from "@mui/icons-material/Person";
 import DialogForm from "./dialogform";
 import CampaignIcon from "@mui/icons-material/Campaign";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
   createBulletin,
   deleteBulletin,
@@ -18,7 +19,7 @@ import { connect } from "react-redux";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {Paper, Stack, Tooltip } from "@mui/material";
+import { Paper, Stack, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import Snack from "./snackbar";
 
@@ -52,7 +53,7 @@ class Bulletin extends React.Component {
     this.props.fetchBulletin();
   };
   createpost = () => {
-    const item = { title: "", details: "" };
+    const item = { title: "", details: "", btype: "" };
     this.setState({ activeItem: item, toggleDrawer: !this.state.toggleDrawer }); //open drawer
   };
   toggle = () => {
@@ -99,28 +100,28 @@ class Bulletin extends React.Component {
 
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
-    if (snacktype == "delete") {
+    if (snacktype === "delete") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Post deleted successfully",
         },
       });
-    } else if (snacktype == "submit") {
+    } else if (snacktype === "submit") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Post submitted successfully",
         },
       });
-    } else if (snacktype == "edit") {
+    } else if (snacktype === "edit") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Post edited successfully",
         },
       });
-    } else if (snacktype == "error") {
+    } else if (snacktype === "error") {
       this.setState({
         popupContent: {
           severity: "error",
@@ -133,7 +134,7 @@ class Bulletin extends React.Component {
   renderTooltip = (post) => {
     return (
       <Stack alignItems={"start"} direction="row" sx={{ marginTop: 2 }}>
-        {post.created_by == this.props.auth.data.user.email ? (
+        {post.created_by === this.props.auth.data.user.email ? (
           <div>
             <Tooltip title={"edit"} arrow>
               <IconButton
@@ -183,9 +184,18 @@ class Bulletin extends React.Component {
                         <Typography sx={{ textAlign: "justify", fontSize: 14 }}>
                           {post.title}
                         </Typography>
-                        <Tooltip title={"Announcement"}>
-                          <CampaignIcon fontSize="small" sx={{ margin: 0 }} />
-                        </Tooltip>
+                        {post.btype === "Announcement" ? (
+                          <Tooltip title={"Announcement"}>
+                            <CampaignIcon fontSize="small" sx={{ margin: 0 }} />
+                          </Tooltip>
+                        ) : (
+                          <Tooltip title={"Event"}>
+                            <CalendarMonthIcon
+                              fontSize="small"
+                              sx={{ margin: 0 }}
+                            />
+                          </Tooltip>
+                        )}
                       </Stack>
                       {this.renderTooltip(post)}
                     </Stack>
@@ -220,10 +230,7 @@ class Bulletin extends React.Component {
             subheader="Your daily announcements & events"
             action={
               <div align="right">
-                <IconButton
-                color="primary"
-                onClick={this.createpost}
-                >
+                <IconButton color="primary" onClick={this.createpost}>
                   <AddBoxIcon fontSize="large" />
                 </IconButton>
               </div>
