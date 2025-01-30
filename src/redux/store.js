@@ -17,7 +17,7 @@ import classSlice from "./classSlice";
 import bulletinSlice from "./bulletinSlice";
 import otherprofileSlice from "./otherprofileSlice";
 import courseSlice from "./courseSlice";
-import eventSlice from "./eventSlice";
+import examSlice from "./examSlice";
 import studentSlice from "./studentSlice";
 
 const persistConfig = {
@@ -33,7 +33,7 @@ const rootReducer = combineReducers({
   bulletin: bulletinSlice.reducer,
   otherprofile: otherprofileSlice.reducer,
   course: courseSlice.reducer,
-  event: eventSlice.reducer,
+  exam: examSlice.reducer,
   student: studentSlice.reducer,
 });
 
