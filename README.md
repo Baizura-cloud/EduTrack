@@ -1,19 +1,29 @@
 This project is currently work in progress (Version 2)
 
-Data design v2:
-
-![Edutrack v2](https://github.com/user-attachments/assets/acfdeb4a-fb1a-4fef-b00f-7799575f17ed)
-
-
-requirement v2:
 
 current updated ui v2: 
 
 Dashboard
-![image](https://github.com/user-attachments/assets/af0d55f6-b04e-4a0d-9dde-a66ffa011aa4)
+![image](https://github.com/user-attachments/assets/451df3d3-8aab-41ca-9853-701de8cc348d)
+
 
 Classroom
-![image](https://github.com/user-attachments/assets/ddbf9441-85d4-4612-b0f3-384f1d8f6098)
+![image](https://github.com/user-attachments/assets/326d9edd-3514-4208-900e-9b230ddf3b0b)
+
+
+Course Hub
+![image](https://github.com/user-attachments/assets/7262195f-584a-4a72-bffd-a42b49a37132)
+
+
+Examination
+![image](https://github.com/user-attachments/assets/3681fd0f-6d34-4378-b505-2cbf93bbea90)
+
+
+Account Setting + Menu Drawer
+![image](https://github.com/user-attachments/assets/ef872592-746f-47be-88c9-82c52183bc10)
+
+
+
 
 
 version 1 (archive) :
