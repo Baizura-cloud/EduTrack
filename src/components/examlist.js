@@ -19,16 +19,23 @@ import PeopleIcon from "@mui/icons-material/People";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AttributionIcon from "@mui/icons-material/Attribution";
-import { fetchExam, createExam, deleteExam } from "../redux/examSlice";
+import {
+  fetchExam,
+  createExam,
+  updateExam,
+  deleteExam,
+} from "../redux/examSlice";
+import DialogForm from "./dialogform";
 import { connect } from "react-redux";
 import AlertDialog from "./confirmDialog";
+import Snack from "./snackbar";
 export class Examlist extends Component {
   constructor(props) {
     super(props);
     this.state = {
       examList: [],
       activeItem: {},
-      modal: false,
+      toggleDialog: false,
       confirmDel: false,
       popup: false, //snackbar open@close
       popupContent: {
@@ -58,7 +65,7 @@ export class Examlist extends Component {
           message: "Class deleted successfully",
         },
       });
-    } else if (snacktype === "submit") {
+    } else if (snacktype === "submit") { 
       this.setState({
         popupContent: {
           severity: "success",
@@ -95,8 +102,28 @@ export class Examlist extends Component {
       });
     }
   };
+  toggle = () => {
+    this.setState({ toggleDialog: !this.state.toggleDialog }); //function to be use to close drawer
+  };
+  handleSubmitItem = (item) => {
+    this.toggle();
+    if (item.id) {
+      this.props.updateExam(item).then(() => {
+        this.togglesnack("edit");
+      });
+    } else {
+      const newItem = { ...item, created_by: this.props.auth.data.user.email };
+      this.props.createExam([newItem]).then(() => {
+        this.togglesnack("submit");
+      });
+    }
+  };
   handlecreateexam = () => {
-    console.log("add");
+    const item = { title: "", year: "" };
+    this.setState({ activeItem: item, toggleDialog: !this.state.toggleDialog }); //open drawer
+  };
+  handleeditexam = (item) => {
+    this.setState({ activeItem: item, toggleDialog: !this.state.toggleDialog });
   };
   handleDelete = (item) => {
     this.setState({
@@ -159,7 +186,7 @@ export class Examlist extends Component {
                         <IconButton
                           sx={{ padding: 0 }}
                           color="secondary"
-                          // onClick={() => this.handleeditexam(exam)}
+                          onClick={() => this.handleeditexam(exam)}
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
@@ -224,12 +251,28 @@ export class Examlist extends Component {
             </Grid2>
           </CardContent>
         </Card>
+        {this.state.toggleDialog ? (
+          <DialogForm
+            toggle={this.toggle}
+            activeItem={this.state.activeItem}
+            onSave={this.handleSubmitItem}
+            flag="exam"
+          />
+        ) : null}
         {this.state.confirmDel ? (
           <AlertDialog
             activeItem={this.state.activeItem}
             handleDelete={this.handleDelete}
             deleteItem={this.handleDeleteItem}
             alertContent={this.state.alertContent}
+          />
+        ) : null}
+        {this.state.popup ? (
+          <Snack
+            togglesnack={this.togglesnack} // the function
+            open={this.state.popup}
+            message={this.state.popupContent.message}
+            severity={this.state.popupContent.severity}
           />
         ) : null}
       </>
@@ -244,6 +287,8 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchExam: () => dispatch(fetchExam()),
-  deleteExam: (id) => dispatch(deleteExam(id))
+  deleteExam: (id) => dispatch(deleteExam(id)),
+  createExam: (data) => dispatch(createExam(data)),
+  updateExam: (data) => dispatch(updateExam(data)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Examlist);

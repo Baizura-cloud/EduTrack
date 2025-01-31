@@ -4,9 +4,9 @@ import { Card } from "@mui/material";
 import TaskForm from "./taskform";
 import BulletinForm from "./bulletinform";
 import Courseform from "./courseform";
-import EventForm from "./eventform";
 import Classform from "./classform";
 import Student from "./student";
+import ExamForm from "./examform";
 class DialogForm extends React.Component {
   constructor(props) {
     super(props);
@@ -37,22 +37,22 @@ class DialogForm extends React.Component {
         >
             {/* Your form content here */}
             <Card sx={{  minWidth: this.state.isSmallScreen? 300 : 600, p: 1 }} role="presentation">
-              {flag == "task" ? (
+              {flag === "task" ? (
                 <TaskForm activeItem={activeItem} onSave={onSave} />
               ) : null}
-              {flag == "bulletin" ? (
+              {flag === "bulletin" ? (
                 <BulletinForm activeItem={activeItem} onSave={onSave} />
               ) : null}
-              {flag == "course" ? (
+              {flag === "course" ? (
                 <Courseform activeItem={activeItem} onSave={onSave} />
               ) : null}
-              {flag == "event" ? (
-                <EventForm activeItem={activeItem} onSave={onSave} />
+              {flag === "exam" ? (
+                <ExamForm activeItem={activeItem} onSave={onSave} />
               ) : null}
-              {flag == "class" ? (
+              {flag === "class" ? (
                 <Classform activeItem={activeItem} onSave={onSave} />
               ) : null}
-              {flag == "student" ? (
+              {flag === "student" ? (
                 <Student activeClass={activeClass} studentList={studentList} />
               ) : null}
             </Card>
