@@ -14,7 +14,7 @@ import { CardHeader, Tooltip, Stack } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import IconButton from "@mui/material/IconButton";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
-import {
+import  {
   createTask,
   deleteTask,
   fetchTask,
@@ -73,7 +73,6 @@ class Tasklist extends Component {
     //update the task status
   };
   dndUpdateTask = (source, destination) => {
-    const taskfrom = source.droppableId;
     const taskTo = destination.droppableId;
     const taskId = source.index;
     const task = this.props.task.data.filter((item) => item.id === taskId);
@@ -111,28 +110,28 @@ class Tasklist extends Component {
   };
   togglesnack = (snacktype) => {
     this.setState({ popup: !this.state.popup });
-    if (snacktype == "delete") {
+    if (snacktype === "delete") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Task deleted successfully",
         },
       });
-    } else if (snacktype == "submit") {
+    } else if (snacktype === "submit") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Task submitted successfully",
         },
       });
-    } else if (snacktype == "edit") {
+    } else if (snacktype === "edit") {
       this.setState({
         popupContent: {
           severity: "success",
           message: "Task edited successfully",
         },
       });
-    } else if (snacktype == "error") {
+    } else if (snacktype === "error") {
       this.setState({
         popupContent: {
           severity: "error",
@@ -147,13 +146,11 @@ class Tasklist extends Component {
     if (item.id) {
       console.log(item);
       this.props.updateTask(item).then(() => {
-        this.refreshList();
         this.togglesnack("edit");
       });
     } else {
       const newItem = { ...item, created_by: this.props.auth.data.user.email };
       this.props.createTask([newItem]).then(() => {
-        this.refreshList();
         this.togglesnack("submit");
       });
     }
@@ -169,7 +166,6 @@ class Tasklist extends Component {
     item = this.state.activeItem;
     try {
       this.props.deleteTask(item.id).then(() => {
-        this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
@@ -298,9 +294,6 @@ class Tasklist extends Component {
           <li ref={provided.innerRef} {...provided.draggableProps}>
             <Card sx={{ marginTop: 1 }}>
               <Grid container  sx={{ margin: 1 }}>
-                {/* <Grid {...provided.dragHandleProps} size={{ xs: 1, md: 1 }}>
-                  <DragIndicatorIcon />
-                </Grid> */}
                 <Grid {...provided.dragHandleProps} size={{ xs: 10, md: 9 }}>
                   <Stack direction="column">
                     <Typography sx={{ textAlign: "start",   fontSize: 14 }}>
@@ -343,8 +336,8 @@ class Tasklist extends Component {
 
   render() {
     const { task } = this.props;
-    const incomplete = task.data.filter((item) => item.completed === false);
-    const complete = task.data.filter((item) => item.completed === true);
+    const incomplete = task.data !== undefined ? task.data.filter((item) => item.completed === false): [];
+    const complete = task.data !== undefined ? task.data.filter((item) => item.completed === true): [];
 
     return (
       <>
@@ -367,7 +360,7 @@ class Tasklist extends Component {
             <Card>
               <Grid container spacing={2}>
                 {this.state.isSmallScreen ? this.renderSmallTabList() : this.renderTabList()}
-                {task.data !== null && task.data.length !== 0 ? (
+                {task.data !== null && task.data !== undefined ? (
                   <>
                     <DragDropContext onDragEnd={this.handleDragEnd}>
                       <Droppable droppableId="incomplete" direction="vertical">

@@ -69,13 +69,11 @@ class Bulletin extends React.Component {
     this.toggle();
     if (item.id) {
       this.props.updateBulletin(item).then(() => {
-        this.refreshList();
         this.togglesnack("edit");
       });
     } else {
       const newItem = { ...item, created_by: this.props.auth.data.user.email };
       this.props.createBulletin([newItem]).then(() => {
-        this.refreshList();
         this.togglesnack("submit");
       });
     }
@@ -89,7 +87,6 @@ class Bulletin extends React.Component {
     item = this.state.activeItem;
     try {
       this.props.deleteBulletin(item.id).then(() => {
-        this.refreshList();
         this.togglesnack("delete");
       });
     } catch (error) {
