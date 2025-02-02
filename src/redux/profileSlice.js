@@ -5,50 +5,41 @@ export const fetchProfile = createAsyncThunk(
   "fetch-profile",
   async (email, { rejectWithValue }) => {
     try {
-      const response = await supabase
+      const { data, error } = await supabase
         .from("profile")
         .select("*")
         .eq("email", email);
-      return response;
+      if (error) throw error;
+      return data;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
 export const updateProfile = createAsyncThunk(
   "edit-profile",
   async (data, { rejectWithValue }) => {
-    if (!data) {
-      throw new Error("Data undefined");
-    }
     try {
-      const { response, error } = await supabase
+      const { data: upDatedData, error } = await supabase
         .from("profile")
         .update(data)
-        .eq("id", data.id);
-      if (error) {
-        return error;
-      }
-      return response;
+        .eq("id", data.id).select();
+      if (error) throw error;
+      return upDatedData;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
 export const createProfile = createAsyncThunk(
   "create-profile",
   async (data, { rejectWithValue }) => {
-    if (!data) {
-      throw new Error("Data undefined");
-    }
     try {
-      const { response, error } = await supabase.from("profile").insert(data);
-      if (error) {
-        return error;
-      }
-      return response
+      const { data: createData, error } = await supabase.from("profile").insert(data);
+      if (error) throw error
+      return createData;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -60,7 +51,7 @@ const profileSilce = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchProfile.fulfilled, (state, action) => {
-        state.data = action.payload.data;
+        state.data = action.payload;
         state.loading = false;
         state.error = null;
       })
@@ -72,7 +63,8 @@ const profileSilce = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(updateProfile.fulfilled, (state) => {
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.data = action.payload;
         state.loading = false;
         state.error = null;
       })

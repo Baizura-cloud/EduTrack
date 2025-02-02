@@ -47,14 +47,14 @@ class Account extends Component {
   handleChange = (e) => {
     let { name, value } = e.target;
 
-    if (e.target.name == "firstname") {
-      if (e.target.value == "") {
+    if (e.target.name === "firstname") {
+      if (e.target.value === "") {
         this.setState({ error: true });
       } else {
         this.setState({ error: false });
       }
-    } else if (e.target.name == "lastname") {
-      if (e.target.value == "") {
+    } else if (e.target.name === "lastname") {
+      if (e.target.value === "") {
         this.setState({ error1: true });
       } else {
         this.setState({ error1: false });
@@ -72,7 +72,7 @@ class Account extends Component {
       return;
     }
     const newdata = { ...data, id: this.props.profile.data[0].id };
-    if (data.firstname == "") {
+    if (data.firstname === "") {
       this.setState({ error: true });
       this.setState({
         loading: false,
@@ -84,7 +84,7 @@ class Account extends Component {
       this.togglesnack();
       return;
     }
-    if (data.lastname == "") {
+    if (data.lastname === "") {
       this.setState({ error1: true });
       this.setState({
         loading: false,
@@ -97,7 +97,6 @@ class Account extends Component {
       return;
     }
     this.props.updateProfile(newdata).then(() => {
-      this.refreshData();
       this.setState({
         loading: false,
         popupContent: {
