@@ -1,14 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { supabase } from "../client";
 
-export const logoutUser = createAsyncThunk("logout-user", async () => {
-  try {
-    const response = await supabase.auth.signOut();
-    return response;
-  } catch (error) {
-    console.log(error);
+export const logoutUser = createAsyncThunk(
+  "logout-user",
+  async (_, { rejectWithValue }) => {
+    try {
+      await supabase.auth.signOut();
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-});
+);
 export const loginUser = createAsyncThunk(
   "login-user",
   async (loginData, { rejectWithValue }) => {
@@ -21,12 +24,10 @@ export const loginUser = createAsyncThunk(
         email: email,
         password: password,
       });
-      if (error) {
-        return error;
-      }
+      if (error) throw error;
       return data;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
@@ -38,25 +39,28 @@ export const signupUser = createAsyncThunk(
     }
     try {
       const { data, error } = await supabase.auth.signUp(signupData);
-      if (error) {
-        return error;
-      }
+      if (error) throw error;
       return data;
     } catch (error) {
-      rejectWithValue(error.message);
+      return rejectWithValue(error.message);
     }
   }
 );
-export const resetPasswordEmail = createAsyncThunk('reset-password-email', async(email)=>{
-  if(!email){
-    throw new Error("Data Undefined")
+export const resetPasswordEmail = createAsyncThunk(
+  "reset-password-email",
+  async (email, { rejectWithValue }) => {
+    try {
+      if (!email) {
+        throw new Error("Data Undefined");
+      }
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
   }
-  const {data, error} = await supabase.auth.resetPasswordForEmail(email)
-  if(error){
-    return error
-  }
-  return data
-})
+);
 const authSlice = createSlice({
   name: "auth",
   initialState: { data: [], fetchstatus: "" },
