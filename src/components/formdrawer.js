@@ -15,29 +15,37 @@ class FormDrawer extends React.Component {
   }
 
   render() {
-    const {activeItem, toggle,  onSave, flag } = this.props;
+    const { activeItem, toggle, onSave, flag } = this.props;
     return (
-      <div>
-        <Drawer
-          anchor="right"
-          open={true}
-          onClose={toggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          disableScrollLock
-        >
-          <Box sx={{ width: 600, p: 2 }} role="presentation">
-            {/* Your form content here */}
-            {flag == 'task'? <TaskForm activeItem={activeItem} onSave={onSave}  />: null}
-            {flag == 'bulletin'? <BulletinForm activeItem={activeItem} onSave={onSave} />:null}
-            {flag == 'course'? <Courseform activeItem={activeItem} onSave={onSave} />:null}
-            {/* {flag == 'event'? <EventForm activeItem={activeItem} onSave={onSave} />:null} */}
-            {flag == 'class'? <Classform activeItem={activeItem} onSave={onSave} />:null}
-            {flag == 'student'? <StudentForm activeItem={activeItem} onSave={onSave} />:null}
-          </Box>
-        </Drawer>
-      </div>
+      <Drawer
+        anchor="right"
+        open={true}
+        onClose={toggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        disableScrollLock
+      >
+        <Box sx={{ width: 600, p: 2 }} role="presentation">
+          {/* Your form content here */}
+          {flag == "task" ? (
+            <TaskForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag == "bulletin" ? (
+            <BulletinForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag == "course" ? (
+            <Courseform activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {/* {flag == 'event'? <EventForm activeItem={activeItem} onSave={onSave} />:null} */}
+          {flag == "class" ? (
+            <Classform activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag == "student" ? (
+            <StudentForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+        </Box>
+      </Drawer>
     );
   }
 }

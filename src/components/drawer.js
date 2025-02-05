@@ -219,7 +219,6 @@ class DrawerAppbar extends Component {
         >
           <Drawer
             variant="temporary"
-            disableScrollLock
             open={this.state.mobileOpen}
             onTransitionEnd={this.handleDrawerTransitionEnd}
             onClose={this.handleDrawerClose}
@@ -238,7 +237,6 @@ class DrawerAppbar extends Component {
           </Drawer>
           <Drawer
             variant="permanent"
-            disableScrollLock
             sx={{
               display: { xs: "none", sm: "block" },
               "& .MuiDrawer-paper": {

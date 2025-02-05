@@ -26,6 +26,7 @@ import Snack from "./snackbar";
 import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import AttributionIcon from "@mui/icons-material/Attribution";
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class Classes extends React.Component {
@@ -220,6 +221,15 @@ class Classes extends React.Component {
                 <TableCell align="left">
                   {clStudent.created_by == this.props.auth.data.user.email ? (
                     <Stack direction="row" spacing={1}>
+                      <Tooltip title={"Course List"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 , marginRight: 1}}
+                          color="primary"
+                          onClick={() => this.handleStudentlist(clStudent)}
+                        >
+                          <LibraryBooksIcon fontSize="medium" />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title={"Student List"} arrow>
                         <IconButton
                           sx={{ padding: 0 }}
@@ -250,6 +260,15 @@ class Classes extends React.Component {
                     </Stack>
                   ) : (
                     <Stack direction="row">
+                      <Tooltip title={"Course List"} arrow>
+                        <IconButton
+                          sx={{ padding: 0 , marginRight: 1}}
+                          color="primary"
+                          onClick={() => this.handleStudentlist(clStudent)}
+                        >
+                          <LibraryBooksIcon fontSize="medium" />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title={"Student List"} arrow>
                         <IconButton
                           sx={{ padding: 0 }}
@@ -259,6 +278,7 @@ class Classes extends React.Component {
                           <PeopleIcon fontSize="medium" />
                         </IconButton>
                       </Tooltip>
+                      
                       <Tooltip title={"Author: " + clStudent.created_by} arrow>
                         <IconButton
                           color="secondary"

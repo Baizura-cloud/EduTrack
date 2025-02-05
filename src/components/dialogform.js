@@ -23,41 +23,43 @@ class DialogForm extends React.Component {
     this.setState({ isSmallScreen: event.matches }); // Update state when the screen size changes
   }
   render() {
-    const { activeItem, toggle, onSave, flag, studentList, activeClass } = this.props;
+    const { activeItem, toggle, onSave, flag, studentList, activeClass } =
+      this.props;
     return (
-      <div>
-        <Dialog
-          open={true}
-          maxWidth={"xl"}
-          onClose={toggle}
-          PaperProps={{
-            component: "form",
-          }}
-          disableScrollLock
+      <Dialog
+        open={true}
+        maxWidth={"xl"}
+        onClose={toggle}
+        PaperProps={{
+          component: "form",
+        }}
+        disableScrollLock
+      >
+        {/* Your form content here */}
+        <Card
+          sx={{ minWidth: this.state.isSmallScreen ? 300 : 600, p: 1 }}
+          role="presentation"
         >
-            {/* Your form content here */}
-            <Card sx={{  minWidth: this.state.isSmallScreen? 300 : 600, p: 1 }} role="presentation">
-              {flag === "task" ? (
-                <TaskForm activeItem={activeItem} onSave={onSave} />
-              ) : null}
-              {flag === "bulletin" ? (
-                <BulletinForm activeItem={activeItem} onSave={onSave} />
-              ) : null}
-              {flag === "course" ? (
-                <Courseform activeItem={activeItem} onSave={onSave} />
-              ) : null}
-              {flag === "exam" ? (
-                <ExamForm activeItem={activeItem} onSave={onSave} />
-              ) : null}
-              {flag === "class" ? (
-                <Classform activeItem={activeItem} onSave={onSave} />
-              ) : null}
-              {flag === "student" ? (
-                <Student activeClass={activeClass} studentList={studentList} />
-              ) : null}
-            </Card>
-        </Dialog>
-      </div>
+          {flag === "task" ? (
+            <TaskForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag === "bulletin" ? (
+            <BulletinForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag === "course" ? (
+            <Courseform activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag === "exam" ? (
+            <ExamForm activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag === "class" ? (
+            <Classform activeItem={activeItem} onSave={onSave} />
+          ) : null}
+          {flag === "student" ? (
+            <Student activeClass={activeClass} studentList={studentList} />
+          ) : null}
+        </Card>
+      </Dialog>
     );
   }
 }
