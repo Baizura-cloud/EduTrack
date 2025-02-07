@@ -279,39 +279,7 @@ class SignUp extends Component {
                   </Link>
                 </Typography>
               </Grid2>
-              <Grid2 size={12}>
-                <Divider
-                  sx={{ margin: "2px", opacity: 0.5, borderColor: "black" }}
-                />
-              </Grid2>
-              <Grid2 size={12}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "90%",
-                    backgroundColor: "#e85b23",
-                    "&:hover": { backgroundColor: "#a64119" },
-                  }}
-                  onClick={this.onSubmit}
-                >
-                  <GoogleIcon sx={{ marginRight: 2 }} />
-                  Sign Up with Google
-                </Button>
-              </Grid2>
-              <Grid2 size={12}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: "90%",
-                    backgroundColor: "#1031eb",
-                    "&:hover": { backgroundColor: "#0d27bd" },
-                  }}
-                  onClick={this.onSubmit}
-                >
-                  <FacebookIcon sx={{ marginRight: 2 }} />
-                  Sign Up with Facebook
-                </Button>
-              </Grid2>
+              
             </Grid2>
           </FormControl>
           {this.state.toggleSnack ? (

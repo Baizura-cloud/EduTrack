@@ -65,11 +65,10 @@ class ForgotPassword extends Component {
           </DialogTitle>
           <DialogContent sx={{ paddingTop: 2 }}>
             <FormControl error={this.state.error} fullWidth={true}>
-              <InputLabel htmlFor="email">Email</InputLabel>
+             
               <OutlinedInput
                 fullWidth
                 id="email"
-                label="Email"
                 name="email"
                 type="text"
                 onChange={this.handleChange}

@@ -23,7 +23,7 @@ class DialogForm extends React.Component {
     this.setState({ isSmallScreen: event.matches }); // Update state when the screen size changes
   }
   render() {
-    const { activeItem, toggle, onSave, flag, studentList, activeClass } =
+    const { activeItem, toggle, onSave, flag, studentList, activeClass, courseList } =
       this.props;
     return (
       <Dialog
@@ -57,6 +57,9 @@ class DialogForm extends React.Component {
           ) : null}
           {flag === "student" ? (
             <Student activeClass={activeClass} studentList={studentList} />
+          ) : null}
+          {flag === "courseList" ? (
+            <Student activeItem={activeItem} courseList={courseList} />
           ) : null}
         </Card>
       </Dialog>

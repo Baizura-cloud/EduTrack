@@ -36,7 +36,8 @@ class Classes extends React.Component {
       activeItem: {},
       classList: [],
       studentList: [],
-      openList: false,
+      openStudent: false,
+      openCourse: false,
       activeClass: {},
       modal: false,
       confirmDel: false, //confirm delete dialog open@close
@@ -111,9 +112,12 @@ class Classes extends React.Component {
     this.props.fetchStudent(clStudent.name);
     this.setState({
       activeClass: clStudent,
-      openList: true,
+      openStudent: true,
     });
   };
+  handleCourselist = (clStudent) =>{
+    this.setState({activeClass: clStudent, openCourse: true})
+  }
   handlecreateClass = () => {
     const item = { name: "" };
     this.setState({ activeItem: item, modal: !this.state.modal }); //open modal
@@ -121,8 +125,11 @@ class Classes extends React.Component {
   handleeditClass = (item) => {
     this.setState({ activeItem: item, modal: !this.state.modal }); // open moda
   };
+  ctoggle = () => {
+    this.setState({ openCourse: !this.state.openCourse });
+  };
   stoggle = () => {
-    this.setState({ openList: !this.state.openList });
+    this.setState({ openStudent: !this.state.openStudent });
   };
   toggle = () => {
     this.setState({ modal: !this.state.modal });
@@ -319,7 +326,15 @@ class Classes extends React.Component {
             </Grid>
           </CardContent>
         </Card>
-        {this.state.openList ? (
+        {this.state.openCourse ? (
+          <DialogForm
+            toggle={this.ctoggle}
+            activeItem={this.state.activeClass}
+            courseList={this.props.activeClass}
+            flag="courseList"
+          />
+        ) : null}
+        {this.state.openStudent ? (
           <DialogForm
             toggle={this.stoggle}
             activeClass={this.state.activeClass}
