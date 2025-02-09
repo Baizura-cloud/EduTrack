@@ -25,7 +25,7 @@ class CourseForm extends Component {
       activeItem: this.props.activeItem,
       error: false,
       error1: false,
-      tagClass: [],
+      defaultClass: [],
       optiontype: [
         "Language",
         "Mathematic",
@@ -42,13 +42,16 @@ class CourseForm extends Component {
     this.handleAutocomplete();
   }
   handleAutocomplete = () => {
-    this.props.fetchClassStudent();
-    const newArray = [];
-    const allfetch = this.props.classstudent.data;
-    for (var i = 0; i < allfetch.length; i++) {
-      newArray.push(allfetch[i].name)
+    if (!this.props.classstudent.data){
+      this.props.fetchClassStudent();
     }
-    this.setState({ tagClass: newArray })
+    const newArray = []
+    var deClass = this.props.activeItem.class_course
+    for (var i=0; i<deClass.length; i++){
+      newArray.push(deClass[i].class)
+    }
+    console.log(newArray)
+    this.setState({defaultClass: newArray})
   }
   handleChange = (e, tag) => {
     let { name, value } = e.target;
@@ -62,8 +65,8 @@ class CourseForm extends Component {
 
     if (!e.target.type) {
       if (Array.isArray(tag)) {
-        const activeItem = { ...this.state.activeItem, tagclass: tag };
-        this.setState({ activeItem });
+        // const activeItem = { ...this.state.activeItem, tagclass: tag };
+         this.setState({ defaultClass: tag });
       }
       if (typeof tag === "string") {
         const activeItem = { ...this.state.activeItem, type: tag };
@@ -170,12 +173,11 @@ class CourseForm extends Component {
                 id="tag-class"
                 name="class"
                 onChange={(event, tag) => this.handleChange(event, tag)}
-                options={this.state.tagClass}
+                options={this.props.classstudent.data}
                 disableCloseOnSelect
-                getOptionLabel={(option) => option}
-                defaultValue={
-                  activeItem.tagclass !== null ? activeItem.tagclass : undefined
-                }
+                getOptionLabel={(option) => option.name.toString()}
+                value={this.state.defaultClass}
+                isOptionEqualToValue={(option, value) => option.id === value.id}
                 renderOption={(props, option, { selected }) => {
                   const { key, ...optionProps } = props;
                   return (
@@ -186,7 +188,7 @@ class CourseForm extends Component {
                         style={{ marginRight: 8 }}
                         checked={selected}
                       />
-                      {option}
+                      {option.name}
                     </li>
                   );
                 }}

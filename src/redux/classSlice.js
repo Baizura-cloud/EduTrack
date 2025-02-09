@@ -5,7 +5,7 @@ export const fetchClassStudent = createAsyncThunk(
   "fetch-class",
   async (_, { rejectWithValue }) => {
     try {
-      const { data, error } = await supabase.from("class").select(`*, class_course (class_id, course_id)`);
+      const { data, error } = await supabase.from("class").select("*");
       if (error) throw error;
       return data;
     } catch (error) {
