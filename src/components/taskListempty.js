@@ -1,7 +1,7 @@
 import * as React from "react";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import ListImage from "../emptyList.png";
+import ListImage from "../assets/emptyList.png";
 
 export default function EmptyList() {
   return (

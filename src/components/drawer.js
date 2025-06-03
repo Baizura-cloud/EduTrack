@@ -22,7 +22,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import MenuIcon from "@mui/icons-material/Menu";
-import logo from "../logo2.png";
+import logo from "../assets/logo2.png";
 import "../App.css";
 import { connect } from "react-redux";
 import { fetchProfile } from "../redux/profileSlice";

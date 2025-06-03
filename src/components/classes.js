@@ -26,7 +26,7 @@ import Snack from "./snackbar";
 import AlertDialog from "./confirmDialog";
 import Tooltip from "@mui/material/Tooltip";
 import AttributionIcon from "@mui/icons-material/Attribution";
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { createStudent, fetchStudent } from "../redux/studentSlice";
 
 class Classes extends React.Component {
@@ -109,15 +109,26 @@ class Classes extends React.Component {
     }
   };
   handleStudentlist = (clStudent) => {
-    this.props.fetchStudent(clStudent.name);
+    console.log(clStudent);
+    console.log(this.props.student);
+    if (
+      this.props.student.data.length === 0 ||
+      this.props.student.data === undefined
+    ) {
+      if (this.props.student.data[0].class === clStudent.name) {
+        this.props.fetchStudent(clStudent.name);
+        this.setState({
+          activeClass: clStudent,
+        });
+      }
+    }
     this.setState({
-      activeClass: clStudent,
       openStudent: true,
     });
   };
-  handleCourselist = (clStudent) =>{
-    this.setState({activeClass: clStudent, openCourse: true})
-  }
+  handleCourselist = (clStudent) => {
+    this.setState({ activeClass: clStudent, openCourse: true });
+  };
   handlecreateClass = () => {
     const item = { name: "" };
     this.setState({ activeItem: item, modal: !this.state.modal }); //open modal
@@ -170,13 +181,13 @@ class Classes extends React.Component {
         ...classItem,
         created_by: this.props.auth.data.user.email,
       };
-      this.props.createClassStudent(newClassItem).then((res) =>{
-        if(res.error !== undefined){
-          this.togglesnack("error")
-          return
+      this.props.createClassStudent(newClassItem).then((res) => {
+        if (res.error !== undefined) {
+          this.togglesnack("error");
+          return;
         }
         this.togglesnack("submit");
-      })
+      });
     }
   };
   handleDelete = (item) => {
@@ -230,7 +241,7 @@ class Classes extends React.Component {
                     <Stack direction="row" spacing={1}>
                       <Tooltip title={"Course List"} arrow>
                         <IconButton
-                          sx={{ padding: 0 , marginRight: 1}}
+                          sx={{ padding: 0, marginRight: 1 }}
                           color="primary"
                           onClick={() => this.handleStudentlist(clStudent)}
                         >
@@ -269,7 +280,7 @@ class Classes extends React.Component {
                     <Stack direction="row">
                       <Tooltip title={"Course List"} arrow>
                         <IconButton
-                          sx={{ padding: 0 , marginRight: 1}}
+                          sx={{ padding: 0, marginRight: 1 }}
                           color="primary"
                           onClick={() => this.handleStudentlist(clStudent)}
                         >
@@ -285,7 +296,7 @@ class Classes extends React.Component {
                           <PeopleIcon fontSize="medium" />
                         </IconButton>
                       </Tooltip>
-                      
+
                       <Tooltip title={"Author: " + clStudent.created_by} arrow>
                         <IconButton
                           color="secondary"

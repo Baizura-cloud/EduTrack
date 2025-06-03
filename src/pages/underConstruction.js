@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import CardContent from "@mui/material/CardContent";
-import uconstruct from "../2.png"
+import uconstruct from "../assets/2.png"
 
 export default class UnderConstruction extends Component {
   render() {

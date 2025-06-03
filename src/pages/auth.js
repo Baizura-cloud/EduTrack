@@ -4,7 +4,7 @@ import Signup from "../components/signup";
 import SignIn from "../components/signin";
 import { Card, CardContent, Tab, Box, Typography, Stack } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
-import logo from "../logo2.png";
+import logo from "../assets/logo2.png";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
