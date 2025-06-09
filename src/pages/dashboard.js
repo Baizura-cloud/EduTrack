@@ -1,6 +1,6 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import { Card, CardContent, CardHeader } from "@mui/material";
 import Tasklist from "../components/taskList";
 import ScheduleTimeline from "../components/scheduleTimeline";

@@ -16,7 +16,7 @@ import {
   Button,
   IconButton,
   Typography,
-  Grid2,
+  Grid,
   Divider,
 } from "@mui/material";
 
@@ -257,8 +257,8 @@ class SignUp extends Component {
             )}
           </FormControl>
           <FormControl>
-            <Grid2 container spacing={3} sx={{ flexGrow: 1 }}>
-              <Grid2 size={12}>
+            <Grid container spacing={3} sx={{ flexGrow: 1 }}>
+              <Grid size={12}>
                 <Button
                   type="submit"
                   variant="contained"
@@ -267,8 +267,8 @@ class SignUp extends Component {
                 >
                   Sign Up
                 </Button>
-              </Grid2>
-              <Grid2 size={12}>
+              </Grid>
+              <Grid size={12}>
                 <Typography sx={{ margin: "10px" }}>
                   Already have an account?{" "}
                   <Link
@@ -278,9 +278,9 @@ class SignUp extends Component {
                     Sign In
                   </Link>
                 </Typography>
-              </Grid2>
+              </Grid>
               
-            </Grid2>
+            </Grid>
           </FormControl>
           {this.state.toggleSnack ? (
             <Snack

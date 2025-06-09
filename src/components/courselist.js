@@ -20,7 +20,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Snack from "../components/snackbar";
 import AlertDialog from "../components/confirmDialog";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";

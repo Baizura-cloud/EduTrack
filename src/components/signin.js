@@ -20,7 +20,7 @@ import {
   IconButton,
   Checkbox,
   Typography,
-  Grid2,
+  Grid,
   Divider,
 } from "@mui/material";
 
@@ -142,21 +142,21 @@ class SignIn extends Component {
           )}
         </FormControl>
         <FormControl>
-          <Grid2 container spacing={3} sx={{ flexGrow: 1 }}>
-            <Grid2 size={6}>
+          <Grid container spacing={3} sx={{ flexGrow: 1 }}>
+            <Grid size={6}>
               <FormControlLabel
                 control={<Checkbox onChange={this.handleChange} />}
                 label="Remember me"
               />
-            </Grid2>
-            <Grid2 size={6}>
+            </Grid>
+            <Grid size={6}>
               <Typography sx={{ margin: "10px" }}>
                 <Link underline="hover" onClick={this.handleReset}>
                   Forgot Password?
                 </Link>
               </Typography>
-            </Grid2>
-            <Grid2 size={12}>
+            </Grid>
+            <Grid size={12}>
               <Button
                 type="submit"
                 variant="contained"
@@ -165,8 +165,8 @@ class SignIn extends Component {
               >
                 Sign In
               </Button>
-            </Grid2>
-            <Grid2 size={12}>
+            </Grid>
+            <Grid size={12}>
               <Typography sx={{ margin: "10px" }}>
                 Don't have an account?{" "}
                 <Link
@@ -176,9 +176,9 @@ class SignIn extends Component {
                   Sign Up
                 </Link>
               </Typography>
-            </Grid2>
+            </Grid>
             
-          </Grid2>
+          </Grid>
         </FormControl>
         {this.state.onReset ? (
           <ForgotPassword toggle={this.handleReset} />

@@ -11,7 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Snack from "./snackbar";
 import { CardHeader, Tooltip, Stack } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import  {

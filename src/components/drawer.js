@@ -201,15 +201,16 @@ class DrawerAppbar extends Component {
               open={Boolean(this.state.anchorEl)}
               onClose={this.handleClose}
             >
-              <MenuItem onClick={this.handleLogout}>Logout</MenuItem>
-              <Link
+              <MenuItem onClick={() => {this.handleClose(); this.handleLogout()}}>Logout</MenuItem>
+              {/* <Link
                 to="/account"
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <MenuItem>My account</MenuItem>
-              </Link>
+                
+              </Link> */}
+              <MenuItem component={Link} to="/account">My account</MenuItem>
             </Menu>
-            {/* </Stack> */}
           </Toolbar>
         </AppBar>
         <Box

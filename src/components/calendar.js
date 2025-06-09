@@ -4,7 +4,7 @@ import { Badge, List, HStack } from "rsuite";
 import "rsuite/dist/rsuite.min.css";
 import "rsuite/Calendar/styles/index.css";
 import { Card, CardContent, CardHeader } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 export class Calendarr extends Component {
   constructor(props) {
     super(props);

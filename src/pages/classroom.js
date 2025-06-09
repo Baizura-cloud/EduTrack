@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Classes from "../components/classes";
 import Calendarr from "../components/calendar";
 import { Card, CardHeader, CardContent } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 export class classroom extends Component {
   render() {
     return (

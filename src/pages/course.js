@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Card, CardHeader, CardContent } from "@mui/material";
-import Grid from "@mui/material/Grid2";
+import Grid from "@mui/material/Grid";
 import UnderConstruction from './underConstruction'
 import Courselist from '../components/courselist'
 export class Course extends Component {

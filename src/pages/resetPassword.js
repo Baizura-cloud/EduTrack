@@ -14,7 +14,7 @@ import {
   InputLabel,
   FormControl,
   IconButton,
-  Grid2,
+  Grid,
   Button,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -149,8 +149,8 @@ class ResetPassword extends Component {
               )}
             </FormControl>
             <FormControl>
-          <Grid2 container spacing={3} sx={{ flexGrow: 1 }}>
-            <Grid2 size={12}>
+          <Grid container spacing={3} sx={{ flexGrow: 1 }}>
+            <Grid size={12}>
               <Button
                 variant="contained"
                 sx={{ width: "100%", marginTop:2, padding:2 }}
@@ -158,8 +158,8 @@ class ResetPassword extends Component {
               >
                 Reset Password
               </Button>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         </FormControl>
           </Box>
         </CardContent>

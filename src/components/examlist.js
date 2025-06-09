@@ -4,7 +4,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Grid2,
+  Grid,
   IconButton,
   Stack,
 } from "@mui/material";
@@ -246,9 +246,9 @@ export class Examlist extends Component {
             }
           />
           <CardContent>
-            <Grid2 container spacing={2}>
-              <Grid2 size={{ xs: 12, md: 12 }}>{this.rendertable()}</Grid2>
-            </Grid2>
+            <Grid container spacing={2}>
+              <Grid size={{ xs: 12, md: 12 }}>{this.rendertable()}</Grid>
+            </Grid>
           </CardContent>
         </Card>
         {this.state.toggleDialog ? (
